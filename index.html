@@ -187,7 +187,7 @@ var _hmt = _hmt || [];
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/20180510-企业级私有仓库方案(harbor).html">企业级私有仓库方案(harbor)</a>
+      <a class="article-title" href="/企业级私有仓库方案(harbor).html">企业级私有仓库方案(harbor)</a>
     </h1>
   
 
@@ -196,7 +196,7 @@ var _hmt = _hmt || [];
 
 
         
-        <a href="/20180510-企业级私有仓库方案(harbor).html" class="archive-article-date">
+        <a href="/企业级私有仓库方案(harbor).html" class="archive-article-date">
   	<time datetime="2018-05-10T06:37:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-10</time>
 </a>
         
@@ -207,96 +207,9 @@ var _hmt = _hmt || [];
         <blockquote>
 <p>前言：<br> Docker Hub作为Docker默认官方公共镜像，如果自己想搭建私有尽享仓库，官网也提供registry镜像，使得搭建私有仓库非常简单。</p>
 </blockquote>
-<p>[toc]</p>
-<p>##一、搭建私有镜像仓库:registry</p>
-<p>1.1、<strong>下载registry镜像并启动</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker pull registry</span><br><span class="line">docker run -d -v /opt/registry:/var/lib/registry -p 5000:5000 --restart=always --name registry registry</span><br></pre></td></tr></table></figure></p>
-<p>1.2、<strong>测试，查看镜像仓库中所有镜像</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-node02 ~]# curl http://127.0.0.1:5000/v2/_catalog</span><br><span class="line">&#123;&quot;repositories&quot;:[]&#125;</span><br></pre></td></tr></table></figure></p>
-<p>1.3、<strong>私有镜像仓库管理</strong><br>1）配置私有仓库可信任<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/docker/daemon.json</span><br><span class="line">&#123;&quot;insecure-registries&quot;:[&quot;127.0.0.1:5000&quot;]&#125;</span><br><span class="line">systemctl restart docker</span><br><span class="line"></span><br><span class="line">这里需要注意一点，如果daemon.json里已经有配置，`需要在原有配置后面加逗号，不然失效！`</span><br><span class="line"> 譬如：</span><br><span class="line">[root@k8s-node02 ~]# cat /etc/docker/daemon.json</span><br><span class="line">&#123;</span><br><span class="line">  &quot;registry-mirrors&quot;: [ &quot;https://registry.docker-cn.com&quot;],</span><br><span class="line">  &quot;insecure-registries&quot;: [&quot;172.16.194.130:5000&quot;]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>2）打标签<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker tag centos:6 127.0.0.1:5000/centos:7</span><br></pre></td></tr></table></figure></p>
-<p>3）上传<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker push 127.0.0.1:5000/centos:7</span><br></pre></td></tr></table></figure></p>
-<p>4）下载<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull 127.0.0.1:5000/centos:7</span><br></pre></td></tr></table></figure></p>
-<p>5）列出镜像标签<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-node02 ~]# curl http://127.0.0.1:5000/v2/centos/tags/list</span><br><span class="line">&#123;&quot;name&quot;:&quot;centos&quot;,&quot;tags&quot;:[&quot;7&quot;]&#125;</span><br></pre></td></tr></table></figure></p>
-<p>注意：127.0.0.1可以换成你网卡的地址</p>
-<p>##二、Docker Hub公共镜像仓库使用<br>因为dockerHub是国外的服务器，push和pull操作都比较慢，甚至有连接超时的情况，个人研究玩玩还是可以的。</p>
-<p><a href="https://cloud.docker.com/swarm/nicksors" target="_blank" rel="noopener">https://cloud.docker.com/swarm/nicksors</a><br>1）注册帐号<br><a href="https://hub.docker.com" target="_blank" rel="noopener">https://hub.docker.com</a></p>
-<p>2）登录Docker Hub<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># docker login</span><br><span class="line">或</span><br><span class="line">[root@k8s-node02 ~]# docker login --username=nicksors --password=与GitHub密码一样</span><br><span class="line">WARNING! Using --password via the CLI is insecure. Use --password-stdin.</span><br><span class="line">Login Succeeded</span><br></pre></td></tr></table></figure></p>
-<p>3）镜像打标签<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># docker tag nginx:1.12 nicksors/nginx:v2</span><br></pre></td></tr></table></figure></p>
-<p>4）上传<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker push nicksors/nginx:v2</span><br></pre></td></tr></table></figure></p>
-<p>5）下载<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull nicksors/nginx:v2</span><br></pre></td></tr></table></figure></p>
-<p>##三、基于Harbor搭建Docker私有镜像仓库（推荐:很多企业都用这个）</p>
-<p>###3.1、什么是Harbor？</p>
-<p>Harbor是VMware开源的又一个Docker Registry企业级私有仓库，其项目地址为<a href="https://github.com/vmware/harbor；" target="_blank" rel="noopener">https://github.com/vmware/harbor；</a><br>相比Docker公司自己提供的Registry私有镜像仓库而言，Harbor提供了更多的功能，如下：</p>
-<ul>
-<li><strong>基于角色的访问控制</strong> - 用户与Docker镜像仓库通过“项目”进行组织管理，一个用户可以对多个镜像仓库在同一命名空间（project）里有不同的权限。</li>
-<li><strong>镜像复制</strong> - 镜像可以在多个Registry实例中复制（同步）。尤其适合于负载均衡，高可用，混合云和多云的场景。</li>
-<li><strong>图形化用户界面</strong> - 用户可以通过浏览器来浏览，检索当前Docker镜像仓库，管理项目和命名空间。</li>
-<li><strong>AD/LDAP 支持</strong> - Harbor可以集成企业内部已有的AD/LDAP，用于鉴权认证管理。</li>
-<li><strong>审计管理</strong> - 所有针对镜像仓库的操作都可以被记录追溯，用于审计管理。</li>
-<li><strong>国际化</strong> - 已拥有英文、中文、德文、日文和俄文的本地化版本。更多的语言将会添加进来。</li>
-<li><strong>RESTful API</strong> - RESTful API 提供给管理员对于Harbor更多的操控, 使得与其它管理软件集成变得更容易。</li>
-<li><strong>部署简单</strong> - 提供在线和离线两种安装工具， 也可以安装到vSphere平台(OVA方式)虚拟设备。</li>
-</ul>
-<p>以上来自官网介绍：<a href="https://vmware.github.io/harbor/cn/" target="_blank" rel="noopener">https://vmware.github.io/harbor/cn/</a></p>
-<p>###3.2、准备环境</p>
-<ol>
-<li>自己创建的虚拟机：CentOS7.2、配置是2G2C；</li>
-<li>Docker版本：Docker version 18.03.0-ce</li>
-<li>Docker-compose：docker-compose version 1.20.1</li>
-<li>Harbor版本：harbor-offline-installer-v1.4.0.tgz</li>
-</ol>
-<p>###3.3、安装Harbor<br>在安装Harbor之前，必须保证你的环境已经安装好docker和docker-compose了,这两个安装方法在Docker官网都有：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">安装Docker方法：https://docs.docker.com/install/linux/docker-ce/centos</span><br><span class="line">安装Docker-Compose方法：https://docs.docker.com/compose/install/#install-compose</span><br></pre></td></tr></table></figure></p>
-<p>你可以在 Harbor版本<a href="https://github.com/vmware/harbor/releases" target="_blank" rel="noopener">https://github.com/vmware/harbor/releases</a> 地址下载你想要装的版本，这里我选择最新的1.4.0，当然你看到的时候已经不是最新版本了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 选择离线安装版本</span><br><span class="line">$ wget https://storage.googleapis.com/harbor-releases/release-1.4.0/harbor-offline-installer-v1.4.0.tgz</span><br><span class="line">（如果下载慢的话，你可以使用迅雷下载，有的网友就这么干，会快很多）</span><br></pre></td></tr></table></figure></p>
-<p>解压下载的包，进入解压后的harbor目录，里面有个harbor.cfg就是配置文件啦，简单说下：这里面可以配置LDAP，数据库，邮件信息，ssl证书等。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vim harbor.cfg</span><br><span class="line"></span><br><span class="line"># 我配置了两个地方，主机名和Harbor admin的密码，其他默认</span><br><span class="line">hostname = 172.16.194.130</span><br><span class="line">harbor_admin_password = abc123!!</span><br></pre></td></tr></table></figure></p>
-<p>下面奉上一份harbor.cfg的关键参数说明：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br></pre></td><td class="code"><pre><span class="line">## Configuration file of Harbor</span><br><span class="line"></span><br><span class="line">#hostname设置访问地址，可以使用ip、域名，不可以设置为127.0.0.1或localhost</span><br><span class="line">hostname = 172.16.194.130 #这里我使用本机IP</span><br><span class="line"></span><br><span class="line"># 访问协议，默认是http，也可以设置https，如果设置https，则nginx ssl需要设置on</span><br><span class="line">ui_url_protocol = http</span><br><span class="line"></span><br><span class="line">#Maximum number of job workers in job service</span><br><span class="line">max_job_workers = 3</span><br><span class="line"></span><br><span class="line">#Determine whether or not to generate certificate for the registry&apos;s token.</span><br><span class="line">#If the value is on, the prepare script creates new root cert and private key</span><br><span class="line">#for generating token to access the registry. If the value is off the default key/cert will be used.</span><br><span class="line">#This flag also controls the creation of the notary signer&apos;s cert.</span><br><span class="line">customize_crt = on</span><br><span class="line"></span><br><span class="line"># 指定的证书文件，生产环境一定要使用ssl证书</span><br><span class="line">ssl_cert = /data/cert/server.crt</span><br><span class="line">ssl_cert_key = /data/cert/server.key</span><br><span class="line"></span><br><span class="line"># 存放证书的路径,这个路径会挂载到宿主机的/data/目录下</span><br><span class="line">secretkey_path = /data</span><br><span class="line"></span><br><span class="line">#Admiral&apos;s url, comment this attribute, or set its value to NA when Harbor is standalone</span><br><span class="line">admiral_url = NA</span><br><span class="line"></span><br><span class="line">#Log files are rotated log_rotate_count times before being removed. If count is 0, old versions are removed rather than rotated.</span><br><span class="line">log_rotate_count = 50</span><br><span class="line">#Log files are rotated only if they grow bigger than log_rotate_size bytes. If size is followed by k, the size is assumed to be in kilobytes.</span><br><span class="line">#If the M is used, the size is in megabytes, and if G is used, the size is in gigabytes. So size 100, size 100k, size 100M and size 100G</span><br><span class="line">#are all valid.</span><br><span class="line">log_rotate_size = 200M</span><br><span class="line"></span><br><span class="line">#************************BEGIN INITIAL PROPERTIES************************</span><br><span class="line"></span><br><span class="line"># 配置邮件server信息</span><br><span class="line">email_identity =</span><br><span class="line"></span><br><span class="line">email_server = smtp.mydomain.com</span><br><span class="line">email_server_port = 25</span><br><span class="line">email_username = sample_admin@mydomain.com</span><br><span class="line">email_password = abc</span><br><span class="line">email_from = admin &lt;sample_admin@mydomain.com&gt;</span><br><span class="line">email_ssl = false</span><br><span class="line">email_insecure = false</span><br><span class="line"></span><br><span class="line"># 启动Harbor后，管理员UI登录的密码，默认是Harbor12345</span><br><span class="line">harbor_admin_password = abc123!!</span><br><span class="line"></span><br><span class="line"># 认证方式，这里支持多种认证方式，如LADP、本次存储、数据库认证。默认是db_auth，mysql数据库认证</span><br><span class="line">auth_mode = db_auth</span><br><span class="line"></span><br><span class="line"># ldap配置</span><br><span class="line">ldap_url = ldaps://ldap.mydomain.com</span><br><span class="line"></span><br><span class="line">#A user&apos;s DN who has the permission to search the LDAP/AD server.</span><br><span class="line">#If your LDAP/AD server does not support anonymous search, you should configure this DN and ldap_search_pwd.</span><br><span class="line">#ldap_searchdn = uid=searchuser,ou=people,dc=mydomain,dc=com</span><br><span class="line"></span><br><span class="line">#the password of the ldap_searchdn</span><br><span class="line">#ldap_search_pwd = password</span><br><span class="line"></span><br><span class="line">#The base DN from which to look up a user in LDAP/AD</span><br><span class="line">ldap_basedn = ou=people,dc=mydomain,dc=com</span><br><span class="line"></span><br><span class="line">#Search filter for LDAP/AD, make sure the syntax of the filter is correct.</span><br><span class="line">#ldap_filter = (objectClass=person)</span><br><span class="line"></span><br><span class="line"># The attribute used in a search to match a user, it could be uid, cn, email, sAMAccountName or other attributes depending on your LDAP/AD</span><br><span class="line">ldap_uid = uid</span><br><span class="line"></span><br><span class="line">#the scope to search for users, 0-LDAP_SCOPE_BASE, 1-LDAP_SCOPE_ONELEVEL, 2-LDAP_SCOPE_SUBTREE</span><br><span class="line">ldap_scope = 2</span><br><span class="line"></span><br><span class="line">#Timeout (in seconds)  when connecting to an LDAP Server. The default value (and most reasonable) is 5 seconds.</span><br><span class="line">ldap_timeout = 5</span><br><span class="line"></span><br><span class="line">#Verify certificate from LDAP server</span><br><span class="line">ldap_verify_cert = true</span><br><span class="line"></span><br><span class="line">#Turn on or off the self-registration feature</span><br><span class="line">self_registration = on</span><br><span class="line"></span><br><span class="line">#The expiration time (in minute) of token created by token service, default is 30 minutes</span><br><span class="line">token_expiration = 30</span><br><span class="line"></span><br><span class="line"># 用户创建项目权限控制，默认是everyone（所有人），也可以设置为adminonly（只能管理员）</span><br><span class="line">project_creation_restriction = everyone</span><br><span class="line"></span><br><span class="line">#************************END INITIAL PROPERTIES************************</span><br><span class="line"></span><br><span class="line">#######Harbor DB configuration section#######</span><br><span class="line"></span><br><span class="line">#The address of the Harbor database. Only need to change when using external db.</span><br><span class="line">db_host = mysql</span><br><span class="line"></span><br><span class="line">#The password for the root user of Harbor DB. Change this before any production use.</span><br><span class="line">db_password = root123</span><br><span class="line"></span><br><span class="line">#The port of Harbor database host</span><br><span class="line">db_port = 3306</span><br><span class="line"></span><br><span class="line">#The user name of Harbor database</span><br><span class="line">db_user = root</span><br><span class="line"></span><br><span class="line">##### End of Harbor DB configuration#######</span><br><span class="line"></span><br><span class="line">#The redis server address. Only needed in HA installation.</span><br><span class="line">redis_url =</span><br><span class="line"></span><br><span class="line">##########Clair DB configuration############</span><br><span class="line"></span><br><span class="line">#Clair DB host address. Only change it when using an exteral DB.</span><br><span class="line">clair_db_host = postgres</span><br><span class="line"></span><br><span class="line">#The password of the Clair&apos;s postgres database. Only effective when Harbor is deployed with Clair.</span><br><span class="line">#Please update it before deployment. Subsequent update will cause Clair&apos;s API server and Harbor unable to access Clair&apos;s database.</span><br><span class="line">clair_db_password = password</span><br><span class="line"></span><br><span class="line">#Clair DB connect port</span><br><span class="line">clair_db_port = 5432</span><br><span class="line"></span><br><span class="line">#Clair DB username</span><br><span class="line">clair_db_username = postgres</span><br><span class="line"></span><br><span class="line">#Clair default database</span><br><span class="line">clair_db = postgres</span><br><span class="line"></span><br><span class="line">##########End of Clair DB configuration############</span><br><span class="line"></span><br><span class="line">#The following attributes only need to be set when auth mode is uaa_auth</span><br><span class="line">uaa_endpoint = uaa.mydomain.org</span><br><span class="line">uaa_clientid = id</span><br><span class="line">uaa_clientsecret = secret</span><br><span class="line">uaa_verify_cert = true</span><br><span class="line">uaa_ca_cert = /path/to/ca.pem</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### Docker Registry setting ###</span><br><span class="line">#registry_storage_provider can be: filesystem, s3, gcs, azure, etc.</span><br><span class="line">registry_storage_provider_name = filesystem</span><br><span class="line">#registry_storage_provider_config is a comma separated &quot;key: value&quot; pairs, e.g. &quot;key1: value, key2: value2&quot;.</span><br><span class="line">#Refer to https://docs.docker.com/registry/configuration/#storage for all available configuration.</span><br><span class="line">registry_storage_provider_config =</span><br></pre></td></tr></table></figure></p>
-<p>###3.4、启动Harbor</p>
-<p>修改完配置文件后，在的当前目录执行./install.sh，Harbor服务就会根据当期目录下的docker-compose.yml开始下载依赖的镜像，检测并按照顺序依次启动各个服务。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line">$ ./install.sh</span><br><span class="line"></span><br><span class="line">[Step 0]: checking installation environment ...</span><br><span class="line"></span><br><span class="line">Note: docker version: 18.03.0</span><br><span class="line"></span><br><span class="line">Note: docker-compose version: 1.20.1</span><br><span class="line"></span><br><span class="line">[Step 1]: loading Harbor images ...</span><br><span class="line">Loaded image: vmware/notary-server-photon:v0.5.1-v1.4.0</span><br><span class="line">Loaded image: vmware/notary-signer-photon:v0.5.1-v1.4.0</span><br><span class="line">Loaded image: vmware/harbor-db:v1.4.0</span><br><span class="line">Loaded image: vmware/clair-photon:v2.0.1-v1.4.0</span><br><span class="line">Loaded image: vmware/postgresql-photon:v1.4.0</span><br><span class="line">Loaded image: vmware/harbor-adminserver:v1.4.0</span><br><span class="line">Loaded image: vmware/harbor-ui:v1.4.0</span><br><span class="line">Loaded image: vmware/harbor-log:v1.4.0</span><br><span class="line">Loaded image: vmware/harbor-jobservice:v1.4.0</span><br><span class="line">Loaded image: vmware/nginx-photon:v1.4.0</span><br><span class="line">Loaded image: vmware/registry-photon:v2.6.2-v1.4.0</span><br><span class="line">Loaded image: vmware/photon:1.0</span><br><span class="line">Loaded image: vmware/mariadb-photon:v1.4.0</span><br><span class="line">Loaded image: vmware/harbor-db-migrator:1.4</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[Step 2]: preparing environment ...</span><br><span class="line">Clearing the configuration file: ./common/config/adminserver/env</span><br><span class="line">Clearing the configuration file: ./common/config/ui/env</span><br><span class="line">Clearing the configuration file: ./common/config/ui/app.conf</span><br><span class="line">Clearing the configuration file: ./common/config/ui/private_key.pem</span><br><span class="line">Clearing the configuration file: ./common/config/db/env</span><br><span class="line">Clearing the configuration file: ./common/config/jobservice/env</span><br><span class="line">Clearing the configuration file: ./common/config/jobservice/app.conf</span><br><span class="line">Clearing the configuration file: ./common/config/registry/config.yml</span><br><span class="line">Clearing the configuration file: ./common/config/registry/root.crt</span><br><span class="line">Clearing the configuration file: ./common/config/nginx/nginx.conf</span><br><span class="line">Clearing the configuration file: ./common/config/log/logrotate.conf</span><br><span class="line">loaded secret from file: /data/secretkey</span><br><span class="line">Generated configuration file: ./common/config/nginx/nginx.conf</span><br><span class="line">Generated configuration file: ./common/config/adminserver/env</span><br><span class="line">Generated configuration file: ./common/config/ui/env</span><br><span class="line">Generated configuration file: ./common/config/registry/config.yml</span><br><span class="line">Generated configuration file: ./common/config/db/env</span><br><span class="line">Generated configuration file: ./common/config/jobservice/env</span><br><span class="line">Generated configuration file: ./common/config/log/logrotate.conf</span><br><span class="line">Generated configuration file: ./common/config/jobservice/app.conf</span><br><span class="line">Generated configuration file: ./common/config/ui/app.conf</span><br><span class="line">Generated certificate, key file: ./common/config/ui/private_key.pem, cert file: ./common/config/registry/root.crt</span><br><span class="line">The configuration files are ready, please use docker-compose to start the service.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[Step 3]: checking existing instance of Harbor ...</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[Step 4]: starting Harbor ...</span><br><span class="line">Creating harbor-log ... done</span><br><span class="line">Creating harbor-db          ... done</span><br><span class="line">Creating registry          ... done</span><br><span class="line">Creating harbor-adminserver ... done</span><br><span class="line">Creating harbor-ui          ... done</span><br><span class="line">Creating nginx              ... done</span><br><span class="line">Creating harbor-jobservice  ... done</span><br><span class="line"></span><br><span class="line">✔ ----Harbor has been installed and started successfully.----</span><br><span class="line"></span><br><span class="line">Now you should be able to visit the admin portal at http://172.16.194.130.</span><br><span class="line">For more details, please visit https://github.com/vmware/harbor .</span><br><span class="line"></span><br><span class="line"># 这时候你可以通过docker-compose 或docker ps来查看Harbor依赖运行的一些容器</span><br><span class="line"># 当然你也可以通过docker-compose来管理这些容器</span><br><span class="line">[root@k8s-node02 harbor]# docker-compose ps</span><br><span class="line">      Name                    Command                  State                                    Ports</span><br><span class="line">-------------------------------------------------------------------------------------------------------------------------------------</span><br><span class="line">harbor-adminserver  /harbor/start.sh                Up (healthy)</span><br><span class="line">harbor-db            /usr/local/bin/docker-entr ...  Up (healthy)  3306/tcp</span><br><span class="line">harbor-jobservice    /harbor/start.sh                Up (healthy)</span><br><span class="line">harbor-log          /bin/sh -c /usr/local/bin/ ...  Up (healthy)  127.0.0.1:1514-&gt;10514/tcp</span><br><span class="line">harbor-ui            /harbor/start.sh                Up (healthy)</span><br><span class="line">nginx                nginx -g daemon off;            Up            0.0.0.0:443-&gt;443/tcp, 0.0.0.0:4443-&gt;4443/tcp, 0.0.0.0:80-&gt;80/tcp</span><br><span class="line">registry            /entrypoint.sh serve /etc/ ...  Up (healthy)  5000/tcp</span><br><span class="line">[root@k8s-node02 harbor]# docker ps</span><br><span class="line">CONTAINER ID        IMAGE                                  COMMAND                  CREATED            STATUS                      PORTS                                                              NAMES</span><br><span class="line">baf9d3e586f8        vmware/harbor-jobservice:v1.4.0        &quot;/harbor/start.sh&quot;      About an hour ago  Up About an hour (healthy)                                                                      harbor-jobservice</span><br><span class="line">484d5c4fca4b        vmware/nginx-photon:v1.4.0            &quot;nginx -g &apos;daemon of…&quot;  About an hour ago  Up About an hour            0.0.0.0:80-&gt;80/tcp, 0.0.0.0:443-&gt;443/tcp, 0.0.0.0:4443-&gt;4443/tcp  nginx</span><br><span class="line">dd7c62b45af1        vmware/harbor-ui:v1.4.0                &quot;/harbor/start.sh&quot;      About an hour ago  Up About an hour (healthy)                                                                      harbor-ui</span><br><span class="line">e5494bd12f64        vmware/registry-photon:v2.6.2-v1.4.0  &quot;/entrypoint.sh serv…&quot;  About an hour ago  Up About an hour (healthy)  5000/tcp                                                          registry</span><br><span class="line">915b753623b7        vmware/harbor-adminserver:v1.4.0      &quot;/harbor/start.sh&quot;      About an hour ago  Up About an hour (healthy)                                                                      harbor-adminserver</span><br><span class="line">55ca16b86243        vmware/harbor-db:v1.4.0                &quot;/usr/local/bin/dock…&quot;  About an hour ago  Up About an hour (healthy)  3306/tcp                                                          harbor-db</span><br><span class="line">30ca0cb76dd0        vmware/harbor-log:v1.4.0              &quot;/bin/sh -c /usr/loc…&quot;  About an hour ago  Up About an hour (healthy)  127.0.0.1:1514-&gt;10514/tcp</span><br></pre></td></tr></table></figure></p>
-<p>###3.5、登录Harbor</p>
-<p>启动完成后，会提示你Harbor的访问地址：<a href="http://172.16.194.130" target="_blank" rel="noopener">http://172.16.194.130</a></p>
-<p>登录界面</p>
-<p>输入账号和我们预先设定的密码：admin/abc123!!</p>
-<p>我们可以看到系统各个模块如下：</p>
-<ul>
-<li>项目：新增/删除项目，查看镜像仓库，给项目添加成员、查看操作日志、复制项目等</li>
-<li>日志：仓库各个镜像create、push、pull等操作日志</li>
-<li>系统管理<ul>
-<li>用户管理：新增/删除用户、设置管理员等</li>
-<li>复制管理：新增/删除从库目标、新建/删除/启停复制规则等</li>
-<li>配置管理：认证模式、复制、邮箱设置、系统设置等</li>
-</ul>
-</li>
-<li>其他设置<ul>
-<li>用户设置：修改用户名、邮箱、名称信息</li>
-<li>修改密码：修改用户密码</li>
-</ul>
-</li>
-</ul>
-<p>注意：非系统管理员用户登录，只能看到有权限的项目和日志，其他模块不可见。</p>
-<p>###3.6、向Harbor仓库中心提交私有镜像</p>
-<p>我们要尝试下能不能把自己 Docker 里面的镜像 push 到 Harbor 的 library 里来（默认这个 library 项目是公开的，所有人都可以有读的权限，都不需要 docker login 进来，就可以拉取里面的镜像）。</p>
-<p>####3.6.1、配置Docker registry仓库地址</p>
-<p>在/etc/docker/daemon.json里添加配置如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;insecure-registries&quot;: [&quot;172.16.194.130&quot;]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>配置好后，别忘了重启<code>systemctl restart docker</code></p>
-<p>####3.6.2、Docker 登录Harbor<br>为什么要登录呢？跟Docker Hub一样，你得登录才能表明你是合法用户，才能push；<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ docker login 172.16.194.130</span><br><span class="line">Username: admin</span><br><span class="line">Password: (这里输入harbor平台设置的admin密码)</span><br><span class="line">Login Succeeded</span><br></pre></td></tr></table></figure></p>
-<p>####3.6.3、本地私有镜像打tag，提交到Harbor<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ docker tag  tale:base 172.16.194.130/library/tale:base</span><br><span class="line"></span><br><span class="line">$  docker push 172.16.194.130/library/tale</span><br><span class="line">The push refers to repository [172.16.194.130/library/tale]</span><br><span class="line">a3ece4722ead: Pushed</span><br><span class="line">ed61150eb02c: Pushed</span><br><span class="line">0f9f3d37a459: Pushed</span><br><span class="line">8ed018b01f91: Pushed</span><br><span class="line">b17185091796: Pushed</span><br><span class="line">b03095563b79: Pushed</span><br><span class="line">base: digest: sha256:f82f2e175479d6d232efab45f81a4495cc4ad0a48135fd839dc27fdee8c13c77 size: 1574</span><br></pre></td></tr></table></figure></p>
-<p>提交成功，我们来看看Harbor仓库里的信息</p>
-<p>能看到已经提交到libary公共仓库中。</p>
-<p>同理，你也可以测试下从 Harbor pull 镜像到你的 Docker 中去，操作如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ docker rmi 172.16.194.130/library/tale:base</span><br><span class="line">$ docker pull 172.16.194.130/library/tale:base</span><br><span class="line">base: Pulling from library/tale</span><br><span class="line">Digest: sha256:f82f2e175479d6d232efab45f81a4495cc4ad0a48135fd839dc27fdee8c13c77</span><br><span class="line">Status: Downloaded newer image for 172.16.194.130/library/tale:base</span><br><span class="line">[root@k8s-node02 harbor]# docker images  </span><br><span class="line">REPOSITORY                    TAG                IMAGE ID            CREATED            SIZE</span><br><span class="line">172.16.194.130/library/tale  base                ab8e3ca33cd0        5 days ago          372MB</span><br></pre></td></tr></table></figure></p>
-<p>镜像在被我删除后，从Harbor里成功pull了回来。</p>
-<p>###3.7、Harbor配置ssl认证</p>
-<p>####3.7.1、创建证书<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cd /data/cert/</span><br></pre></td></tr></table></figure></p>
-<p>1、创建 CA 根证书<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ openssl req  -newkey rsa:4096 -nodes -sha256 -keyout ca.key -x509 -days 365 -out ca.crt -subj &quot;/C=CN/L=xian/O=nova/CN=harbor-registry&quot;</span><br></pre></td></tr></table></figure></p>
-<p>2、生成一个证书签名, 设置访问域名为harbor.moxiu.cn<br>$ openssl req -newkey rsa:4096 -nodes -sha256 -keyout harbor.moxiu.cn.key -out server.csr -subj “/C=CN/L=xian/O=nova/CN=harbor.moxiu.cn”</p>
-<p>3、生成主机的证书<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ openssl x509 -req -days 365 -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out harbor.moxiu.cn.crt</span><br></pre></td></tr></table></figure></p>
-<p>####3.7.2、配置harbor以https方式访问<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ vim harbor.cfg</span><br><span class="line">hostname = harbor.moxiu.cn:443</span><br><span class="line">ui_url_protocol = https</span><br><span class="line">ssl_cert = /data/cert/harbor.moxiu.cn.crt</span><br><span class="line">ssl_cert_key = /data/cert/harbor.moxiu.cn.key</span><br></pre></td></tr></table></figure></p>
-<p>####3.7.3、配置Docker registry仓库地址</p>
-<p>在/etc/docker/daemon.json里添加配置如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;insecure-registries&quot;: [&quot;harbor.moxiu.cn&quot;]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>然后，重启docker服务生效</p>
-<p>####3.7.4、登录验证</p>
-<p>1、验证admin登录方法1<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ docker login harbor.moxiu.cn</span><br><span class="line">Username (admin): admin</span><br><span class="line">Password: </span><br><span class="line">Login Succeeded</span><br></pre></td></tr></table></figure></p>
-<p>2、验证admin登录方法2<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ docker login -u admin -p abc123!! harbor.moxiu.cn</span><br><span class="line">Login Succeeded</span><br></pre></td></tr></table></figure></p>
-<p>3、Web页面登录验证<br><a href="http://harbor.moxiu.cn/harbor/sign-in" target="_blank" rel="noopener">http://harbor.moxiu.cn/harbor/sign-in</a><br>用户名/密码：admin/abc123!!</p>
-<p>因为不是有效机构颁发的证书，所有浏览器会提示不安全。如果企业需要使用，那需要买商用的证书更换即可。</p>
-
+        
+          <a class="article-more-a" href="/企业级私有仓库方案(harbor).html#more">more >></a>
+        
       
 
       
@@ -338,7 +251,7 @@ var _hmt = _hmt || [];
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/20180510-企业级私有仓库方案(harbor).html">展开全文 >></a>
+          <a class="article-more-a" href="/企业级私有仓库方案(harbor).html">展开全文 >></a>
         </p>
       
 
@@ -375,7 +288,7 @@ var _hmt = _hmt || [];
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/20180508-hello-world.html">Hello World</a>
+      <a class="article-title" href="/hello-world.html">Hello World</a>
     </h1>
   
 
@@ -384,7 +297,7 @@ var _hmt = _hmt || [];
 
 
         
-        <a href="/20180508-hello-world.html" class="archive-article-date">
+        <a href="/hello-world.html" class="archive-article-date">
   	<time datetime="2018-05-08T03:37:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-08</time>
 </a>
         
@@ -436,7 +349,7 @@ var _hmt = _hmt || [];
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/20180508-hello-world.html">展开全文 >></a>
+          <a class="article-more-a" href="/hello-world.html">展开全文 >></a>
         </p>
       
 
@@ -473,7 +386,7 @@ var _hmt = _hmt || [];
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/20180508-我的第一篇hexo博客.html">我的第一篇hexo博客</a>
+      <a class="article-title" href="/我的第一篇hexo博客.html">我的第一篇hexo博客</a>
     </h1>
   
 
@@ -482,7 +395,7 @@ var _hmt = _hmt || [];
 
 
         
-        <a href="/20180508-我的第一篇hexo博客.html" class="archive-article-date">
+        <a href="/我的第一篇hexo博客.html" class="archive-article-date">
   	<time datetime="2018-05-08T03:37:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-08</time>
 </a>
         
@@ -492,7 +405,7 @@ var _hmt = _hmt || [];
       
         <p><strong>应用软件：</strong><br>Jenkins、Zookeeper、JBoss、tcpcopy、squid、Bind、OpenVPN<br>hadoop生态（HDFS，Spark）、HBase、ELK、weblogic、ldap、 openstack+marathon+mesos+docker</p>
         
-          <a class="article-more-a" href="/20180508-我的第一篇hexo博客.html#more">more >></a>
+          <a class="article-more-a" href="/我的第一篇hexo博客.html#more">more >></a>
         
       
 
@@ -531,7 +444,7 @@ var _hmt = _hmt || [];
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/20180508-我的第一篇hexo博客.html">展开全文 >></a>
+          <a class="article-more-a" href="/我的第一篇hexo博客.html">展开全文 >></a>
         </p>
       
 
@@ -568,7 +481,7 @@ var _hmt = _hmt || [];
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/20180410-Hello-Hexo.html">Hello Hexo</a>
+      <a class="article-title" href="/Hello-Hexo.html">Hello Hexo</a>
     </h1>
   
 
@@ -577,7 +490,7 @@ var _hmt = _hmt || [];
 
 
         
-        <a href="/20180410-Hello-Hexo.html" class="archive-article-date">
+        <a href="/Hello-Hexo.html" class="archive-article-date">
   	<time datetime="2018-04-10T10:47:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-10</time>
 </a>
         
@@ -612,7 +525,7 @@ var _hmt = _hmt || [];
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/20180410-Hello-Hexo.html">展开全文 >></a>
+          <a class="article-more-a" href="/Hello-Hexo.html">展开全文 >></a>
         </p>
       
 
@@ -747,15 +660,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Hexo 教程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">docker</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">harbor</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Hexo 教程</a>
               </li>
              
               <li class="article-tag-list-item">

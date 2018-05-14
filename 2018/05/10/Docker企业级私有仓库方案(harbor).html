@@ -8,22 +8,22 @@
   <link rel="dns-prefetch" href="//nicksors.cc">
   <title>Docker企业级私有仓库方案(harbor) | Nicksors的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="前言： Docker Hub作为Docker默认官方公共镜像，如果自己想搭建私有尽享仓库，官网也提供registry镜像，使得搭建私有仓库非常简单。">
+  <meta name="description" content="前言： Docker Hub作为Docker默认官方公共镜像，如果自己想搭建私有镜像仓库，官网也提供registry镜像，使得搭建私有仓库非常简单。">
 <meta name="keywords" content="docker,harbor">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Docker企业级私有仓库方案(harbor)">
 <meta property="og:url" content="//nicksors.cc/2018/05/10/Docker企业级私有仓库方案(harbor).html">
 <meta property="og:site_name" content="Nicksors的博客">
-<meta property="og:description" content="前言： Docker Hub作为Docker默认官方公共镜像，如果自己想搭建私有尽享仓库，官网也提供registry镜像，使得搭建私有仓库非常简单。">
+<meta property="og:description" content="前言： Docker Hub作为Docker默认官方公共镜像，如果自己想搭建私有镜像仓库，官网也提供registry镜像，使得搭建私有仓库非常简单。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://p8hvsc1eo.bkt.clouddn.com/static/images/Harbor登录界面.png?imageView2/2/w/2150">
 <meta property="og:image" content="http://p8hvsc1eo.bkt.clouddn.com/static/images/Harbor项目-默认仓库.png?imageView2/2/w/2150">
 <meta property="og:image" content="http://p8hvsc1eo.bkt.clouddn.com/static/images/Harbor项目-上传镜像.png?imageView2/2/w/2150">
 <meta property="og:image" content="http://p8hvsc1eo.bkt.clouddn.com/static/images/Harbor-自签证书.png?imageView2/2/w/2150">
-<meta property="og:updated_time" content="2018-05-10T09:43:52.000Z">
+<meta property="og:updated_time" content="2018-05-14T04:34:12.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Docker企业级私有仓库方案(harbor)">
-<meta name="twitter:description" content="前言： Docker Hub作为Docker默认官方公共镜像，如果自己想搭建私有尽享仓库，官网也提供registry镜像，使得搭建私有仓库非常简单。">
+<meta name="twitter:description" content="前言： Docker Hub作为Docker默认官方公共镜像，如果自己想搭建私有镜像仓库，官网也提供registry镜像，使得搭建私有仓库非常简单。">
 <meta name="twitter:image" content="http://p8hvsc1eo.bkt.clouddn.com/static/images/Harbor登录界面.png?imageView2/2/w/2150">
   
     <link rel="alternative" href="/atom.xml" title="Nicksors的博客" type="application/atom+xml">
@@ -212,7 +212,7 @@ var _hmt = _hmt || [];
     <div class="article-entry" itemprop="articleBody">
       
         <blockquote>
-<p>前言：<br> Docker Hub作为Docker默认官方公共镜像，如果自己想搭建私有尽享仓库，官网也提供registry镜像，使得搭建私有仓库非常简单。</p>
+<p>前言：<br> Docker Hub作为Docker默认官方公共镜像，如果自己想搭建私有镜像仓库，官网也提供registry镜像，使得搭建私有仓库非常简单。</p>
 </blockquote>
 <a id="more"></a>
 <h2 id="一、搭建私有镜像仓库-registry"><a href="#一、搭建私有镜像仓库-registry" class="headerlink" title="一、搭建私有镜像仓库:registry"></a>一、搭建私有镜像仓库:registry</h2><p>1.1、<strong>下载registry镜像并启动</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ docker pull registry</span><br><span class="line">$ docker run -d -v /opt/registry:/var/lib/registry -p 5000:5000 --restart=always --name registry registry</span><br></pre></td></tr></table></figure></p>

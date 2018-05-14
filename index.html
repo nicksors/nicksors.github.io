@@ -180,6 +180,108 @@ var _hmt = _hmt || [];
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Docker图形界面管理Portainer" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/05/14/Docker图形界面管理Portainer.html">Docker图形界面管理Portainer</a>
+    </h1>
+  
+
+        
+        <a href="/2018/05/14/Docker图形界面管理Portainer.html" class="archive-article-date">
+  	<time datetime="2018-05-14T06:48:38.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-14</time>
+</a>
+        
+
+        
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>官网：<a href="https://portainer.io/" target="_blank" rel="noopener">https://portainer.io/</a></p>
+<h2 id="一、创建卷"><a href="#一、创建卷" class="headerlink" title="一、创建卷"></a>一、创建卷</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker volume create portainer_data</span><br></pre></td></tr></table></figure>
+<h2 id="二、创建portainer容器-默认可以自动创建卷"><a href="#二、创建portainer容器-默认可以自动创建卷" class="headerlink" title="二、创建portainer容器 (默认可以自动创建卷)"></a>二、创建portainer容器 (默认可以自动创建卷)</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># docker run -d \</span></span><br><span class="line">--name portainer \</span><br><span class="line">-p 9000:9000 \</span><br><span class="line">-v /var/run/docker.sock:/var/run/docker.sock \</span><br><span class="line">-v portainer_data:/data \</span><br><span class="line">portainer/portainer</span><br></pre></td></tr></table></figure>
+<h2 id="三、配置portainer"><a href="#三、配置portainer" class="headerlink" title="三、配置portainer"></a>三、配置portainer</h2><p><a href="http://172.16.194.130:9000/" target="_blank" rel="noopener">http://172.16.194.130:9000/</a></p>
+<p>用户名默认：admin<br>需要设置密码，输入：abc123!!<br><img title="portainer_登录界面" alt="portainer_登录界面" src="http://p8hvsc1eo.bkt.clouddn.com/static/images/portainer_登录界面.png?imageView2/2/w/3000"></p>
+<p>选择本地或远程连接，我这里选择本地，点击Connect<br><img title="portainer_配置界面" alt="portainer_配置界面" src="http://p8hvsc1eo.bkt.clouddn.com/static/images/portainer_配置界面.png?imageView2/2/w/3000"></p>
+<p>这是整个管理页面的全貌，自己研究玩吧~<br><img title="portainer_dashboard" alt="portainer_dashboard" src="http://p8hvsc1eo.bkt.clouddn.com/static/images/portainer_dashboard.png?imageView2/2/w/3000"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">docker</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">portainer</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/technical//" class="article-tag-list-link color5">技术文章</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/technical/docker//" class="article-tag-list-link color2">docker</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/05/14/Docker图形界面管理Portainer.html">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-搭建Hexo所用到的技术" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -471,6 +573,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">harbor</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">portainer</a>
               </li>
              
               <li class="article-tag-list-item">

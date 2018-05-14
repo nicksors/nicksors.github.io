@@ -6,19 +6,32 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="//nicksors.cc">
-  <title>Tag: harbor | Nicksors的博客</title>
+  <title>容器监控系统cAdvisor+InfluxDB+Grafana | Nicksors的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="知识管理，时间管理，自我管理，阅读，思维导图，Wiz">
-<meta name="keywords" content="Geek,Developer,Python,Django,Flask,Html,Css,Js,Jq,Bootstrap,Vue,Ops,ELKF,OpenStack,K8s,Docker,Ceph,FastDFS,GlusterFS,Gentoo">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Nicksors的博客">
-<meta property="og:url" content="//nicksors.cc/tags/harbor/index.html">
+  <meta name="description" content="一、启动三个应用容器123456789101112131415161718192021222324252627282930313233343536# 先创建一个专属于他们几个小基友的网络docker network create monitor#InfluxDBdocker run -d \--name=influxdb \--net monitor \-p 8083:8083 \-p 8086">
+<meta name="keywords" content="标签">
+<meta property="og:type" content="article">
+<meta property="og:title" content="容器监控系统cAdvisor+InfluxDB+Grafana">
+<meta property="og:url" content="//nicksors.cc/2018/05/14/容器监控系统cAdvisor-InfluxDB-Grafana.html">
 <meta property="og:site_name" content="Nicksors的博客">
-<meta property="og:description" content="知识管理，时间管理，自我管理，阅读，思维导图，Wiz">
+<meta property="og:description" content="一、启动三个应用容器123456789101112131415161718192021222324252627282930313233343536# 先创建一个专属于他们几个小基友的网络docker network create monitor#InfluxDBdocker run -d \--name=influxdb \--net monitor \-p 8083:8083 \-p 8086">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://p8hvsc1eo.bkt.clouddn.com/static/images/Grafana_login.png?imageView2/2/w/3000">
+<meta property="og:image" content="http://p8hvsc1eo.bkt.clouddn.com/static/images/InfluxDB_01.png?imageView2/2/w/3000">
+<meta property="og:image" content="http://p8hvsc1eo.bkt.clouddn.com/static/images/cAdvisor_01.png?imageView2/2/w/3000">
+<meta property="og:image" content="http://p8hvsc1eo.bkt.clouddn.com/static/images/cAdvisor_02.png?imageView2/2/w/3000">
+<meta property="og:image" content="http://p8hvsc1eo.bkt.clouddn.com/static/images/cAdvisor_03.png?imageView2/2/w/3000">
+<meta property="og:image" content="http://p8hvsc1eo.bkt.clouddn.com/static/images/InfluxDB_02.png?imageView2/2/w/3000">
+<meta property="og:image" content="http://p8hvsc1eo.bkt.clouddn.com/static/images/InfluxDB_03.png?imageView2/2/w/3000">
+<meta property="og:image" content="http://p8hvsc1eo.bkt.clouddn.com/static/images/grafana_配置01.png?imageView2/2/w/3000">
+<meta property="og:image" content="http://p8hvsc1eo.bkt.clouddn.com/static/images/grafana_配置02.png?imageView2/2/w/3000">
+<meta property="og:image" content="http://p8hvsc1eo.bkt.clouddn.com/static/images/grafana_配置03.png?imageView2/2/w/3000">
+<meta property="og:image" content="http://p8hvsc1eo.bkt.clouddn.com/static/images/grafana_dashboard.png?imageView2/2/w/3000">
+<meta property="og:updated_time" content="2018-05-14T07:21:10.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Nicksors的博客">
-<meta name="twitter:description" content="知识管理，时间管理，自我管理，阅读，思维导图，Wiz">
+<meta name="twitter:title" content="容器监控系统cAdvisor+InfluxDB+Grafana">
+<meta name="twitter:description" content="一、启动三个应用容器123456789101112131415161718192021222324252627282930313233343536# 先创建一个专属于他们几个小基友的网络docker network create monitor#InfluxDBdocker run -d \--name=influxdb \--net monitor \-p 8083:8083 \-p 8086">
+<meta name="twitter:image" content="http://p8hvsc1eo.bkt.clouddn.com/static/images/Grafana_login.png?imageView2/2/w/3000">
   
     <link rel="alternative" href="/atom.xml" title="Nicksors的博客" type="application/atom+xml">
   
@@ -178,79 +191,212 @@ var _hmt = _hmt || [];
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-容器监控系统cAdvisor-InfluxDB-Grafana" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/05/10/Docker企业级私有仓库方案(harbor).html" class="archive-article-date">
-  	<time datetime="2018-05-10T06:37:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-10</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/05/10/Docker企业级私有仓库方案(harbor).html">Docker企业级私有仓库方案(harbor)</a>
+    <h1 class="article-title" itemprop="name">
+      容器监控系统cAdvisor+InfluxDB+Grafana
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2018/05/14/容器监控系统cAdvisor-InfluxDB-Grafana.html" class="archive-article-date">
+  	<time datetime="2018-05-14T07:08:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-14</time>
+</a>
+        
+
+        
+          <span class="archive-article-date">
+            阅读量 <span id="busuanzi_value_page_pv"></span>
+          </span>
+        
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <a id="more"></a>
+<h2 id="一、启动三个应用容器"><a href="#一、启动三个应用容器" class="headerlink" title="一、启动三个应用容器"></a>一、启动三个应用容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 先创建一个专属于他们几个小基友的网络</span></span><br><span class="line">docker network create monitor</span><br><span class="line"></span><br><span class="line"><span class="comment">#InfluxDB</span></span><br><span class="line">docker run -d \</span><br><span class="line">--name=influxdb \</span><br><span class="line">--net monitor \</span><br><span class="line">-p 8083:8083 \</span><br><span class="line">-p 8086:8086 \</span><br><span class="line">tutum/influxdb</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># cAdvisor</span></span><br><span class="line">docker run -d \</span><br><span class="line">--name=cadvisor \</span><br><span class="line">--net monitor \</span><br><span class="line">-p 8081:8080 \</span><br><span class="line">--mount <span class="built_in">type</span>=<span class="built_in">bind</span>,src=/,dst=/rootfs,ro \</span><br><span class="line">--mount <span class="built_in">type</span>=<span class="built_in">bind</span>,src=/var/run,dst=/var/run \</span><br><span class="line">--mount <span class="built_in">type</span>=<span class="built_in">bind</span>,src=/sys,dst=/sys,ro \</span><br><span class="line">--mount <span class="built_in">type</span>=<span class="built_in">bind</span>,src=/var/lib/docker,dst=/var/lib/docker,ro \</span><br><span class="line">google/cadvisor \</span><br><span class="line">-storage_driver=influxdb \</span><br><span class="line">-storage_driver_db=cadvisor \</span><br><span class="line">-storage_driver_host=influxdb:8086</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#Grafana</span></span><br><span class="line">docker run -d \</span><br><span class="line">--name=grafana \</span><br><span class="line">--net monitor \</span><br><span class="line">-p 3000:3000 \</span><br><span class="line">grafana/grafana</span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果想让容器异常退出后重启，你需要加上下面的参数</span></span><br><span class="line">--restart=always</span><br></pre></td></tr></table></figure>
+<p>##二、各个应用访问界面<br>Grafana： <a href="http://172.16.194.130:3000/login" target="_blank" rel="noopener">http://172.16.194.130:3000/login</a>   用户名和密码默认：admin<br><img title="Grafana_login" alt="Grafana_login" src="http://p8hvsc1eo.bkt.clouddn.com/static/images/Grafana_login.png?imageView2/2/w/3000"></p>
+<p>InfluxDB： <a href="http://172.16.194.130:8083/" target="_blank" rel="noopener">http://172.16.194.130:8083/</a><br><img title="InfluxDB_01" alt="InfluxDB_01" src="http://p8hvsc1eo.bkt.clouddn.com/static/images/InfluxDB_01.png?imageView2/2/w/3000"></p>
+<p>cAdvisor：<a href="http://172.16.194.130:8081/" target="_blank" rel="noopener">http://172.16.194.130:8081/</a><br><img title="cAdvisor_01" alt="cAdvisor_01" src="http://p8hvsc1eo.bkt.clouddn.com/static/images/cAdvisor_01.png?imageView2/2/w/3000"><br><img title="cAdvisor_02" alt="cAdvisor_02" src="http://p8hvsc1eo.bkt.clouddn.com/static/images/cAdvisor_02.png?imageView2/2/w/3000"><br><img title="cAdvisor_03" alt="cAdvisor_03" src="http://p8hvsc1eo.bkt.clouddn.com/static/images/cAdvisor_03.png?imageView2/2/w/3000"></p>
+<h2 id="三、配置"><a href="#三、配置" class="headerlink" title="三、配置"></a>三、配置</h2><p><strong>3.1、在influxdb里创建数据库，用于cadvisor存储数据</strong><br>CREATE DATABASE “cadvisor”<br><img title="InfluxDB_02" alt="InfluxDB_02" src="http://p8hvsc1eo.bkt.clouddn.com/static/images/InfluxDB_02.png?imageView2/2/w/3000"></p>
+<p><strong>3.2、influxdb里创建一个用户，用于grafana连接influxdb数据库</strong><br>CREATE USER “grafana” WITH PASSWORD ‘grafana’<br><img title="InfluxDB_03" alt="InfluxDB_03" src="http://p8hvsc1eo.bkt.clouddn.com/static/images/InfluxDB_03.png?imageView2/2/w/3000"></p>
+<p><strong>3.3、grafana添加数据源</strong></p>
+<p>登录grafana –&gt;点击Add data source<br><img title="grafana_配置01" alt="grafana_配置01" src="http://p8hvsc1eo.bkt.clouddn.com/static/images/grafana_配置01.png?imageView2/2/w/3000"></p>
+<p>Type：选择influxdb<br>URL：influxdb （monitor 网络互连，所以直接使用name名称即可）<br>database: cadvisor 上面创建好的，账号密码也是填写之前创建好的<br><img title="grafana_配置02" alt="grafana_配置02" src="http://p8hvsc1eo.bkt.clouddn.com/static/images/grafana_配置02.png?imageView2/2/w/3000"></p>
+<p><strong>3.4、grafana创建Dashboard</strong><br><img title="grafana_配置03" alt="grafana_配置03" src="http://p8hvsc1eo.bkt.clouddn.com/static/images/grafana_配置03.png?imageView2/2/w/3000"></p>
+<p>添加过程及细节，自己研究，这里不做输出</p>
+<p>最终添加的结果，这里只是添加了两个示例</p>
+<img title="grafana_dashboard" alt="grafana_dashboard" src="http://p8hvsc1eo.bkt.clouddn.com/static/images/grafana_dashboard.png?imageView2/2/w/3000">
+<p>那么，“容器监控系统” 解决方案在这里就结束了，期待更多的玩法ing.</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">docker</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">harbor</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">标签</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/technical//" class="article-tag-list-link color5">技术文章</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/technical/docker//" class="article-tag-list-link color2">docker</a>
+        			<a href="/categories/归档//" class="article-tag-list-link color3">归档</a>
         		</li>
       		
 		</ul>
 	</div>
 
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://nicksors.cc/2018/05/14/容器监控系统cAdvisor-InfluxDB-Grafana.html" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
   
   
-    </div></section>
+    <a href="/2018/05/14/Docker图形界面管理Portainer.html" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Docker图形界面管理Portainer</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、启动三个应用容器"><span class="toc-number">1.</span> <span class="toc-text">一、启动三个应用容器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三、配置"><span class="toc-number">2.</span> <span class="toc-text">三、配置</span></a></li></ol>
+                    </div>
+                </span>
+            </div>
+        </div>
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
+  
+
+  
+
+  
+  <div id="gitment-ctn"></div> 
+
+<!--<link rel="stylesheet" href="//imsun.github.io/gitment/style/default.css">-->
+<!--<script src="//imsun.github.io/gitment/dist/gitment.browser.js"></script>-->
+
+<link rel="stylesheet" href="https://billts.site/extra_css/gitment.css">
+<script src="https://billts.site/js/gitment.js"></script>
+<script>
+var gitment = new Gitment({
+  id: 'Mon May 14 2018 15:08:37 GMT+0800',
+  owner: 'nicksors',
+  repo: 'nicksors.github.io',
+  oauth: {
+    client_id: '6ad20bd02d1f646e9f25',
+    client_secret: 'aa27706a1da971d05c7c7e7c3a5298a494931f15',
+  },
+})
+gitment.render('gitment-ctn')
+</script>
+
+  
 
 
           </div>
@@ -285,9 +431,9 @@ var _hmt = _hmt || [];
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,

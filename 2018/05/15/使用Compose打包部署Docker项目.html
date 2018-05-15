@@ -8,20 +8,20 @@
   <link rel="dns-prefetch" href="//nicksors.cc">
   <title>使用Compose打包部署Docker项目 | Nicksors的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="前言：Docker Compose 是一个编排多容器分布式部署的工具，提供命令集管理容器化应用的完整开发周期，包括服务构建，启动和停止。  一些学习资料:Docker Compose 配置文件详解:https://www.jianshu.com/p/2217cfed29d7Docker Compose 项目：https://yeasy.gitbooks.io/docker_practice/co">
+  <meta name="description" content="前言：Docker Compose 是一个编排多容器分布式部署的工具，提供命令集管理容器化应用的完整开发周期，包括服务构建，启动和停止。一些学习资料:Docker Compose 配置文件详解:https://www.jianshu.com/p/2217cfed29d7Docker Compose 项目：https://yeasy.gitbooks.io/docker_practice/cont">
 <meta name="keywords" content="Compose">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用Compose打包部署Docker项目">
 <meta property="og:url" content="//nicksors.cc/2018/05/15/使用Compose打包部署Docker项目.html">
 <meta property="og:site_name" content="Nicksors的博客">
-<meta property="og:description" content="前言：Docker Compose 是一个编排多容器分布式部署的工具，提供命令集管理容器化应用的完整开发周期，包括服务构建，启动和停止。  一些学习资料:Docker Compose 配置文件详解:https://www.jianshu.com/p/2217cfed29d7Docker Compose 项目：https://yeasy.gitbooks.io/docker_practice/co">
+<meta property="og:description" content="前言：Docker Compose 是一个编排多容器分布式部署的工具，提供命令集管理容器化应用的完整开发周期，包括服务构建，启动和停止。一些学习资料:Docker Compose 配置文件详解:https://www.jianshu.com/p/2217cfed29d7Docker Compose 项目：https://yeasy.gitbooks.io/docker_practice/cont">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://p8hvsc1eo.bkt.clouddn.com/static/images/compose_count.png?imageView2/2/w/3000">
 <meta property="og:image" content="http://p8hvsc1eo.bkt.clouddn.com/static/images/wordpress_home.png?imageView2/2/w/3000">
-<meta property="og:updated_time" content="2018-05-15T07:12:22.000Z">
+<meta property="og:updated_time" content="2018-05-15T07:15:39.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用Compose打包部署Docker项目">
-<meta name="twitter:description" content="前言：Docker Compose 是一个编排多容器分布式部署的工具，提供命令集管理容器化应用的完整开发周期，包括服务构建，启动和停止。  一些学习资料:Docker Compose 配置文件详解:https://www.jianshu.com/p/2217cfed29d7Docker Compose 项目：https://yeasy.gitbooks.io/docker_practice/co">
+<meta name="twitter:description" content="前言：Docker Compose 是一个编排多容器分布式部署的工具，提供命令集管理容器化应用的完整开发周期，包括服务构建，启动和停止。一些学习资料:Docker Compose 配置文件详解:https://www.jianshu.com/p/2217cfed29d7Docker Compose 项目：https://yeasy.gitbooks.io/docker_practice/cont">
 <meta name="twitter:image" content="http://p8hvsc1eo.bkt.clouddn.com/static/images/compose_count.png?imageView2/2/w/3000">
   
     <link rel="alternative" href="/atom.xml" title="Nicksors的博客" type="application/atom+xml">
@@ -210,12 +210,9 @@ var _hmt = _hmt || [];
     <div class="article-entry" itemprop="articleBody">
       
         <blockquote>
-<p>前言：<br>Docker Compose 是一个编排多容器分布式部署的工具，提供命令集管理容器化应用的完整开发周期，包括服务构建，启动和停止。</p>
-<ul>
-<li>一些学习资料:<br>Docker Compose 配置文件详解:<a href="https://www.jianshu.com/p/2217cfed29d7" target="_blank" rel="noopener">https://www.jianshu.com/p/2217cfed29d7</a><br>Docker Compose 项目：<a href="https://yeasy.gitbooks.io/docker_practice/content/compose/" target="_blank" rel="noopener">https://yeasy.gitbooks.io/docker_practice/content/compose/</a></li>
-</ul>
+<p>前言：<br>Docker Compose 是一个编排多容器分布式部署的工具，提供命令集管理容器化应用的完整开发周期，包括服务构建，启动和停止。<br>一些学习资料:<br>Docker Compose 配置文件详解:<a href="https://www.jianshu.com/p/2217cfed29d7" target="_blank" rel="noopener">https://www.jianshu.com/p/2217cfed29d7</a><br>Docker Compose 项目：<a href="https://yeasy.gitbooks.io/docker_practice/content/compose/" target="_blank" rel="noopener">https://yeasy.gitbooks.io/docker_practice/content/compose/</a></p>
 </blockquote>
-<!--moer-->
+<a id="more"></a>
 <h2 id="一、Compose简介"><a href="#一、Compose简介" class="headerlink" title="一、Compose简介"></a>一、Compose简介</h2><p>Compose 项目是 Docker 官方的开源项目，负责实现对 Docker 容器集群的快速编排。</p>
 <p>Compose 恰好满足了这样的需求。它允许用户通过一个单独的 docker-compose.yml 模板文件（YAML 格式）来定义一组相关联的应用容器为一个项目（project）。</p>
 <p>Compose 中有两个重要的概念：</p>
@@ -503,11 +500,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">portainer</a>
+                <a href="javascript:void(0)" class="js-tag color2">harbor</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">harbor</a>
+                <a href="javascript:void(0)" class="js-tag color5">portainer</a>
               </li>
              
               <li class="article-tag-list-item">

@@ -6,24 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="//nicksors.cc">
-  <title>Docker图形界面管理Portainer | Nicksors的博客</title>
+  <title>Nicksors的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="官网：https://portainer.io/">
-<meta name="keywords" content="portainer">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Docker图形界面管理Portainer">
-<meta property="og:url" content="//nicksors.cc/2018/05/14/Docker图形界面管理Portainer.html">
+  <meta name="description" content="知识管理，时间管理，自我管理，阅读，思维导图，Wiz">
+<meta name="keywords" content="Geek,Developer,Python,Django,Flask,Html,Css,Js,Jq,Bootstrap,Vue,Ops,ELKF,OpenStack,K8s,Docker,Ceph,FastDFS,GlusterFS,Gentoo">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Nicksors的博客">
+<meta property="og:url" content="//nicksors.cc/page/2/index.html">
 <meta property="og:site_name" content="Nicksors的博客">
-<meta property="og:description" content="官网：https://portainer.io/">
+<meta property="og:description" content="知识管理，时间管理，自我管理，阅读，思维导图，Wiz">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://p8hvsc1eo.bkt.clouddn.com/static/images/portainer_登录界面.png?imageView2/2/w/3000">
-<meta property="og:image" content="http://p8hvsc1eo.bkt.clouddn.com/static/images/portainer_配置界面.png?imageView2/2/w/3000">
-<meta property="og:image" content="http://p8hvsc1eo.bkt.clouddn.com/static/images/portainer_dashboard.png?imageView2/2/w/3000">
-<meta property="og:updated_time" content="2018-05-14T07:25:32.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Docker图形界面管理Portainer">
-<meta name="twitter:description" content="官网：https://portainer.io/">
-<meta name="twitter:image" content="http://p8hvsc1eo.bkt.clouddn.com/static/images/portainer_登录界面.png?imageView2/2/w/3000">
+<meta name="twitter:title" content="Nicksors的博客">
+<meta name="twitter:description" content="知识管理，时间管理，自我管理，阅读，思维导图，Wiz">
   
     <link rel="alternative" href="/atom.xml" title="Nicksors的博客" type="application/atom+xml">
   
@@ -183,41 +178,37 @@ var _hmt = _hmt || [];
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-Docker图形界面管理Portainer" class="article article-type-post " itemscope itemprop="blogPost">
+            
+  
+    <article id="post-Docker企业级私有仓库方案(harbor)" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
-    <h1 class="article-title" itemprop="name">
-      Docker图形界面管理Portainer
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/05/10/Docker企业级私有仓库方案(harbor).html">Docker企业级私有仓库方案(harbor)</a>
     </h1>
   
 
         
-        <a href="/2018/05/14/Docker图形界面管理Portainer.html" class="archive-article-date">
-  	<time datetime="2018-05-14T06:48:38.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-14</time>
+        <a href="/2018/05/10/Docker企业级私有仓库方案(harbor).html" class="archive-article-date">
+  	<time datetime="2018-05-10T06:37:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-10</time>
 </a>
         
 
-        
-          <span class="archive-article-date">
-            阅读量 <span id="busuanzi_value_page_pv"></span>
-          </span>
         
 
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>官网：<a href="https://portainer.io/" target="_blank" rel="noopener">https://portainer.io/</a><br><a id="more"></a></p>
-<h2 id="一、创建卷"><a href="#一、创建卷" class="headerlink" title="一、创建卷"></a>一、创建卷</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker volume create portainer_data</span><br></pre></td></tr></table></figure>
-<h2 id="二、创建portainer容器-默认可以自动创建卷"><a href="#二、创建portainer容器-默认可以自动创建卷" class="headerlink" title="二、创建portainer容器 (默认可以自动创建卷)"></a>二、创建portainer容器 (默认可以自动创建卷)</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># docker run -d \</span></span><br><span class="line">--name portainer \</span><br><span class="line">-p 9000:9000 \</span><br><span class="line">-v /var/run/docker.sock:/var/run/docker.sock \</span><br><span class="line">-v portainer_data:/data \</span><br><span class="line">portainer/portainer</span><br></pre></td></tr></table></figure>
-<h2 id="三、配置portainer"><a href="#三、配置portainer" class="headerlink" title="三、配置portainer"></a>三、配置portainer</h2><p><a href="http://172.16.194.130:9000/" target="_blank" rel="noopener">http://172.16.194.130:9000/</a></p>
-<p>用户名默认：admin<br>需要设置密码，输入：abc123!!<br><img title="portainer_登录界面" alt="portainer_登录界面" src="http://p8hvsc1eo.bkt.clouddn.com/static/images/portainer_登录界面.png?imageView2/2/w/3000"></p>
-<p>选择本地或远程连接，我这里选择本地，点击Connect<br><img title="portainer_配置界面" alt="portainer_配置界面" src="http://p8hvsc1eo.bkt.clouddn.com/static/images/portainer_配置界面.png?imageView2/2/w/3000"></p>
-<p>这是整个管理页面的全貌，自己研究玩吧~<br><img title="portainer_dashboard" alt="portainer_dashboard" src="http://p8hvsc1eo.bkt.clouddn.com/static/images/portainer_dashboard.png?imageView2/2/w/3000"></p>
-
+        <blockquote>
+<p>前言：<br> Docker Hub作为Docker默认官方公共镜像，如果自己想搭建私有镜像仓库，官网也提供registry镜像，使得搭建私有仓库非常简单。</p>
+</blockquote>
+        
+          <a class="article-more-a" href="/2018/05/10/Docker企业级私有仓库方案(harbor).html#more">more >></a>
+        
       
 
       
@@ -230,7 +221,7 @@ var _hmt = _hmt || [];
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">portainer</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">harbor</a>
         		</li>
       		
 		</ul>
@@ -254,84 +245,16 @@ var _hmt = _hmt || [];
 
 
       
-
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/05/10/Docker企业级私有仓库方案(harbor).html">展开全文 >></a>
+        </p>
       
-        
-<div class="share-btn share-icons tooltip-left">
-  <div class="tooltip tooltip-east">
-    <span class="tooltip-item">
-      <a href="javascript:;" class="share-sns share-outer">
-        <i class="icon icon-share"></i>
-      </a>
-    </span>
-    <span class="tooltip-content">
-      <div class="share-wrap">
-        <div class="share-icons">
-          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
-            <i class="icon icon-weibo"></i>
-          </a>
-          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
-            <i class="icon icon-weixin"></i>
-          </a>
-          <a class="qq share-sns" href="javascript:;" data-type="qq">
-            <i class="icon icon-qq"></i>
-          </a>
-          <a class="douban share-sns" href="javascript:;" data-type="douban">
-            <i class="icon icon-douban"></i>
-          </a>
-          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
-            <i class="icon icon-qzone"></i>
-          </a>
-          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
-            <i class="icon icon-facebook"></i>
-          </a>
-          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
-            <i class="icon icon-twitter"></i>
-          </a>
-          <a class="google share-sns" href="javascript:;" data-type="google">
-            <i class="icon icon-google"></i>
-          </a>
-        </div>
-      </div>
-    </span>
-  </div>
-</div>
 
-<div class="page-modal wx-share js-wx-box">
-    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
-    <p>扫一扫，分享到微信</p>
-    <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://nicksors.cc/2018/05/14/Docker图形界面管理Portainer.html" alt="微信分享二维码">
-    </div>
-</div>
-
-<div class="mask js-mask"></div>
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
-
-  
-<nav id="article-nav">
-  
-    <a href="/2018/05/14/使用cAdvisor+InfluxDB+Grafana构建容器监控系统.html" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          使用cAdvisor+InfluxDB+Grafana构建容器监控系统
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2018/05/10/搭建Hexo所用到的技术.html" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">搭建Hexo博客所用到的技术</div>
-      <i class="icon-circle-right"></i>
-    </a>
-  
-</nav>
-
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -346,23 +269,18 @@ var _hmt = _hmt || [];
         </div>
         
         
-        <div class="toc-container tooltip-left">
-            <i class="icon-font icon-category"></i>
-            <div class="tooltip tooltip-east">
-                <span class="tooltip-item">
-                </span>
-                <span class="tooltip-content">
-                    <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、创建卷"><span class="toc-number">1.</span> <span class="toc-text">一、创建卷</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、创建portainer容器-默认可以自动创建卷"><span class="toc-number">2.</span> <span class="toc-text">二、创建portainer容器 (默认可以自动创建卷)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三、配置portainer"><span class="toc-number">3.</span> <span class="toc-text">三、配置portainer</span></a></li></ol>
-                    </div>
-                </span>
-            </div>
-        </div>
-        
     </div>
 </aside>
 
 
+
+
+  
+  
+    <nav id="page-nav">
+      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    </nav>
+  
 
 
           </div>
@@ -396,8 +314,8 @@ var _hmt = _hmt || [];
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: false,
-		isPost: true,
+		isHome: true,
+		isPost: false,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,

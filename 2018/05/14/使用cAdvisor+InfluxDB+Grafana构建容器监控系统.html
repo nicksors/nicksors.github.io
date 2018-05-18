@@ -228,43 +228,7 @@ var _hmt = _hmt || [];
 </blockquote>
 <p>三个都直接下载镜像启动容器即可。</p>
 <a id="more"></a>
-<h2 id="一、启动三个应用容器"><a href="#一、启动三个应用容器" class="headerlink" title="一、启动三个应用容器"></a>一、启动三个应用容器</h2><pre><code class="bash"># 先创建一个专属于他们几个小基友的网络
-docker network create monitor
-
-#InfluxDB
-docker run -d \
---name=influxdb \
---net monitor \
--p 8083:8083 \
--p 8086:8086 \
-tutum/influxdb
-
-
-# cAdvisor
-docker run -d \
---name=cadvisor \
---net monitor \
--p 8081:8080 \
---mount type=bind,src=/,dst=/rootfs,ro \
---mount type=bind,src=/var/run,dst=/var/run \
---mount type=bind,src=/sys,dst=/sys,ro \
---mount type=bind,src=/var/lib/docker,dst=/var/lib/docker,ro \
-google/cadvisor \
--storage_driver=influxdb \
--storage_driver_db=cadvisor \
--storage_driver_host=influxdb:8086
-
-
-#Grafana
-docker run -d \
---name=grafana \
---net monitor \
--p 3000:3000 \
-grafana/grafana
-
-# 如果想让容器异常退出后重启，你需要加上下面的参数
---restart=always
-</code></pre>
+<h2 id="一、启动三个应用容器"><a href="#一、启动三个应用容器" class="headerlink" title="一、启动三个应用容器"></a>一、启动三个应用容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 先创建一个专属于他们几个小基友的网络</span></span><br><span class="line">docker network create monitor</span><br><span class="line"></span><br><span class="line"><span class="comment">#InfluxDB</span></span><br><span class="line">docker run -d \</span><br><span class="line">--name=influxdb \</span><br><span class="line">--net monitor \</span><br><span class="line">-p 8083:8083 \</span><br><span class="line">-p 8086:8086 \</span><br><span class="line">tutum/influxdb</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># cAdvisor</span></span><br><span class="line">docker run -d \</span><br><span class="line">--name=cadvisor \</span><br><span class="line">--net monitor \</span><br><span class="line">-p 8081:8080 \</span><br><span class="line">--mount <span class="built_in">type</span>=<span class="built_in">bind</span>,src=/,dst=/rootfs,ro \</span><br><span class="line">--mount <span class="built_in">type</span>=<span class="built_in">bind</span>,src=/var/run,dst=/var/run \</span><br><span class="line">--mount <span class="built_in">type</span>=<span class="built_in">bind</span>,src=/sys,dst=/sys,ro \</span><br><span class="line">--mount <span class="built_in">type</span>=<span class="built_in">bind</span>,src=/var/lib/docker,dst=/var/lib/docker,ro \</span><br><span class="line">google/cadvisor \</span><br><span class="line">-storage_driver=influxdb \</span><br><span class="line">-storage_driver_db=cadvisor \</span><br><span class="line">-storage_driver_host=influxdb:8086</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#Grafana</span></span><br><span class="line">docker run -d \</span><br><span class="line">--name=grafana \</span><br><span class="line">--net monitor \</span><br><span class="line">-p 3000:3000 \</span><br><span class="line">grafana/grafana</span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果想让容器异常退出后重启，你需要加上下面的参数</span></span><br><span class="line">--restart=always</span><br></pre></td></tr></table></figure>
 <h2 id="二、各个应用访问界面"><a href="#二、各个应用访问界面" class="headerlink" title="二、各个应用访问界面"></a>二、各个应用访问界面</h2><p>Grafana： <a href="http://172.16.194.130:3000/login" target="_blank" rel="noopener">http://172.16.194.130:3000/login</a>   用户名和密码默认：admin<br><img title="Grafana_login" alt="Grafana_login" src="http://p8hvsc1eo.bkt.clouddn.com/static/images/Grafana_login.png?imageView2/2/w/3000"></p>
 <p>InfluxDB： <a href="http://172.16.194.130:8083/" target="_blank" rel="noopener">http://172.16.194.130:8083/</a><br><img title="InfluxDB_01" alt="InfluxDB_01" src="http://p8hvsc1eo.bkt.clouddn.com/static/images/InfluxDB_01.png?imageView2/2/w/3000"></p>
 <p>cAdvisor：<a href="http://172.16.194.130:8081/" target="_blank" rel="noopener">http://172.16.194.130:8081/</a><br><img title="cAdvisor_01" alt="cAdvisor_01" src="http://p8hvsc1eo.bkt.clouddn.com/static/images/cAdvisor_01.png?imageView2/2/w/3000"><br><img title="cAdvisor_02" alt="cAdvisor_02" src="http://p8hvsc1eo.bkt.clouddn.com/static/images/cAdvisor_02.png?imageView2/2/w/3000"><br><img title="cAdvisor_03" alt="cAdvisor_03" src="http://p8hvsc1eo.bkt.clouddn.com/static/images/cAdvisor_03.png?imageView2/2/w/3000"></p>
@@ -534,11 +498,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">harbor</a>
+                <a href="javascript:void(0)" class="js-tag color5">portainer</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">portainer</a>
+                <a href="javascript:void(0)" class="js-tag color2">harbor</a>
               </li>
              
               <li class="article-tag-list-item">

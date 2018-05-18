@@ -211,15 +211,8 @@ var _hmt = _hmt || [];
     <div class="article-entry" itemprop="articleBody">
       
         <p>官网：<a href="https://portainer.io/" target="_blank" rel="noopener">https://portainer.io/</a><br><a id="more"></a></p>
-<h2 id="一、创建卷"><a href="#一、创建卷" class="headerlink" title="一、创建卷"></a>一、创建卷</h2><pre><code class="bash">docker volume create portainer_data
-</code></pre>
-<h2 id="二、创建portainer容器-默认可以自动创建卷"><a href="#二、创建portainer容器-默认可以自动创建卷" class="headerlink" title="二、创建portainer容器 (默认可以自动创建卷)"></a>二、创建portainer容器 (默认可以自动创建卷)</h2><pre><code class="bash"># docker run -d \
---name portainer \
--p 9000:9000 \
--v /var/run/docker.sock:/var/run/docker.sock \
--v portainer_data:/data \
-portainer/portainer
-</code></pre>
+<h2 id="一、创建卷"><a href="#一、创建卷" class="headerlink" title="一、创建卷"></a>一、创建卷</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker volume create portainer_data</span><br></pre></td></tr></table></figure>
+<h2 id="二、创建portainer容器-默认可以自动创建卷"><a href="#二、创建portainer容器-默认可以自动创建卷" class="headerlink" title="二、创建portainer容器 (默认可以自动创建卷)"></a>二、创建portainer容器 (默认可以自动创建卷)</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># docker run -d \</span></span><br><span class="line">--name portainer \</span><br><span class="line">-p 9000:9000 \</span><br><span class="line">-v /var/run/docker.sock:/var/run/docker.sock \</span><br><span class="line">-v portainer_data:/data \</span><br><span class="line">portainer/portainer</span><br></pre></td></tr></table></figure>
 <h2 id="三、配置portainer"><a href="#三、配置portainer" class="headerlink" title="三、配置portainer"></a>三、配置portainer</h2><p><a href="http://172.16.194.130:9000/" target="_blank" rel="noopener">http://172.16.194.130:9000/</a></p>
 <p>用户名默认：admin<br>需要设置密码，输入：abc123!!<br><img title="portainer_登录界面" alt="portainer_登录界面" src="http://p8hvsc1eo.bkt.clouddn.com/static/images/portainer_登录界面.png?imageView2/2/w/3000"></p>
 <p>选择本地或远程连接，我这里选择本地，点击Connect<br><img title="portainer_配置界面" alt="portainer_配置界面" src="http://p8hvsc1eo.bkt.clouddn.com/static/images/portainer_配置界面.png?imageView2/2/w/3000"></p>
@@ -472,11 +465,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">harbor</a>
+                <a href="javascript:void(0)" class="js-tag color5">portainer</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">portainer</a>
+                <a href="javascript:void(0)" class="js-tag color2">harbor</a>
               </li>
              
               <li class="article-tag-list-item">

@@ -65,7 +65,14 @@ var _hmt = _hmt || [];
 </script>
 
 
+<link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">
+<script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
 </head>
+
+<script>
+// highlight
+hljs.initHighlightingOnLoad();
+</script>
 
 <body>
   <div id="container" q-class="show:isCtnShow">
@@ -291,21 +298,227 @@ var _hmt = _hmt || [];
 </table>
 <h3 id="1、CI-CD"><a href="#1、CI-CD" class="headerlink" title="1、CI/CD"></a>1、CI/CD</h3><img title="CICD" alt="CICD" src="http://p8hvsc1eo.bkt.clouddn.com/static/images/CICD.png?imageView2/2/w/3000">
 <h3 id="2、发布流程设计"><a href="#2、发布流程设计" class="headerlink" title="2、发布流程设计"></a>2、发布流程设计</h3><img title="发布流程设计图" alt="发布流程设计图" src="http://p8hvsc1eo.bkt.clouddn.com/static/images/发布流程设计图.png?imageView2/2/w/3000">
-<h3 id="3、部署Git服务器"><a href="#3、部署Git服务器" class="headerlink" title="3、部署Git服务器"></a>3、部署Git服务器</h3><h4 id="1-安装git"><a href="#1-安装git" class="headerlink" title="1.安装git"></a>1.安装git</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-node02 ~]<span class="comment"># yum install git -y</span></span><br></pre></td></tr></table></figure>
-<h4 id="2-创建用户"><a href="#2-创建用户" class="headerlink" title="2.创建用户"></a>2.创建用户</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">useradd git</span><br><span class="line">passwd git</span><br></pre></td></tr></table></figure>
-<h4 id="3-创建仓库"><a href="#3-创建仓库" class="headerlink" title="3.创建仓库"></a>3.创建仓库</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">su - git</span><br><span class="line">mkdir app.git</span><br><span class="line">git --bare init app.git</span><br></pre></td></tr></table></figure>
-<h4 id="4-克隆仓库"><a href="#4-克隆仓库" class="headerlink" title="4.克隆仓库"></a>4.克隆仓库</h4><p>在另外的节点上操作<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]<span class="comment">#  yum install git -y</span></span><br><span class="line"></span><br><span class="line">[root@k8s-master ~]<span class="comment"># git clone git@172.16.194.130:/home/git/app.git</span></span><br><span class="line">正克隆到 <span class="string">'app'</span>...</span><br><span class="line">The authenticity of host <span class="string">'172.16.194.130 (172.16.194.130)'</span> can<span class="string">'t be established.</span></span><br><span class="line"><span class="string">ECDSA key fingerprint is 60:eb:ee:4d:7d:12:10:5d:49:0c:7a:f3:81:5d:1f:2b.</span></span><br><span class="line"><span class="string">Are you sure you want to continue connecting (yes/no)? yss</span></span><br><span class="line"><span class="string">Warning: Permanently added '</span>172.16.194.130<span class="string">' (ECDSA) to the list of known hosts.</span></span><br><span class="line"><span class="string">git@172.16.194.130'</span>s password:</span><br><span class="line">warning: 您似乎克隆了一个空版本库。</span><br><span class="line">[root@k8s-master ~]<span class="comment"># cd app/</span></span><br><span class="line">[root@k8s-master app]<span class="comment"># ls -lh</span></span><br><span class="line">总用量 0</span><br><span class="line">[root@k8s-master app]<span class="comment">#</span></span><br></pre></td></tr></table></figure></p>
-<h4 id="5-生成秘钥对，配置免密clone"><a href="#5-生成秘钥对，配置免密clone" class="headerlink" title="5.生成秘钥对，配置免密clone"></a>5.生成秘钥对，配置免密clone</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]<span class="comment"># ssh-keygen</span></span><br><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file <span class="keyword">in</span> <span class="built_in">which</span> to save the key (/root/.ssh/id_rsa):</span><br><span class="line">Enter passphrase (empty <span class="keyword">for</span> no passphrase):</span><br><span class="line">Enter same passphrase again:</span><br><span class="line">Your identification has been saved <span class="keyword">in</span> /root/.ssh/id_rsa.</span><br><span class="line">Your public key has been saved <span class="keyword">in</span> /root/.ssh/id_rsa.pub.</span><br><span class="line">The key fingerprint is:</span><br><span class="line">5a:f9:66:7a:53:5a:2c:f9:a4:bc:98:5e:29:7d:2d:6f root@k8s-master</span><br><span class="line">The key<span class="string">'s randomart image is:</span></span><br><span class="line"><span class="string">+--[ RSA 2048]----+</span></span><br><span class="line"><span class="string">|                |</span></span><br><span class="line"><span class="string">|                |</span></span><br><span class="line"><span class="string">|                |</span></span><br><span class="line"><span class="string">|        .      |</span></span><br><span class="line"><span class="string">|        S  o    |</span></span><br><span class="line"><span class="string">|      o oo.=.  |</span></span><br><span class="line"><span class="string">|      . ..BOo .  |</span></span><br><span class="line"><span class="string">|        O*..oE  |</span></span><br><span class="line"><span class="string">|      .=..o ..  |</span></span><br><span class="line"><span class="string">+-----------------+</span></span><br><span class="line"><span class="string">[root@k8s-master ~]# ls -lh /root/.ssh/</span></span><br><span class="line"><span class="string">总用量 12K</span></span><br><span class="line"><span class="string">-rw------- 1 root root 1.7K 3月  29 18:46 id_rsa</span></span><br><span class="line"><span class="string">-rw-r--r-- 1 root root  397 3月  29 18:46 id_rsa.pub</span></span><br><span class="line"><span class="string">-rw-r--r-- 1 root root  176 3月  29 17:57 known_hosts</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">[root@k8s-master ~]# ssh-copy-id git@172.16.194.130 </span></span><br><span class="line"><span class="string">/usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed</span></span><br><span class="line"><span class="string">/usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys</span></span><br><span class="line"><span class="string">git@172.16.194.130'</span>s password:</span><br><span class="line"></span><br><span class="line">Number of key(s) added: 1</span><br><span class="line"></span><br><span class="line">Now try logging into the machine, with:  <span class="string">"ssh 'git@172.16.194.130'"</span></span><br><span class="line">and check to make sure that only the key(s) you wanted were added.</span><br><span class="line"></span><br><span class="line">[root@k8s-master ~]<span class="comment">#</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看master节点cp过来的秘钥</span></span><br><span class="line">[root@k8s-node02 ~]<span class="comment"># su - git</span></span><br><span class="line">上一次登录：四 3月 29 17:52:09 CST 2018pts/1 上</span><br><span class="line">[git@k8s-node02 ~]$ ls -lh .ssh/authorized_keys</span><br><span class="line">-rw-------. 1 git git 397 Mar 29 18:49 .ssh/authorized_keys</span><br><span class="line">[git@k8s-node02 ~]$ cat !$</span><br><span class="line">cat .ssh/authorized_keys</span><br><span class="line">ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDHp/RZmgz5R5Nw1pQXyPjVynDu0kkn/3i05WR7CRNS31ylGkkI5k7AOmw8sEEDn3mAQg/z/xEI+LIoCRu68MESJEkqXX2oHzsEa6/JB6X3OW4VIwAkwD8W1FUppK1dueAmnZmx4k7ZiIgE43QWxcOuDthQ2mO3ybWjk13tR0viz4mrcuK/ulkW5AOlLP1I2A4NkTVmkXktk/CuTrULph/VXz10kbX+u0OPNxDLGzUdC94Issm4IPZRwYBhgYviCNEIxZW2pBrpnL3rXmVHHE4eeNGNJ0DnhaX32p4wYAKqujU1VK7udED2Af9rYgE9yArRfTc53di6OXTrlJ7polG/ root@k8s-master</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除app项目后，重新clone就不需要密码了</span></span><br><span class="line">[root@k8s-master ~]<span class="comment"># git clone git@172.16.194.130:/home/git/app.git</span></span><br><span class="line">正克隆到 <span class="string">'app'</span>...</span><br><span class="line">warning: 您似乎克隆了一个空版本库。</span><br></pre></td></tr></table></figure>
-<h4 id="6-克隆博客系统，提交到自建git仓库"><a href="#6-克隆博客系统，提交到自建git仓库" class="headerlink" title="6.克隆博客系统，提交到自建git仓库"></a>6.克隆博客系统，提交到自建git仓库</h4><p>1.git clone tale<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]<span class="comment"># git clone https://github.com/otale/tale.git</span></span><br></pre></td></tr></table></figure></p>
-<p>2.提交到我们自己的git仓库里<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]<span class="comment"># \cp -a tale/* app/</span></span><br><span class="line">[root@k8s-master ~]<span class="comment"># ls -lh app/</span></span><br><span class="line">总用量 24K</span><br><span class="line">drwxr-xr-x 2 root root  21 3月  29 18:45 bin</span><br><span class="line">-rw-r--r-- 1 root root 1.1K 3月  29 18:45 LICENSE</span><br><span class="line">-rw-r--r-- 1 root root 1.5K 3月  29 18:45 package.xml</span><br><span class="line">-rw-r--r-- 1 root root 7.1K 3月  29 18:45 pom.xmlf</span><br><span class="line">-rw-r--r-- 1 root root 2.8K 3月  29 18:45 README.md</span><br><span class="line">-rw-r--r-- 1 root root 2.7K 3月  29 18:45 README_ZH.md</span><br><span class="line">drwxr-xr-x 3 root root  17 3月  29 18:45 src</span><br><span class="line"></span><br><span class="line">[root@k8s-master app]<span class="comment"># git add .</span></span><br><span class="line">[root@k8s-master app]<span class="comment"># git status</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[root@k8s-master app]<span class="comment"># git config --global user.email "you@example.com"  # 这两步需要执行下，内容随便，不然commit时会提示</span></span><br><span class="line">[root@k8s-master app]<span class="comment"># git config --global user.name "Your Name"</span></span><br><span class="line">[root@k8s-master app]<span class="comment"># git commit -m 'all'</span></span><br><span class="line"></span><br><span class="line">[root@k8s-master app]<span class="comment"># git push</span></span><br><span class="line">warning: push.default 未设置，它的默认值将会在 Git 2.0 由 <span class="string">'matching'</span></span><br><span class="line">修改为 <span class="string">'simple'</span>。若要不再显示本信息并在其默认值改变后维持当前使用习惯，</span><br><span class="line">进行如下设置：</span><br><span class="line"></span><br><span class="line">  git config --global push.default matching</span><br><span class="line"></span><br><span class="line">若要不再显示本信息并从现在开始采用新的使用习惯，设置：</span><br><span class="line"></span><br><span class="line">  git config --global push.default simple</span><br><span class="line"></span><br><span class="line">参见 <span class="string">'git help config'</span> 并查找 <span class="string">'push.default'</span> 以获取更多信息。</span><br><span class="line">（<span class="string">'simple'</span> 模式由 Git 1.7.11 版本引入。如果您有时要使用老版本的 Git，</span><br><span class="line">为保持兼容，请用 <span class="string">'current'</span> 代替 <span class="string">'simple'</span> 模式）</span><br><span class="line"></span><br><span class="line">No refs <span class="keyword">in</span> common and none specified; doing nothing.</span><br><span class="line">Perhaps you should specify a branch such as <span class="string">'master'</span>.</span><br><span class="line">fatal: The remote end hung up unexpectedly</span><br><span class="line">error: 无法推送一些引用到 <span class="string">'git@172.16.194.130:/home/git/app.git'</span></span><br><span class="line">[root@k8s-master app]<span class="comment"># git push origin master  # 需要提交到origin master 主干仓库</span></span><br><span class="line">Counting objects: 297, <span class="keyword">done</span>.</span><br><span class="line">Delta compression using up to 4 threads.</span><br><span class="line">Compressing objects: 100% (255/255), <span class="keyword">done</span>.</span><br><span class="line">Writing objects: 100% (297/297), 6.35 MiB | 0 bytes/s, <span class="keyword">done</span>.</span><br><span class="line">Total 297 (delta 22), reused 0 (delta 0)</span><br><span class="line">To git@172.16.194.130:/home/git/app.git</span><br><span class="line">* [new branch]      master -&gt; master</span><br></pre></td></tr></table></figure></p>
-<h3 id="4、Docker私有镜像仓库搭建"><a href="#4、Docker私有镜像仓库搭建" class="headerlink" title="4、Docker私有镜像仓库搭建"></a>4、Docker私有镜像仓库搭建</h3><h4 id="1-创建私有仓库容器"><a href="#1-创建私有仓库容器" class="headerlink" title="1.创建私有仓库容器"></a>1.创建私有仓库容器</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在node2上运行仓库容器</span></span><br><span class="line">[root@k8s-node02 ~]<span class="comment"># docker run -d -v /opt/registry:/var/lib/registry -p 5000:5000 --restart=always --name registry registry</span></span><br><span class="line">b45a684be68fbecebe6c433e38eb98ca805fe3b45e44594057cbb3c5bf99bb13</span><br></pre></td></tr></table></figure>
-<h4 id="2-构建tale开源博客基础镜像"><a href="#2-构建tale开源博客基础镜像" class="headerlink" title="2.构建tale开源博客基础镜像"></a>2.构建tale开源博客基础镜像</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">mkdir tale &amp;&amp; <span class="built_in">cd</span> tale</span><br><span class="line">cat &gt; Dockerfile&lt;&lt;EOF</span><br><span class="line">FROM centos:7</span><br><span class="line">RUN yum install epel-release -y</span><br><span class="line">RUN yum install nginx supervisor -y &amp;&amp; yum clean all</span><br><span class="line">RUN sed -i <span class="string">'47a proxy_pass http://127.0.0.1:9000;'</span> /etc/nginx/nginx.conf</span><br><span class="line">COPY supervisord.conf /etc/supervisord.conf</span><br><span class="line">ENV PATH /usr/<span class="built_in">local</span>/jdk/bin/:<span class="variable">$PATH</span></span><br><span class="line">WORKDIR /tale</span><br><span class="line">CMD [<span class="string">"/usr/bin/supervisord"</span>]</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">cat &gt;supervisord.conf&lt;&lt;EOF</span><br><span class="line">[supervisord]</span><br><span class="line">nodaemon=<span class="literal">true</span></span><br><span class="line"></span><br><span class="line">[program:tale]</span><br><span class="line"><span class="built_in">command</span>=/usr/<span class="built_in">local</span>/jdk/bin/java -jar /tale/tale-least.jar</span><br><span class="line">autostart=<span class="literal">true</span></span><br><span class="line">autorestart=<span class="literal">true</span></span><br><span class="line"></span><br><span class="line">[program:nginx]</span><br><span class="line"><span class="built_in">command</span>=/usr/sbin/nginx -g <span class="string">"daemon off;"</span></span><br><span class="line">autostart=<span class="literal">true</span></span><br><span class="line">autorestart=<span class="literal">true</span></span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">[root@k8s-node02 tale]<span class="comment"># docker build -t tale:v1 .</span></span><br><span class="line">[root@k8s-node02 tale]<span class="comment"># docker images|grep tale</span></span><br><span class="line">tale                          v1                  cd96b2fd2d6b        41 seconds ago      372MB</span><br></pre></td></tr></table></figure>
-<h4 id="3-提交tale基础镜像到私有仓库"><a href="#3-提交tale基础镜像到私有仓库" class="headerlink" title="3.提交tale基础镜像到私有仓库"></a>3.提交tale基础镜像到私有仓库</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 这一步尤为重要，因为后面Jenkins会来拉取这个镜像进行应用部署</span></span><br><span class="line">docker tag tale:v1  172.16.194.130:5000/tale:v1</span><br><span class="line">docker push 172.16.194.130:5000/tale:v1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看提交的镜像版本信息</span></span><br><span class="line">curl http://172.16.194.130:5000/v2/tale/tags/list</span><br></pre></td></tr></table></figure>
-<h3 id="5、测试服务器安装Docker"><a href="#5、测试服务器安装Docker" class="headerlink" title="5、测试服务器安装Docker"></a>5、测试服务器安装Docker</h3><h4 id="1-安装docker"><a href="#1-安装docker" class="headerlink" title="1.安装docker"></a>1.安装docker</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">yum install -y yum-utils \</span><br><span class="line">  device-mapper-persistent-data \</span><br><span class="line">  lvm2</span><br><span class="line"></span><br><span class="line">yum-config-manager \</span><br><span class="line">    --add-repo \</span><br><span class="line">    https://download.docker.com/linux/centos/docker-ce.repo</span><br><span class="line"></span><br><span class="line">yum install docker-ce</span><br></pre></td></tr></table></figure>
-<h4 id="2-配置官方国内镜像源、添加私有仓库可信任"><a href="#2-配置官方国内镜像源、添加私有仓库可信任" class="headerlink" title="2.配置官方国内镜像源、添加私有仓库可信任"></a>2.配置官方国内镜像源、添加私有仓库可信任</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-node02 ~]<span class="comment"># cat  &gt;/etc/docker/daemon.json &lt;&lt;EOF</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"registry-mirrors"</span>: [ <span class="string">"https://registry.docker-cn.com"</span>]</span><br><span class="line">  <span class="string">"insecure-registries"</span>:[<span class="string">"172.16.194.130:5000"</span>]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">[root@k8s-node01 ~]<span class="comment"># systemctl restart docker</span></span><br></pre></td></tr></table></figure>
-<h3 id="6、Jenkins安装"><a href="#6、Jenkins安装" class="headerlink" title="6、Jenkins安装"></a>6、Jenkins安装</h3><h4 id="1-编译镜像"><a href="#1-编译镜像" class="headerlink" title="1.编译镜像"></a>1.编译镜像</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-node01 ~]<span class="comment"># mkdir jenkins</span></span><br><span class="line">[root@k8s-node01~]<span class="comment"># cd jenkins/</span></span><br><span class="line"></span><br><span class="line">[root@k8s-node01 jenkins]<span class="comment"># cat Dockerfile</span></span><br><span class="line">FROM jenkins</span><br><span class="line">USER root</span><br><span class="line">RUN <span class="built_in">echo</span> <span class="string">''</span> &gt; /etc/apt/sources.list.d/jessie-backports.list &amp;&amp; \wget http://mirrors.163.com/.<span class="built_in">help</span>/sources.list.jessie -O /etc/apt/sources.list</span><br><span class="line">RUN apt-get update &amp;&amp; apt-get install -y git</span><br><span class="line"></span><br><span class="line">[root@k8s-node01 jenkins]<span class="comment"># docker build -t jenkins:v1 .</span></span><br><span class="line">Sending build context to Docker daemon  2.048kB</span><br><span class="line">Step 1/4 : FROM jenkins</span><br><span class="line">···中间略···</span><br><span class="line">---&gt; 8711202c6fda</span><br><span class="line">Successfully built 8711202c6fda</span><br><span class="line">Successfully tagged jenkins:v1</span><br></pre></td></tr></table></figure>
-<h4 id="2-准备应用包"><a href="#2-准备应用包" class="headerlink" title="2.准备应用包"></a>2.准备应用包</h4><p>在k8s-node01的宿主机上准备以下两个包，事先放在下面位置：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/usr/<span class="built_in">local</span>/apache-maven-3.5.0</span><br><span class="line">/usr/<span class="built_in">local</span>/jdk1.8.0_45</span><br></pre></td></tr></table></figure></p>
-<h4 id="3-运行Jenkins容器"><a href="#3-运行Jenkins容器" class="headerlink" title="3. 运行Jenkins容器"></a>3. 运行Jenkins容器</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">--name jenkins \</span><br><span class="line">-p 8080:8080 \</span><br><span class="line">-v /var/jenkins_home/:/var/jenkins_home \</span><br><span class="line">-v /usr/<span class="built_in">local</span>/apache-maven-3.5.0:/usr/<span class="built_in">local</span>/maven \</span><br><span class="line">-v /usr/<span class="built_in">local</span>/jdk1.8.0_45:/usr/<span class="built_in">local</span>/jdk \</span><br><span class="line">-v ~/.ssh:/root/.ssh \</span><br><span class="line">jenkins:v1</span><br></pre></td></tr></table></figure>
+<h3 id="3、部署Git服务器"><a href="#3、部署Git服务器" class="headerlink" title="3、部署Git服务器"></a>3、部署Git服务器</h3><h4 id="1-安装git"><a href="#1-安装git" class="headerlink" title="1.安装git"></a>1.安装git</h4><pre><code class="bash">[root@k8s-node02 ~]# yum install git -y
+</code></pre>
+<h4 id="2-创建用户"><a href="#2-创建用户" class="headerlink" title="2.创建用户"></a>2.创建用户</h4><pre><code class="bash">useradd git
+passwd git
+</code></pre>
+<h4 id="3-创建仓库"><a href="#3-创建仓库" class="headerlink" title="3.创建仓库"></a>3.创建仓库</h4><pre><code class="bash">su - git
+mkdir app.git
+git --bare init app.git
+</code></pre>
+<h4 id="4-克隆仓库"><a href="#4-克隆仓库" class="headerlink" title="4.克隆仓库"></a>4.克隆仓库</h4><p>在另外的节点上操作</p>
+<pre><code class="bash">[root@k8s-master ~]#  yum install git -y
+
+[root@k8s-master ~]# git clone git@172.16.194.130:/home/git/app.git
+正克隆到 &#39;app&#39;...
+The authenticity of host &#39;172.16.194.130 (172.16.194.130)&#39; can&#39;t be established.
+ECDSA key fingerprint is 60:eb:ee:4d:7d:12:10:5d:49:0c:7a:f3:81:5d:1f:2b.
+Are you sure you want to continue connecting (yes/no)? yss
+Warning: Permanently added &#39;172.16.194.130&#39; (ECDSA) to the list of known hosts.
+git@172.16.194.130&#39;s password:
+warning: 您似乎克隆了一个空版本库。
+[root@k8s-master ~]# cd app/
+[root@k8s-master app]# ls -lh
+总用量 0
+[root@k8s-master app]#
+</code></pre>
+<h4 id="5-生成秘钥对，配置免密clone"><a href="#5-生成秘钥对，配置免密clone" class="headerlink" title="5.生成秘钥对，配置免密clone"></a>5.生成秘钥对，配置免密clone</h4><pre><code class="bash">[root@k8s-master ~]# ssh-keygen
+Generating public/private rsa key pair.
+Enter file in which to save the key (/root/.ssh/id_rsa):
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /root/.ssh/id_rsa.
+Your public key has been saved in /root/.ssh/id_rsa.pub.
+The key fingerprint is:
+5a:f9:66:7a:53:5a:2c:f9:a4:bc:98:5e:29:7d:2d:6f root@k8s-master
+The key&#39;s randomart image is:
++--[ RSA 2048]----+
+|                |
+|                |
+|                |
+|        .      |
+|        S  o    |
+|      o oo.=.  |
+|      . ..BOo .  |
+|        O*..oE  |
+|      .=..o ..  |
++-----------------+
+[root@k8s-master ~]# ls -lh /root/.ssh/
+总用量 12K
+-rw------- 1 root root 1.7K 3月  29 18:46 id_rsa
+-rw-r--r-- 1 root root  397 3月  29 18:46 id_rsa.pub
+-rw-r--r-- 1 root root  176 3月  29 17:57 known_hosts
+
+[root@k8s-master ~]# ssh-copy-id git@172.16.194.130 
+/usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+/usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+git@172.16.194.130&#39;s password:
+
+Number of key(s) added: 1
+
+Now try logging into the machine, with:  &quot;ssh &#39;git@172.16.194.130&#39;&quot;
+and check to make sure that only the key(s) you wanted were added.
+
+[root@k8s-master ~]#
+
+# 查看master节点cp过来的秘钥
+[root@k8s-node02 ~]# su - git
+上一次登录：四 3月 29 17:52:09 CST 2018pts/1 上
+[git@k8s-node02 ~]$ ls -lh .ssh/authorized_keys
+-rw-------. 1 git git 397 Mar 29 18:49 .ssh/authorized_keys
+[git@k8s-node02 ~]$ cat !$
+cat .ssh/authorized_keys
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDHp/RZmgz5R5Nw1pQXyPjVynDu0kkn/3i05WR7CRNS31ylGkkI5k7AOmw8sEEDn3mAQg/z/xEI+LIoCRu68MESJEkqXX2oHzsEa6/JB6X3OW4VIwAkwD8W1FUppK1dueAmnZmx4k7ZiIgE43QWxcOuDthQ2mO3ybWjk13tR0viz4mrcuK/ulkW5AOlLP1I2A4NkTVmkXktk/CuTrULph/VXz10kbX+u0OPNxDLGzUdC94Issm4IPZRwYBhgYviCNEIxZW2pBrpnL3rXmVHHE4eeNGNJ0DnhaX32p4wYAKqujU1VK7udED2Af9rYgE9yArRfTc53di6OXTrlJ7polG/ root@k8s-master
+
+# 删除app项目后，重新clone就不需要密码了
+[root@k8s-master ~]# git clone git@172.16.194.130:/home/git/app.git
+正克隆到 &#39;app&#39;...
+warning: 您似乎克隆了一个空版本库。
+</code></pre>
+<h4 id="6-克隆博客系统，提交到自建git仓库"><a href="#6-克隆博客系统，提交到自建git仓库" class="headerlink" title="6.克隆博客系统，提交到自建git仓库"></a>6.克隆博客系统，提交到自建git仓库</h4><p>1.git clone tale </p>
+<pre><code class="bash">[root@k8s-master ~]# git clone https://github.com/otale/tale.git
+</code></pre>
+<p>2.提交到我们自己的git仓库里</p>
+<pre><code class="bash">[root@k8s-master ~]# \cp -a tale/* app/
+[root@k8s-master ~]# ls -lh app/
+总用量 24K
+drwxr-xr-x 2 root root  21 3月  29 18:45 bin
+-rw-r--r-- 1 root root 1.1K 3月  29 18:45 LICENSE
+-rw-r--r-- 1 root root 1.5K 3月  29 18:45 package.xml
+-rw-r--r-- 1 root root 7.1K 3月  29 18:45 pom.xmlf
+-rw-r--r-- 1 root root 2.8K 3月  29 18:45 README.md
+-rw-r--r-- 1 root root 2.7K 3月  29 18:45 README_ZH.md
+drwxr-xr-x 3 root root  17 3月  29 18:45 src
+
+[root@k8s-master app]# git add .
+[root@k8s-master app]# git status
+
+
+[root@k8s-master app]# git config --global user.email &quot;you@example.com&quot;  # 这两步需要执行下，内容随便，不然commit时会提示
+[root@k8s-master app]# git config --global user.name &quot;Your Name&quot;
+[root@k8s-master app]# git commit -m &#39;all&#39;
+
+[root@k8s-master app]# git push
+warning: push.default 未设置，它的默认值将会在 Git 2.0 由 &#39;matching&#39;
+修改为 &#39;simple&#39;。若要不再显示本信息并在其默认值改变后维持当前使用习惯，
+进行如下设置：
+
+  git config --global push.default matching
+
+若要不再显示本信息并从现在开始采用新的使用习惯，设置：
+
+  git config --global push.default simple
+
+参见 &#39;git help config&#39; 并查找 &#39;push.default&#39; 以获取更多信息。
+（&#39;simple&#39; 模式由 Git 1.7.11 版本引入。如果您有时要使用老版本的 Git，
+为保持兼容，请用 &#39;current&#39; 代替 &#39;simple&#39; 模式）
+
+No refs in common and none specified; doing nothing.
+Perhaps you should specify a branch such as &#39;master&#39;.
+fatal: The remote end hung up unexpectedly
+error: 无法推送一些引用到 &#39;git@172.16.194.130:/home/git/app.git&#39;
+[root@k8s-master app]# git push origin master  # 需要提交到origin master 主干仓库
+Counting objects: 297, done.
+Delta compression using up to 4 threads.
+Compressing objects: 100% (255/255), done.
+Writing objects: 100% (297/297), 6.35 MiB | 0 bytes/s, done.
+Total 297 (delta 22), reused 0 (delta 0)
+To git@172.16.194.130:/home/git/app.git
+* [new branch]      master -&gt; master
+</code></pre>
+<h3 id="4、Docker私有镜像仓库搭建"><a href="#4、Docker私有镜像仓库搭建" class="headerlink" title="4、Docker私有镜像仓库搭建"></a>4、Docker私有镜像仓库搭建</h3><h4 id="1-创建私有仓库容器"><a href="#1-创建私有仓库容器" class="headerlink" title="1.创建私有仓库容器"></a>1.创建私有仓库容器</h4><pre><code class="bash"># 在node2上运行仓库容器
+[root@k8s-node02 ~]# docker run -d -v /opt/registry:/var/lib/registry -p 5000:5000 --restart=always --name registry registry
+b45a684be68fbecebe6c433e38eb98ca805fe3b45e44594057cbb3c5bf99bb13
+</code></pre>
+<h4 id="2-构建tale开源博客基础镜像"><a href="#2-构建tale开源博客基础镜像" class="headerlink" title="2.构建tale开源博客基础镜像"></a>2.构建tale开源博客基础镜像</h4><pre><code class="bash">mkdir tale &amp;&amp; cd tale
+cat &gt; Dockerfile&lt;&lt;EOF
+FROM centos:7
+RUN yum install epel-release -y
+RUN yum install nginx supervisor -y &amp;&amp; yum clean all
+RUN sed -i &#39;47a proxy_pass http://127.0.0.1:9000;&#39; /etc/nginx/nginx.conf
+COPY supervisord.conf /etc/supervisord.conf
+ENV PATH /usr/local/jdk/bin/:$PATH
+WORKDIR /tale
+CMD [&quot;/usr/bin/supervisord&quot;]
+EOF
+
+
+cat &gt;supervisord.conf&lt;&lt;EOF
+[supervisord]
+nodaemon=true
+
+[program:tale]
+command=/usr/local/jdk/bin/java -jar /tale/tale-least.jar
+autostart=true
+autorestart=true
+
+[program:nginx]
+command=/usr/sbin/nginx -g &quot;daemon off;&quot;
+autostart=true
+autorestart=true
+EOF
+
+[root@k8s-node02 tale]# docker build -t tale:v1 .
+[root@k8s-node02 tale]# docker images|grep tale
+tale                          v1                  cd96b2fd2d6b        41 seconds ago      372MB
+</code></pre>
+<h4 id="3-提交tale基础镜像到私有仓库"><a href="#3-提交tale基础镜像到私有仓库" class="headerlink" title="3.提交tale基础镜像到私有仓库"></a>3.提交tale基础镜像到私有仓库</h4><pre><code class="bash"># 这一步尤为重要，因为后面Jenkins会来拉取这个镜像进行应用部署
+docker tag tale:v1  172.16.194.130:5000/tale:v1
+docker push 172.16.194.130:5000/tale:v1
+
+# 查看提交的镜像版本信息
+curl http://172.16.194.130:5000/v2/tale/tags/list
+</code></pre>
+<h3 id="5、测试服务器安装Docker"><a href="#5、测试服务器安装Docker" class="headerlink" title="5、测试服务器安装Docker"></a>5、测试服务器安装Docker</h3><h4 id="1-安装docker"><a href="#1-安装docker" class="headerlink" title="1.安装docker"></a>1.安装docker</h4><pre><code class="bash">yum install -y yum-utils \
+  device-mapper-persistent-data \
+  lvm2
+
+yum-config-manager \
+    --add-repo \
+    https://download.docker.com/linux/centos/docker-ce.repo
+
+yum install docker-ce
+</code></pre>
+<h4 id="2-配置官方国内镜像源、添加私有仓库可信任"><a href="#2-配置官方国内镜像源、添加私有仓库可信任" class="headerlink" title="2.配置官方国内镜像源、添加私有仓库可信任"></a>2.配置官方国内镜像源、添加私有仓库可信任</h4><pre><code class="bash">[root@k8s-node02 ~]# cat  &gt;/etc/docker/daemon.json &lt;&lt;EOF
+{
+  &quot;registry-mirrors&quot;: [ &quot;https://registry.docker-cn.com&quot;]
+  &quot;insecure-registries&quot;:[&quot;172.16.194.130:5000&quot;]
+}
+EOF
+
+[root@k8s-node01 ~]# systemctl restart docker
+</code></pre>
+<h3 id="6、Jenkins安装"><a href="#6、Jenkins安装" class="headerlink" title="6、Jenkins安装"></a>6、Jenkins安装</h3><h4 id="1-编译镜像"><a href="#1-编译镜像" class="headerlink" title="1.编译镜像"></a>1.编译镜像</h4><pre><code class="bash">[root@k8s-node01 ~]# mkdir jenkins
+[root@k8s-node01~]# cd jenkins/
+
+[root@k8s-node01 jenkins]# cat Dockerfile
+FROM jenkins
+USER root
+RUN echo &#39;&#39; &gt; /etc/apt/sources.list.d/jessie-backports.list &amp;&amp; \wget http://mirrors.163.com/.help/sources.list.jessie -O /etc/apt/sources.list
+RUN apt-get update &amp;&amp; apt-get install -y git
+
+[root@k8s-node01 jenkins]# docker build -t jenkins:v1 .
+Sending build context to Docker daemon  2.048kB
+Step 1/4 : FROM jenkins
+···中间略···
+---&gt; 8711202c6fda
+Successfully built 8711202c6fda
+Successfully tagged jenkins:v1
+</code></pre>
+<h4 id="2-准备应用包"><a href="#2-准备应用包" class="headerlink" title="2.准备应用包"></a>2.准备应用包</h4><p>在k8s-node01的宿主机上准备以下两个包，事先放在下面位置：</p>
+<pre><code class="bash">/usr/local/apache-maven-3.5.0
+/usr/local/jdk1.8.0_45
+</code></pre>
+<h4 id="3-运行Jenkins容器"><a href="#3-运行Jenkins容器" class="headerlink" title="3. 运行Jenkins容器"></a>3. 运行Jenkins容器</h4><pre><code class="bash">docker run -d \
+--name jenkins \
+-p 8080:8080 \
+-v /var/jenkins_home/:/var/jenkins_home \
+-v /usr/local/apache-maven-3.5.0:/usr/local/maven \
+-v /usr/local/jdk1.8.0_45:/usr/local/jdk \
+-v ~/.ssh:/root/.ssh \
+jenkins:v1
+</code></pre>
 <p>访问：<a href="http://172.16.194.129:8080/" target="_blank" rel="noopener">http://172.16.194.129:8080/</a></p>
 <img title="Jenkins_cfg" alt="Jenkins_cfg" src="http://p8hvsc1eo.bkt.clouddn.com/static/images/Jenkins_start.png?imageView2/2/w/3000">
 <h3 id="7、Jenkins基本配置"><a href="#7、Jenkins基本配置" class="headerlink" title="7、Jenkins基本配置"></a>7、Jenkins基本配置</h3><img title="Jenkins_start" alt="Jenkins_start" src="http://p8hvsc1eo.bkt.clouddn.com/static/images/Jenkins_start.png?imageView2/2/w/3000">
@@ -318,13 +531,45 @@ var _hmt = _hmt || [];
 <h3 id="8、Jenkins创建项目"><a href="#8、Jenkins创建项目" class="headerlink" title="8、Jenkins创建项目"></a>8、Jenkins创建项目</h3><h4 id="1-创建项目步骤"><a href="#1-创建项目步骤" class="headerlink" title="1.创建项目步骤"></a>1.创建项目步骤</h4><p>新建–&gt;构建一个maven项目–&gt;点击ok<br><img title="Jenkins_create_maven-project" alt="Jenkins_create_maven-project" src="http://p8hvsc1eo.bkt.clouddn.com/static/images/Jenkins_create_maven-project.png?imageView2/2/w/3000"></p>
 <h4 id="2-项目的一些配置"><a href="#2-项目的一些配置" class="headerlink" title="2.项目的一些配置"></a>2.项目的一些配置</h4><h5 id="2-1-配置git"><a href="#2-1-配置git" class="headerlink" title="2.1 配置git"></a>2.1 配置git</h5><p>这里的git仓库配置，就是我们之前拉取的那个地址，分支指定master<br><img title="Jenkins_cfg_git-adderss" alt="Jenkins_cfg_git-adderss" src="http://p8hvsc1eo.bkt.clouddn.com/static/images/Jenkins_cfg_git-adderss.png?imageView2/2/w/3000"></p>
 <h5 id="2-2-构建触发器"><a href="#2-2-构建触发器" class="headerlink" title="2.2 构建触发器"></a>2.2 构建触发器</h5><p>构建触发器，定制每小时出发一次，发现代码仓库有变化，就进行构建动作<br><img title="Jenkins_cfg_action" alt="Jenkins_cfg_action" src="http://p8hvsc1eo.bkt.clouddn.com/static/images/Jenkins_cfg_action.png?imageView2/2/w/3000"></p>
-<h5 id="2-3构建之前执行的动作"><a href="#2-3构建之前执行的动作" class="headerlink" title="2.3构建之前执行的动作"></a>2.3构建之前执行的动作</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 如果多次构建的话，需要清空上次构建的环境</span></span><br><span class="line">docker rm -f tale-test &amp;&amp; \</span><br><span class="line">docker image rm 172.16.194.130:5000/tale:base</span><br></pre></td></tr></table></figure>
+<h5 id="2-3构建之前执行的动作"><a href="#2-3构建之前执行的动作" class="headerlink" title="2.3构建之前执行的动作"></a>2.3构建之前执行的动作</h5><pre><code class="bash"># 如果多次构建的话，需要清空上次构建的环境
+docker rm -f tale-test &amp;&amp; \
+docker image rm 172.16.194.130:5000/tale:base
+</code></pre>
 <img title="Jenkins_cfg_per-steps" alt="Jenkins_cfg_per-steps" src="http://p8hvsc1eo.bkt.clouddn.com/static/images/Jenkins_cfg_per-steps.png?imageView2/2/w/3000">
-<h5 id="2-3构建之后执行的动作"><a href="#2-3构建之后执行的动作" class="headerlink" title="2.3构建之后执行的动作"></a>2.3构建之后执行的动作</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 构建好后，将环境使用docker运行到一个容器里，接下来就是测试啦！</span></span><br><span class="line">docker run -itd \</span><br><span class="line">--name tale-test \</span><br><span class="line">-p 88:80 \</span><br><span class="line">-v /usr/<span class="built_in">local</span>/jdk1.8.0_45:/usr/<span class="built_in">local</span>/jdk \</span><br><span class="line">-v /data/tale:/tale \    <span class="comment"># 这个构建后的Command一定是能在服务器上手动执行成功的，在这里才能执行成功。</span></span><br><span class="line">172.16.194.130:5000/tale:base</span><br></pre></td></tr></table></figure>
+<h5 id="2-3构建之后执行的动作"><a href="#2-3构建之后执行的动作" class="headerlink" title="2.3构建之后执行的动作"></a>2.3构建之后执行的动作</h5><pre><code class="bash"># 构建好后，将环境使用docker运行到一个容器里，接下来就是测试啦！
+docker run -itd \
+--name tale-test \
+-p 88:80 \
+-v /usr/local/jdk1.8.0_45:/usr/local/jdk \
+-v /data/tale:/tale \    # 这个构建后的Command一定是能在服务器上手动执行成功的，在这里才能执行成功。
+172.16.194.130:5000/tale:base
+</code></pre>
 <img title="Jenkins_cfg_post-steps" alt="Jenkins_cfg_post-steps" src="http://p8hvsc1eo.bkt.clouddn.com/static/images/Jenkins_cfg_post-steps.png?imageView2/2/w/3000">
 <p>配置好后，应用–&gt;保存.</p>
-<h3 id="9、测试"><a href="#9、测试" class="headerlink" title="9、测试"></a>9、测试</h3><h4 id="1、这是构建的结果"><a href="#1、这是构建的结果" class="headerlink" title="1、这是构建的结果"></a>1、这是构建的结果</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 第一次构建会比较慢，因为需要下载maven相关插件</span></span><br><span class="line"></span><br><span class="line">Started by user nicksors</span><br><span class="line">[EnvInject] - Loading node environment variables.</span><br><span class="line">Building <span class="keyword">in</span> workspace /var/jenkins_home/workspace/tale-test</span><br><span class="line"> &gt; git rev-parse --is-inside-work-tree <span class="comment"># timeout=10</span></span><br><span class="line"></span><br><span class="line">···中间略···</span><br><span class="line"></span><br><span class="line">Digest: sha256:f82f2e175479d6d232efab45f81a4495cc4ad0a48135fd839dc27fdee8c13c77</span><br><span class="line">Status: Downloaded newer image <span class="keyword">for</span> 172.16.194.130:5000/tale:base</span><br><span class="line">ccc80d6215724027d9111069b5c8afa48c0b9df5694386656d611e19796b34b3</span><br><span class="line">SSH: EXEC: completed after 21,474 ms</span><br><span class="line">SSH: Disconnecting configuration [172.16.194.129] ...</span><br><span class="line">SSH: Transferred 183 file(s)</span><br><span class="line">Finished: SUCCESS</span><br></pre></td></tr></table></figure>
-<h4 id="2、查看构建的docker运行情况"><a href="#2、查看构建的docker运行情况" class="headerlink" title="2、查看构建的docker运行情况"></a>2、查看构建的docker运行情况</h4><p>运行良好，访问：<a href="http://172.16.194.129:88/" target="_blank" rel="noopener">http://172.16.194.129:88/</a><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-node01 ~]<span class="comment"># docker ps</span></span><br><span class="line">CONTAINER ID        IMAGE                          COMMAND                  CREATED            STATUS              PORTS                              NAMES</span><br><span class="line">ccc80d621572        172.16.194.130:5000/tale:base  <span class="string">"/usr/bin/supervisord"</span>  11 minutes ago      Up 11 minutes      0.0.0.0:88-&gt;80/tcp                  tale-test</span><br><span class="line">aa80a34ec7b6        jenkins:v1                      <span class="string">"/bin/tini -- /usr/l…"</span>  20 hours ago        Up 4 hours          0.0.0.0:8080-&gt;8080/tcp, 50000/tcp  jenkins</span><br><span class="line">[root@k8s-node01 ~]<span class="comment">#</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="9、测试"><a href="#9、测试" class="headerlink" title="9、测试"></a>9、测试</h3><h4 id="1、这是构建的结果"><a href="#1、这是构建的结果" class="headerlink" title="1、这是构建的结果"></a>1、这是构建的结果</h4><pre><code class="bash"># 第一次构建会比较慢，因为需要下载maven相关插件
+
+Started by user nicksors
+[EnvInject] - Loading node environment variables.
+Building in workspace /var/jenkins_home/workspace/tale-test
+ &gt; git rev-parse --is-inside-work-tree # timeout=10
+
+···中间略···
+
+Digest: sha256:f82f2e175479d6d232efab45f81a4495cc4ad0a48135fd839dc27fdee8c13c77
+Status: Downloaded newer image for 172.16.194.130:5000/tale:base
+ccc80d6215724027d9111069b5c8afa48c0b9df5694386656d611e19796b34b3
+SSH: EXEC: completed after 21,474 ms
+SSH: Disconnecting configuration [172.16.194.129] ...
+SSH: Transferred 183 file(s)
+Finished: SUCCESS
+</code></pre>
+<h4 id="2、查看构建的docker运行情况"><a href="#2、查看构建的docker运行情况" class="headerlink" title="2、查看构建的docker运行情况"></a>2、查看构建的docker运行情况</h4><p>运行良好，访问：<a href="http://172.16.194.129:88/" target="_blank" rel="noopener">http://172.16.194.129:88/</a></p>
+<pre><code class="bash">[root@k8s-node01 ~]# docker ps
+CONTAINER ID        IMAGE                          COMMAND                  CREATED            STATUS              PORTS                              NAMES
+ccc80d621572        172.16.194.130:5000/tale:base  &quot;/usr/bin/supervisord&quot;  11 minutes ago      Up 11 minutes      0.0.0.0:88-&gt;80/tcp                  tale-test
+aa80a34ec7b6        jenkins:v1                      &quot;/bin/tini -- /usr/l…&quot;  20 hours ago        Up 4 hours          0.0.0.0:8080-&gt;8080/tcp, 50000/tcp  jenkins
+[root@k8s-node01 ~]#
+</code></pre>
 <h4 id="3、tale博客运行起来啦！"><a href="#3、tale博客运行起来啦！" class="headerlink" title="3、tale博客运行起来啦！"></a>3、tale博客运行起来啦！</h4><p>第一次访问会让你设置一下站点信息<br>设置账号密码：nicksors/abc123!!</p>
 <p>博客页面：<br><img title="tale_blog_index" alt="tale_blog_index" src="http://p8hvsc1eo.bkt.clouddn.com/static/images/tale_blog_index.png?imageView2/2/w/3000"></p>
 <p>后台：<br><img title="tale_blog_admin" alt="tale_blog_admin" src="http://p8hvsc1eo.bkt.clouddn.com/static/images/tale_blog_admin.png?imageView2/2/w/3000"></p>
@@ -612,23 +857,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">portainer</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">harbor</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">portainer</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Compose</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">CI/CD</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">持续集成</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -641,6 +878,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Grafana</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">CI/CD</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">持续集成</a>
               </li>
              
               <li class="article-tag-list-item">

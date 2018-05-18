@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Nicksors的博客">
 <meta property="og:description" content="前言：这里记录着我搭建博客时用到了以下技术，基本上是参考各位博友写的博文。为了防止哪天我的博客崩掉后，我还能想起来如何重建它。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-05-11T05:47:50.000Z">
+<meta property="og:updated_time" content="2018-05-18T04:23:14.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="搭建Hexo博客所用到的技术">
 <meta name="twitter:description" content="前言：这里记录着我搭建博客时用到了以下技术，基本上是参考各位博友写的博文。为了防止哪天我的博客崩掉后，我还能想起来如何重建它。">
@@ -47,7 +47,14 @@ var _hmt = _hmt || [];
 </script>
 
 
+<link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">
+<script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
 </head>
+
+<script>
+// highlight
+hljs.initHighlightingOnLoad();
+</script>
 
 <body>
   <div id="container" q-class="show:isCtnShow">
@@ -229,6 +236,7 @@ var _hmt = _hmt || [];
 </li>
 <li><p><a href="https://www.jianshu.com/p/6991e8e7f01b" target="_blank" rel="noopener">Hexo七牛插件安装与使用</a></p>
 </li>
+<li><a href="http://yuchen-lea.github.io/2016-01-21-use-qiniu-store-file-for-hexo/" target="_blank" rel="noopener">使用七牛为Hexo存储图片等资源</a></li>
 </ul>
 <p>以上，非常感谢各位博友的辛苦总结.</p>
 
@@ -482,23 +490,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">portainer</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">harbor</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">portainer</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Compose</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">CI/CD</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">持续集成</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -511,6 +511,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Grafana</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">CI/CD</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">持续集成</a>
               </li>
              
               <li class="article-tag-list-item">

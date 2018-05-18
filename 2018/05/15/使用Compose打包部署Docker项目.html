@@ -50,7 +50,14 @@ var _hmt = _hmt || [];
 </script>
 
 
+<link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">
+<script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
 </head>
+
+<script>
+// highlight
+hljs.initHighlightingOnLoad();
+</script>
 
 <body>
   <div id="container" q-class="show:isCtnShow">
@@ -222,11 +229,21 @@ var _hmt = _hmt || [];
 </ul>
 <p>Compose 项目由 Python 编写，实现上调用了 Docker 服务提供的 API 来对容器进行管理。因此，只要所操作的平台支持 Docker API，就可以在其上利用 Compose 来进行编排管理。</p>
 <h2 id="二、安装与卸载"><a href="#二、安装与卸载" class="headerlink" title="二、安装与卸载"></a>二、安装与卸载</h2><p>官网：<a href="https://docs.docker.com/compose/install/" target="_blank" rel="noopener">https://docs.docker.com/compose/install/</a></p>
-<p><strong>二进制包：</strong><br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> sudo curl -L https://github.com/docker/compose/releases/download/1.20.1/docker-compose-`uname -s`-`uname -m` -o /usr/<span class="built_in">local</span>/bin/docker-compose</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> sudo chmod +x /usr/<span class="built_in">local</span>/bin/docker-compose</span></span><br><span class="line">[root@k8s-node02 ~]# docker-compose --version</span><br><span class="line">docker-compose version 1.20.1, build 5d8c71b</span><br></pre></td></tr></table></figure></p>
-<p><strong>PIP安装：</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install -U docker-compose</span><br></pre></td></tr></table></figure></p>
+<p><strong>二进制包：</strong></p>
+<pre><code># sudo curl -L https://github.com/docker/compose/releases/download/1.20.1/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+# sudo chmod +x /usr/local/bin/docker-compose
+[root@k8s-node02 ~]# docker-compose --version
+docker-compose version 1.20.1, build 5d8c71b
+</code></pre><p><strong>PIP安装：</strong></p>
+<pre><code class="bash">pip install -U docker-compose
+</code></pre>
 <p><strong>卸载：</strong></p>
-<p>如果是二进制包方式安装的，删除二进制文件即可。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo rm /usr/<span class="built_in">local</span>/bin/docker-compose</span><br></pre></td></tr></table></figure></p>
-<p>如果是通过 pip 安装的，则执行如下命令即可删除。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pip uninstall docker-compose</span><br></pre></td></tr></table></figure></p>
+<p>如果是二进制包方式安装的，删除二进制文件即可。</p>
+<pre><code class="bash">$ sudo rm /usr/local/bin/docker-compose
+</code></pre>
+<p>如果是通过 pip 安装的，则执行如下命令即可删除。</p>
+<pre><code class="bash">$ sudo pip uninstall docker-compose
+</code></pre>
 <h2 id="三、使用"><a href="#三、使用" class="headerlink" title="三、使用"></a>三、使用</h2><p>首先介绍几个术语。</p>
 <ul>
 <li>服务 (service)：一个应用容器，实际上可以运行多个相同镜像的实例。</li>
@@ -236,11 +253,67 @@ var _hmt = _hmt || [];
 <h3 id="案例一：构建web网站"><a href="#案例一：构建web网站" class="headerlink" title="案例一：构建web网站"></a>案例一：构建web网站</h3><p>最常见的项目是 web 网站，该项目应该包含 web 应用和缓存。</p>
 <p>下面我们用 Python 来建立一个能够记录页面访问次数的 web 网站。</p>
 <p><strong>web应用</strong></p>
-<p>新建文件夹，在该目录中编写 app.py 文件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-node02 ~]<span class="comment"># mkdir web_server</span></span><br><span class="line">[root@k8s-node02 ~]<span class="comment"># cd web_server/</span></span><br><span class="line">[root@k8s-node02 web_server]<span class="comment">#vim app.py</span></span><br><span class="line">from flask import Flask</span><br><span class="line">from redis import Redis</span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line">redis = Redis(host=<span class="string">'redis'</span>, port=6379)</span><br><span class="line"></span><br><span class="line">@app.route(<span class="string">'/'</span>)</span><br><span class="line">def hello():</span><br><span class="line">    count = redis.incr(<span class="string">'hits'</span>)</span><br><span class="line">    <span class="built_in">return</span> <span class="string">'Hello World! 该页面已被访问 &#123;&#125; 次。\n'</span>.format(count)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    app.run(host=<span class="string">"0.0.0.0"</span>, debug=True)</span><br></pre></td></tr></table></figure></p>
+<p>新建文件夹，在该目录中编写 app.py 文件</p>
+<pre><code class="bash">[root@k8s-node02 ~]# mkdir web_server
+[root@k8s-node02 ~]# cd web_server/
+[root@k8s-node02 web_server]#vim app.py
+from flask import Flask
+from redis import Redis
+
+app = Flask(__name__)
+redis = Redis(host=&#39;redis&#39;, port=6379)
+
+@app.route(&#39;/&#39;)
+def hello():
+    count = redis.incr(&#39;hits&#39;)
+    return &#39;Hello World! 该页面已被访问 {} 次。\n&#39;.format(count)
+
+if __name__ == &quot;__main__&quot;:
+    app.run(host=&quot;0.0.0.0&quot;, debug=True)
+</code></pre>
 <p><strong>Dockerfile</strong></p>
-<p>编写Dockerfile文件，内容为<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-node02 web_server]<span class="comment"># cat Dockerfile</span></span><br><span class="line">FROM python:3.6-alpine</span><br><span class="line">ADD . /code</span><br><span class="line">WORKDIR /code</span><br><span class="line">RUN pip install redis flask</span><br><span class="line">CMD [<span class="string">"python"</span>, <span class="string">"app.py"</span>]</span><br></pre></td></tr></table></figure></p>
-<p><strong>docker-compase.yml</strong><br>编写 docker-compose.yml 文件，这个是 Compose 使用的主模板文件。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-node02 web_server]<span class="comment"># cat docker-compose.yml</span></span><br><span class="line">version: <span class="string">'3'</span></span><br><span class="line">services:</span><br><span class="line"></span><br><span class="line">  web:</span><br><span class="line">    build: .</span><br><span class="line">    ports:</span><br><span class="line">    - <span class="string">"5000:5000"</span></span><br><span class="line"></span><br><span class="line">  redis:</span><br><span class="line">    image: <span class="string">"redis:alpine"</span></span><br></pre></td></tr></table></figure></p>
-<p><strong>运行 compose 项目</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-node02 web_server]<span class="comment"># docker-compose up</span></span><br><span class="line">Building web</span><br><span class="line">Step 1/5 : FROM python:3.6-alpine</span><br><span class="line">3.6-alpine: Pulling from library/python</span><br><span class="line">81033e7c1d6a: Already exists</span><br><span class="line">9b61101706a6: Pull complete</span><br><span class="line">35b21c1a8b97: Pull complete</span><br><span class="line">4856f5aeeec4: Pull complete</span><br><span class="line">84607ac623a4: Pull complete</span><br><span class="line">Digest: sha256:e10e26000b4dcfb66c52c11a6a7cc5251f6a95f9512fa9228bb3a66efc6c7075</span><br><span class="line">Status: Downloaded newer image <span class="keyword">for</span> python:3.6-alpine</span><br><span class="line">---&gt; 4fcaf5fb5f2b</span><br><span class="line">Step 2/5 : ADD . /code</span><br><span class="line">---&gt; 061db7e464f1</span><br><span class="line">Step 3/5 : WORKDIR /code</span><br><span class="line">Removing intermediate container 7986a3cb8c7e</span><br><span class="line">---&gt; 92a3ea98dfff</span><br><span class="line">Step 4/5 : RUN pip install redis flask</span><br><span class="line">---&gt; Running <span class="keyword">in</span> f0bed49a550d</span><br></pre></td></tr></table></figure></p>
+<p>编写Dockerfile文件，内容为</p>
+<pre><code class="bash">[root@k8s-node02 web_server]# cat Dockerfile
+FROM python:3.6-alpine
+ADD . /code
+WORKDIR /code
+RUN pip install redis flask
+CMD [&quot;python&quot;, &quot;app.py&quot;]
+</code></pre>
+<p><strong>docker-compase.yml</strong><br>编写 docker-compose.yml 文件，这个是 Compose 使用的主模板文件。</p>
+<pre><code class="bash">[root@k8s-node02 web_server]# cat docker-compose.yml
+version: &#39;3&#39;
+services:
+
+  web:
+    build: .
+    ports:
+    - &quot;5000:5000&quot;
+
+  redis:
+    image: &quot;redis:alpine&quot;
+</code></pre>
+<p><strong>运行 compose 项目</strong></p>
+<pre><code class="bash">[root@k8s-node02 web_server]# docker-compose up
+Building web
+Step 1/5 : FROM python:3.6-alpine
+3.6-alpine: Pulling from library/python
+81033e7c1d6a: Already exists
+9b61101706a6: Pull complete
+35b21c1a8b97: Pull complete
+4856f5aeeec4: Pull complete
+84607ac623a4: Pull complete
+Digest: sha256:e10e26000b4dcfb66c52c11a6a7cc5251f6a95f9512fa9228bb3a66efc6c7075
+Status: Downloaded newer image for python:3.6-alpine
+---&gt; 4fcaf5fb5f2b
+Step 2/5 : ADD . /code
+---&gt; 061db7e464f1
+Step 3/5 : WORKDIR /code
+Removing intermediate container 7986a3cb8c7e
+---&gt; 92a3ea98dfff
+Step 4/5 : RUN pip install redis flask
+---&gt; Running in f0bed49a550d
+</code></pre>
 <p>此时访问本地 5000 端口，每次刷新页面，计数就会加 1。</p>
 <img title="compose_count" alt="compose_count" src="http://p8hvsc1eo.bkt.clouddn.com/static/images/compose_count.png?imageView2/2/w/3000">
 <p><strong>注意事项</strong></p>
@@ -248,12 +321,152 @@ var _hmt = _hmt || [];
 <li>使用-d参数放入后台运行</li>
 <li>docker-compose ps必须是在当前项目下执行，否则报错</li>
 </ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-node02 web_server]<span class="comment"># docker-compose up -d</span></span><br><span class="line">Starting webserver_redis_1 ... <span class="keyword">done</span></span><br><span class="line">Starting webserver_web_1  ... <span class="keyword">done</span></span><br><span class="line">[root@k8s-node02 web_server]<span class="comment">#</span></span><br><span class="line">[root@k8s-node02 web_server]<span class="comment"># docker-compose ps</span></span><br><span class="line">      Name                    Command              State          Ports</span><br><span class="line">-----------------------------------------------------------------------------------</span><br><span class="line">webserver_redis_1  docker-entrypoint.sh redis ...  Up      6379/tcp</span><br><span class="line">webserver_web_1    python app.py                    Up      0.0.0.0:5000-&gt;5000/tcp</span><br><span class="line">[root@k8s-node02 web_server]<span class="comment">#</span></span><br><span class="line"></span><br><span class="line">[root@k8s-node02 web_server]<span class="comment"># cd</span></span><br><span class="line">[root@k8s-node02 ~]<span class="comment"># docker-compose ps     &lt;==找不到项目目录</span></span><br><span class="line">ERROR:</span><br><span class="line">        Can<span class="string">'t find a suitable configuration file in this directory or any</span></span><br><span class="line"><span class="string">        parent. Are you in the right directory?</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        Supported filenames: docker-compose.yml, docker-compose.yaml</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">[root@k8s-node02 ~]#</span></span><br></pre></td></tr></table></figure>
-<h3 id="案例二：一键部署LNMP网站平台"><a href="#案例二：一键部署LNMP网站平台" class="headerlink" title="案例二：一键部署LNMP网站平台"></a>案例二：一键部署LNMP网站平台</h3><p><strong>项目结构</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-node02 compose_lnmp]<span class="comment"># tree</span></span><br><span class="line">.</span><br><span class="line">├── docker-compose.yml   <span class="comment"># lnmp项目的yaml文件，默认文件名：docker-compose.yml，可更改</span></span><br><span class="line">├── mysql                            <span class="comment"># 数据库目录</span></span><br><span class="line">│  ├── conf                         <span class="comment"># 数据库配置目录</span></span><br><span class="line">│  │  └── my.cnf                <span class="comment"># 数据库配置文件</span></span><br><span class="line">│  └── data                          <span class="comment"># 存储数据的目录（mysql的这些配置，是在容器起来所需要的东西）</span></span><br><span class="line">├── nginx                              <span class="comment"># Nginx目录</span></span><br><span class="line">│  ├── Dockerfile                <span class="comment"># 会通过Dockerfile去构建Nginx</span></span><br><span class="line">│  ├── nginx-1.12.1.tar.gz</span><br><span class="line">│  └── nginx.conf</span><br><span class="line">├── php                                <span class="comment"># PHP目录</span></span><br><span class="line">│  ├── Dockerfile                 <span class="comment"># php 的Dockerfile文件</span></span><br><span class="line">│  ├── php-5.6.31.tar.gz</span><br><span class="line">│  └── php.ini                        <span class="comment"># 配置文件</span></span><br><span class="line">└── wwwroot                        <span class="comment"># 网站根目录</span></span><br><span class="line">    └── index.php</span><br><span class="line"></span><br><span class="line">6 directories, 9 files</span><br></pre></td></tr></table></figure></p>
-<p><strong>docker-compose.yml</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-node02 compose_lnmp]<span class="comment"># cat docker-compose.yml</span></span><br><span class="line">version: <span class="string">'3'</span>   <span class="comment"># 版本，这里是指定compose的版本，compose有三个版本，分别为1、2、3；</span></span><br><span class="line">services:  <span class="comment"># 这里是一个顶级标签，这个是服务标签，下面定义了nginx、php、mysql等服务，当然今后你有多少个就写多少个。</span></span><br><span class="line">  nginx:    <span class="comment"># 具体服务名称</span></span><br><span class="line">    hostname: nginx <span class="comment"># 服务的主机名</span></span><br><span class="line">    build:    <span class="comment"># 编译，同等于docker build Dockerfile ...</span></span><br><span class="line">      context: ./nginx  <span class="comment"># 这里是指定Dockerfile的位置，这个位置是相对于docker-compose.yml所在位置而定的</span></span><br><span class="line">      dockerfile: Dockerfile <span class="comment"># Dockerfile文件名称</span></span><br><span class="line">    ports:  <span class="comment"># 指定暴露的端口</span></span><br><span class="line">      - 81:80</span><br><span class="line">    networks: <span class="comment"># 指定网络</span></span><br><span class="line">      - lnmp <span class="comment"># 这里是具体的网络名称</span></span><br><span class="line">    volumes: <span class="comment"># 映射的数据卷</span></span><br><span class="line">      - ./wwwroot:/usr/<span class="built_in">local</span>/nginx/html</span><br><span class="line"></span><br><span class="line">  php:  </span><br><span class="line">    hostname: php</span><br><span class="line">    build:</span><br><span class="line">      context: ./php </span><br><span class="line">      dockerfile: Dockerfile</span><br><span class="line">    networks: <span class="comment"># 指定网络，要与Nginx、mysq同一个网络</span></span><br><span class="line">      - lnmp</span><br><span class="line">    volumes:</span><br><span class="line">      - ./wwwroot:/usr/<span class="built_in">local</span>/nginx/html</span><br><span class="line"></span><br><span class="line">  mysql:</span><br><span class="line">    hostname: mysql</span><br><span class="line">    image: mysql:5.6 <span class="comment"># 要拉取的mysql容器镜像</span></span><br><span class="line">    ports: <span class="comment"># 暴露的数据库端口</span></span><br><span class="line">      - 3306:3306</span><br><span class="line">    networks: <span class="comment"># 指定到同一个网络</span></span><br><span class="line">      - lnmp</span><br><span class="line">    volumes:  <span class="comment"># 映射数据卷</span></span><br><span class="line">      - ./mysql/conf:/etc/mysql/conf.d  <span class="comment"># ./mysql/conf是当前的目录，这里面有我们配置好的my.cnf配置文件</span></span><br><span class="line">      - ./mysql/data:/var/lib/mysql        <span class="comment"># ./mysql/data 这也是之前创建好的数据库data目录，用于存储mysql数据</span></span><br><span class="line">    <span class="built_in">command</span>: --character-set-server=utf8 <span class="comment"># 上面指定的mysql:5.6镜像在run的时候会接收到这个命令，并执行</span></span><br><span class="line">    environment: <span class="comment"># 其他设置，这块属于数据库容器里的设置了，用户名、密码、要创建的数据库</span></span><br><span class="line">      MYSQL_ROOT_PASSWORD: 123456</span><br><span class="line">      MYSQL_DATABASE: wordpress</span><br><span class="line">      MYSQL_USER: user</span><br><span class="line">      MYSQL_PASSWORD: user123</span><br><span class="line"></span><br><span class="line">networks: <span class="comment"># 这里是一个顶级标签，创建网络（compose会先执行顶级标签，然后在执行后面的，这里的体现就是会先创建网络，再安装Nginx、php、mysql）</span></span><br><span class="line">  lnmp: <span class="comment"># 指定要创建的网络名称</span></span><br></pre></td></tr></table></figure></p>
-<p><strong>nginx:Dockerfile</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-node02 compose_lnmp]<span class="comment"># cat nginx/Dockerfile # 通过Dockerfile编译一个Nginx容器</span></span><br><span class="line">FROM centos:7 <span class="comment"># 选择一个基础镜像</span></span><br><span class="line">MAINTAINER www.xxx.com <span class="comment"># 作者名称 </span></span><br><span class="line">RUN yum install -y gcc gcc-c++ make openssl-devel pcre-devel <span class="comment"># 初始安装包</span></span><br><span class="line">ADD nginx-1.12.1.tar.gz /tmp <span class="comment"># 将本地的Nginx软件添加到容器的/tmp目录下</span></span><br><span class="line"></span><br><span class="line">RUN <span class="built_in">cd</span> /tmp/nginx-1.12.1 &amp;&amp; \ <span class="comment"># 运行命令，解压和执行编译安装</span></span><br><span class="line">    ./configure --prefix=/usr/<span class="built_in">local</span>/nginx &amp;&amp; \</span><br><span class="line">    make -j 2 &amp;&amp; \</span><br><span class="line">    make install</span><br><span class="line"></span><br><span class="line">RUN rm -rf /tmp/nginx-1.12.1* &amp;&amp; yum clean all <span class="comment"># 清除一些不需要的东东</span></span><br><span class="line"></span><br><span class="line">COPY nginx.conf /usr/<span class="built_in">local</span>/nginx/conf <span class="comment"># 然后再拷贝我们准备好的Nginx配置文件</span></span><br><span class="line"></span><br><span class="line">WORKDIR /usr/<span class="built_in">local</span>/nginx    <span class="comment"># 设置工作目录</span></span><br><span class="line">EXPOSE 80 <span class="comment"># 开放80端口，注意这里是开放，是运行这个容器时会打开80端口，不是对外暴露端口</span></span><br><span class="line">CMD [<span class="string">"./sbin/nginx"</span>, <span class="string">"-g"</span>, <span class="string">"daemon off;"</span>] <span class="comment">#运行容器时所需要执行的命令</span></span><br></pre></td></tr></table></figure></p>
-<p><strong>php:Dockerfile</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 上面说过的选项，这里就不在赘述了哈！</span></span><br><span class="line">[root@k8s-node02 compose_lnmp]<span class="comment"># cat php/Dockerfile</span></span><br><span class="line">FROM centos:7</span><br><span class="line">MAINTAINER www.xxx.com</span><br><span class="line">RUN yum install -y gcc gcc-c++ make gd-devel libxml2-devel libcurl-devel libjpeg-devel libpng-devel openssl-devel</span><br><span class="line">ADD php-5.6.31.tar.gz /tmp/</span><br><span class="line"></span><br><span class="line">RUN <span class="built_in">cd</span> /tmp/php-5.6.31 &amp;&amp; \</span><br><span class="line">    ./configure --prefix=/usr/<span class="built_in">local</span>/php \</span><br><span class="line">    --with-config-file-path=/usr/<span class="built_in">local</span>/php/etc \</span><br><span class="line">    --with-mysql --with-mysqli \</span><br><span class="line">    --with-openssl --with-zlib --with-curl --with-gd \</span><br><span class="line">    --with-jpeg-dir --with-png-dir --with-iconv \</span><br><span class="line">    --<span class="built_in">enable</span>-fpm --<span class="built_in">enable</span>-zip --<span class="built_in">enable</span>-mbstring &amp;&amp; \</span><br><span class="line">    make -j 4 &amp;&amp; \</span><br><span class="line">    make install &amp;&amp; \</span><br><span class="line">    cp /usr/<span class="built_in">local</span>/php/etc/php-fpm.conf.default /usr/<span class="built_in">local</span>/php/etc/php-fpm.conf &amp;&amp; \</span><br><span class="line">    sed -i <span class="string">"s/127.0.0.1/0.0.0.0/"</span> /usr/<span class="built_in">local</span>/php/etc/php-fpm.conf &amp;&amp; \</span><br><span class="line">    sed -i <span class="string">"21a \daemonize = no"</span> /usr/<span class="built_in">local</span>/php/etc/php-fpm.conf</span><br><span class="line">COPY php.ini /usr/<span class="built_in">local</span>/php/etc</span><br><span class="line"></span><br><span class="line">RUN rm -rf /tmp/php-5.6.31* &amp;&amp; yum clean all</span><br><span class="line"></span><br><span class="line">WORKDIR /usr/<span class="built_in">local</span>/php</span><br><span class="line">EXPOSE 9000</span><br><span class="line">CMD [<span class="string">"./sbin/php-fpm"</span>, <span class="string">"-c"</span>, <span class="string">"/usr/local/php/etc/php-fpm.conf"</span>]</span><br></pre></td></tr></table></figure></p>
-<p><strong>一键部署</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-node02 compose_lnmp]<span class="comment"># docker-compose up -d</span></span><br><span class="line">···一个漫长的编译、安装、拉取镜像过程···</span><br><span class="line">[root@k8s-node02 compose_lnmp]<span class="comment"># docker-compose ps</span></span><br><span class="line">      Name                      Command              State          Ports</span><br><span class="line">-------------------------------------------------------------------------------------</span><br><span class="line">composelnmp_mysql_1  docker-entrypoint.sh --cha ...  Up      0.0.0.0:3306-&gt;3306/tcp</span><br><span class="line">composelnmp_nginx_1  ./sbin/nginx -g daemon off;      Up      0.0.0.0:81-&gt;80/tcp</span><br><span class="line">composelnmp_php_1    ./sbin/php-fpm -c /usr/loc ...  Up      9000/tcp</span><br></pre></td></tr></table></figure></p>
+<pre><code class="bash">[root@k8s-node02 web_server]# docker-compose up -d
+Starting webserver_redis_1 ... done
+Starting webserver_web_1  ... done
+[root@k8s-node02 web_server]#
+[root@k8s-node02 web_server]# docker-compose ps
+      Name                    Command              State          Ports
+-----------------------------------------------------------------------------------
+webserver_redis_1  docker-entrypoint.sh redis ...  Up      6379/tcp
+webserver_web_1    python app.py                    Up      0.0.0.0:5000-&gt;5000/tcp
+[root@k8s-node02 web_server]#
+
+[root@k8s-node02 web_server]# cd
+[root@k8s-node02 ~]# docker-compose ps     &lt;==找不到项目目录
+ERROR:
+        Can&#39;t find a suitable configuration file in this directory or any
+        parent. Are you in the right directory?
+
+        Supported filenames: docker-compose.yml, docker-compose.yaml
+
+[root@k8s-node02 ~]#
+</code></pre>
+<h3 id="案例二：一键部署LNMP网站平台"><a href="#案例二：一键部署LNMP网站平台" class="headerlink" title="案例二：一键部署LNMP网站平台"></a>案例二：一键部署LNMP网站平台</h3><p><strong>项目结构</strong></p>
+<pre><code class="bash">[root@k8s-node02 compose_lnmp]# tree
+.
+├── docker-compose.yml   # lnmp项目的yaml文件，默认文件名：docker-compose.yml，可更改
+├── mysql                            # 数据库目录
+│  ├── conf                         # 数据库配置目录
+│  │  └── my.cnf                # 数据库配置文件
+│  └── data                          # 存储数据的目录（mysql的这些配置，是在容器起来所需要的东西）
+├── nginx                              # Nginx目录
+│  ├── Dockerfile                # 会通过Dockerfile去构建Nginx
+│  ├── nginx-1.12.1.tar.gz
+│  └── nginx.conf
+├── php                                # PHP目录
+│  ├── Dockerfile                 # php 的Dockerfile文件
+│  ├── php-5.6.31.tar.gz
+│  └── php.ini                        # 配置文件
+└── wwwroot                        # 网站根目录
+    └── index.php
+
+6 directories, 9 files
+</code></pre>
+<p><strong>docker-compose.yml</strong></p>
+<pre><code class="bash">[root@k8s-node02 compose_lnmp]# cat docker-compose.yml
+version: &#39;3&#39;   # 版本，这里是指定compose的版本，compose有三个版本，分别为1、2、3；
+services:  # 这里是一个顶级标签，这个是服务标签，下面定义了nginx、php、mysql等服务，当然今后你有多少个就写多少个。
+  nginx:    # 具体服务名称
+    hostname: nginx # 服务的主机名
+    build:    # 编译，同等于docker build Dockerfile ...
+      context: ./nginx  # 这里是指定Dockerfile的位置，这个位置是相对于docker-compose.yml所在位置而定的
+      dockerfile: Dockerfile # Dockerfile文件名称
+    ports:  # 指定暴露的端口
+      - 81:80
+    networks: # 指定网络
+      - lnmp # 这里是具体的网络名称
+    volumes: # 映射的数据卷
+      - ./wwwroot:/usr/local/nginx/html
+
+  php:  
+    hostname: php
+    build:
+      context: ./php 
+      dockerfile: Dockerfile
+    networks: # 指定网络，要与Nginx、mysq同一个网络
+      - lnmp
+    volumes:
+      - ./wwwroot:/usr/local/nginx/html
+
+  mysql:
+    hostname: mysql
+    image: mysql:5.6 # 要拉取的mysql容器镜像
+    ports: # 暴露的数据库端口
+      - 3306:3306
+    networks: # 指定到同一个网络
+      - lnmp
+    volumes:  # 映射数据卷
+      - ./mysql/conf:/etc/mysql/conf.d  # ./mysql/conf是当前的目录，这里面有我们配置好的my.cnf配置文件
+      - ./mysql/data:/var/lib/mysql        # ./mysql/data 这也是之前创建好的数据库data目录，用于存储mysql数据
+    command: --character-set-server=utf8 # 上面指定的mysql:5.6镜像在run的时候会接收到这个命令，并执行
+    environment: # 其他设置，这块属于数据库容器里的设置了，用户名、密码、要创建的数据库
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user123
+
+networks: # 这里是一个顶级标签，创建网络（compose会先执行顶级标签，然后在执行后面的，这里的体现就是会先创建网络，再安装Nginx、php、mysql）
+  lnmp: # 指定要创建的网络名称
+</code></pre>
+<p><strong>nginx:Dockerfile</strong></p>
+<pre><code class="bash">[root@k8s-node02 compose_lnmp]# cat nginx/Dockerfile # 通过Dockerfile编译一个Nginx容器
+FROM centos:7 # 选择一个基础镜像
+MAINTAINER www.xxx.com # 作者名称 
+RUN yum install -y gcc gcc-c++ make openssl-devel pcre-devel # 初始安装包
+ADD nginx-1.12.1.tar.gz /tmp # 将本地的Nginx软件添加到容器的/tmp目录下
+
+RUN cd /tmp/nginx-1.12.1 &amp;&amp; \ # 运行命令，解压和执行编译安装
+    ./configure --prefix=/usr/local/nginx &amp;&amp; \
+    make -j 2 &amp;&amp; \
+    make install
+
+RUN rm -rf /tmp/nginx-1.12.1* &amp;&amp; yum clean all # 清除一些不需要的东东
+
+COPY nginx.conf /usr/local/nginx/conf # 然后再拷贝我们准备好的Nginx配置文件
+
+WORKDIR /usr/local/nginx    # 设置工作目录
+EXPOSE 80 # 开放80端口，注意这里是开放，是运行这个容器时会打开80端口，不是对外暴露端口
+CMD [&quot;./sbin/nginx&quot;, &quot;-g&quot;, &quot;daemon off;&quot;] #运行容器时所需要执行的命令
+</code></pre>
+<p><strong>php:Dockerfile</strong></p>
+<pre><code class="bash"># 上面说过的选项，这里就不在赘述了哈！
+[root@k8s-node02 compose_lnmp]# cat php/Dockerfile
+FROM centos:7
+MAINTAINER www.xxx.com
+RUN yum install -y gcc gcc-c++ make gd-devel libxml2-devel libcurl-devel libjpeg-devel libpng-devel openssl-devel
+ADD php-5.6.31.tar.gz /tmp/
+
+RUN cd /tmp/php-5.6.31 &amp;&amp; \
+    ./configure --prefix=/usr/local/php \
+    --with-config-file-path=/usr/local/php/etc \
+    --with-mysql --with-mysqli \
+    --with-openssl --with-zlib --with-curl --with-gd \
+    --with-jpeg-dir --with-png-dir --with-iconv \
+    --enable-fpm --enable-zip --enable-mbstring &amp;&amp; \
+    make -j 4 &amp;&amp; \
+    make install &amp;&amp; \
+    cp /usr/local/php/etc/php-fpm.conf.default /usr/local/php/etc/php-fpm.conf &amp;&amp; \
+    sed -i &quot;s/127.0.0.1/0.0.0.0/&quot; /usr/local/php/etc/php-fpm.conf &amp;&amp; \
+    sed -i &quot;21a \daemonize = no&quot; /usr/local/php/etc/php-fpm.conf
+COPY php.ini /usr/local/php/etc
+
+RUN rm -rf /tmp/php-5.6.31* &amp;&amp; yum clean all
+
+WORKDIR /usr/local/php
+EXPOSE 9000
+CMD [&quot;./sbin/php-fpm&quot;, &quot;-c&quot;, &quot;/usr/local/php/etc/php-fpm.conf&quot;]
+</code></pre>
+<p><strong>一键部署</strong></p>
+<pre><code class="bash">[root@k8s-node02 compose_lnmp]# docker-compose up -d
+···一个漫长的编译、安装、拉取镜像过程···
+[root@k8s-node02 compose_lnmp]# docker-compose ps
+      Name                      Command              State          Ports
+-------------------------------------------------------------------------------------
+composelnmp_mysql_1  docker-entrypoint.sh --cha ...  Up      0.0.0.0:3306-&gt;3306/tcp
+composelnmp_nginx_1  ./sbin/nginx -g daemon off;      Up      0.0.0.0:81-&gt;80/tcp
+composelnmp_php_1    ./sbin/php-fpm -c /usr/loc ...  Up      9000/tcp
+</code></pre>
 <p>将WordPress下载到站点解压并安装，最终运行结果如下：<br><img title="wordpress_home" alt="wordpress_home" src="http://p8hvsc1eo.bkt.clouddn.com/static/images/wordpress_home.png?imageView2/2/w/3000"></p>
 <h2 id="四、应用场景"><a href="#四、应用场景" class="headerlink" title="四、应用场景"></a>四、应用场景</h2><ol>
 <li>互联网产品交付客户<br> 将产品封装成docker compose文件项目文件，打包交付给客户；省却手动部署环境的麻烦，高效精简整个交付过程。</li>
@@ -507,23 +720,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">portainer</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">harbor</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">portainer</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Compose</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">CI/CD</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">持续集成</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -536,6 +741,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Grafana</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">CI/CD</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">持续集成</a>
               </li>
              
               <li class="article-tag-list-item">

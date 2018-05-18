@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Nicksors的博客">
 <meta property="og:description" content="前言:yilia主题默认的代码高亮风格个人不是太喜欢，就想着怎么样能改变下？于是就baidu、google了解了下！然而发现很多解决方案大都是两年前的，根本没法用。于是着手自己看源码，不就是改改样式么？哼，我还不行搞不定了！">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-05-18T10:14:53.000Z">
+<meta property="og:updated_time" content="2018-05-18T10:24:28.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="私人定制yilia主题的代码高亮风格">
 <meta name="twitter:description" content="前言:yilia主题默认的代码高亮风格个人不是太喜欢，就想着怎么样能改变下？于是就baidu、google了解了下！然而发现很多解决方案大都是两年前的，根本没法用。于是着手自己看源码，不就是改改样式么？哼，我还不行搞不定了！">
@@ -229,7 +229,7 @@ var _hmt = _hmt || [];
 <p>如果你不喜欢我更改的方案，有必要告诉你一下更改技巧：</p>
 <ol>
 <li>首先你需要一个HTML<a href="http://www.runoob.com/tags/html-colorpicker.html" target="_blank" rel="noopener">拾色器</a>，因为它能帮你找到想要的颜色；</li>
-<li>上面罗列了四个颜色，其中背景颜色我在main.0cf68a.css文件里更改了三处才达到我想要的效果，而最不好更改的就是代码块里的主要字体颜色，我更改了起码有5、6处。</li>
+<li>上面罗列了四个颜色，其中背景颜色我在main.0cf68a.css文件里更改了三处才达到我想要的效果，而最不好更改的就是代码块里的主要字体颜色，我更改了起码有5、6处，到底改了哪5、6处呢？你可以下载我改过的源码文件看一下即知。</li>
 <li>如果你想要更改字体颜色的话，可以执行命令：sed -i ‘s/1c1f23/你喜欢的颜色/g’ main.0cf68a.css，这个命令的作用是将1c1f23全部替换成”你喜欢的颜色”，不需要你一个一个的更改了。其他颜色也可以用这种方式更改哈。</li>
 </ol>
 <p>私人定制方案到此为止，比较简单，但解决了我的问题。<br>若你更改或使用遇到问题，欢迎issue.</p>
@@ -492,27 +492,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">portainer</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">harbor</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Compose</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">CI/CD</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">持续集成</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Heox</a>
+                <a href="javascript:void(0)" class="js-tag color5">portainer</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -525,6 +509,22 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Grafana</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">CI/CD</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">持续集成</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Compose</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Heox</a>
               </li>
              
               <li class="article-tag-list-item">

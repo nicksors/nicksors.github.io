@@ -20,7 +20,7 @@
 <meta property="og:image" content="http://p8hvsc1eo.bkt.clouddn.com/static/images/Flannel网络架构图.png?imageView2/2/w/3000">
 <meta property="og:image" content="http://p8hvsc1eo.bkt.clouddn.com/static/images/k8s-ui.png?imageView2/2/w/3000">
 <meta property="og:image" content="http://p8hvsc1eo.bkt.clouddn.com/static/images/k8s运行Nginx.png?imageView2/2/w/3000">
-<meta property="og:updated_time" content="2018-05-24T08:14:08.000Z">
+<meta property="og:updated_time" content="2018-05-24T08:19:34.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用二进制包在CentOS7上部署Kubernetes1.9集群">
 <meta name="twitter:description" content="本文续《Kubernetes是什么？》之后的搭建k8s集群篇，主要以实战演示为重心。如果你还不是太熟悉k8s的各个组件或应用，不妨先把它搭建出来， 再来慢慢学习他们的原理及关联关系！">
@@ -476,12 +476,21 @@ var _hmt = _hmt || [];
 <p>我们部署了nginx这个service，集群IP是10.10.10.61，暴露的端口是88。也就是说在k8s集群里，我们可以通过如下方式来访问<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-node-91 ~]<span class="comment"># curl 10.10.10.61:88</span></span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">&lt;title&gt;Welcome to nginx!&lt;/title&gt;</span><br><span class="line">&lt;style&gt;</span><br><span class="line">    body &#123;</span><br><span class="line">        width: 35em;</span><br><span class="line">        margin: 0 auto;</span><br><span class="line">        font-family: Tahoma, Verdana, Arial, sans-serif;</span><br><span class="line">    &#125;</span><br><span class="line">&lt;/style&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;h1&gt;Welcome to nginx!&lt;/h1&gt;</span><br><span class="line">&lt;p&gt;If you see this page, the nginx web server is successfully installed and</span><br><span class="line">working. Further configuration is required.&lt;/p&gt;</span><br><span class="line"></span><br><span class="line">&lt;p&gt;For online documentation and support please refer to</span><br><span class="line">&lt;a href=<span class="string">"http://nginx.org/"</span>&gt;nginx.org&lt;/a&gt;.&lt;br/&gt;</span><br><span class="line">Commercial support is available at</span><br><span class="line">&lt;a href=<span class="string">"http://nginx.com/"</span>&gt;nginx.com&lt;/a&gt;.&lt;/p&gt;</span><br><span class="line"></span><br><span class="line">&lt;p&gt;&lt;em&gt;Thank you <span class="keyword">for</span> using nginx.&lt;/em&gt;&lt;/p&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure></p>
 <p>如果需要在集群外部访问的话，那访问pod的端口也就是37224即可。</p>
 <img title="k8s运行Nginx" alt="k8s运行Nginx" src="http://p8hvsc1eo.bkt.clouddn.com/static/images/k8s运行Nginx.png?imageView2/2/w/3000">
-<p>这篇部署有点长，就先在这里结尾吧，前面有些技术细节并没有写清楚，如果你有恰好到此文章，有看不懂的地方欢迎与我探讨，QQ：1432753451，Nicksors。</p>
+<p>这篇部署有点长，就先在这里结尾吧，前面有些技术细节并没有写清楚，如果你有恰好看到此文章，有看不懂的地方欢迎与我探讨，QQ：1432753451，Nicksors。</p>
 
       
 
 
 	
+	
+		<div class="declare">
+		<strong>本文链接：</strong>
+		https://nicksors.cc/2018/05/24/使用二进制包在CentOS7上部署Kubernetes1-9集群.html
+		<br>
+		<strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>进行许可。转载请注明出处！
+		<br>
+		<a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"/></a>
+		</div>
 	
 
 
@@ -620,6 +629,37 @@ var _hmt = _hmt || [];
 
 
 
+  
+  
+  
+
+  
+
+  
+
+  
+  <div id="gitment-ctn"></div> 
+
+<!--<link rel="stylesheet" href="//imsun.github.io/gitment/style/default.css">-->
+<!--<script src="//imsun.github.io/gitment/dist/gitment.browser.js"></script>-->
+
+<link rel="stylesheet" href="https://billts.site/extra_css/gitment.css">
+<script src="https://billts.site/js/gitment.js"></script>
+<script>
+var gitment = new Gitment({
+  id: 'Thu May 24 2018 15:42:37 GMT+0800',
+  owner: 'nicksors',
+  repo: 'nicksors.github.io',
+  oauth: {
+    client_id: '6ad20bd02d1f646e9f25',
+    client_secret: 'aa27706a1da971d05c7c7e7c3a5298a494931f15',
+  },
+})
+gitment.render('gitment-ctn')
+</script>
+
+  
+
 
           </div>
         </div>
@@ -721,15 +761,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">harbor</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">portainer</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">k8s集群部署</a>
+                <a href="javascript:void(0)" class="js-tag color2">harbor</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -749,6 +785,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Heox</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">CI/CD</a>
               </li>
              
@@ -761,11 +801,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Heox</a>
+                <a href="javascript:void(0)" class="js-tag color1">yilia</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">yilia</a>
+                <a href="javascript:void(0)" class="js-tag color3">k8s集群部署</a>
               </li>
             
             <div class="clearfix"></div>

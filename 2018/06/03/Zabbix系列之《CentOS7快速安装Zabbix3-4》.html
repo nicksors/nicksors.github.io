@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="前言：这篇文章适合刚入行的运维同学，在运维领域学习技术最好的方式就是：先快速将它搭建起来，然后根据每个组件或知识点横向深入学习，这也是最佳实践，本文就是带领运维童鞋们快速安装和掌握监控领域的利器，zabbix！">
+<meta name="keywords" content="Zabbix,CentOS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Zabbix系列之《CentOS7快速安装Zabbix3-4》">
+<meta property="og:url" content="//nicksors.cc/2018/06/03/Zabbix系列之《CentOS7快速安装Zabbix3-4》.html">
+<meta property="og:site_name" content="现在博客之站">
+<meta property="og:description" content="前言：这篇文章适合刚入行的运维同学，在运维领域学习技术最好的方式就是：先快速将它搭建起来，然后根据每个组件或知识点横向深入学习，这也是最佳实践，本文就是带领运维童鞋们快速安装和掌握监控领域的利器，zabbix！">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="//nicksors.cc/2018/06/03/Zabbix系列之《CentOS7快速安装Zabbix3-4》/选择版本.png">
+<meta property="og:image" content="//nicksors.cc/2018/06/03/Zabbix系列之《CentOS7快速安装Zabbix3-4》/配置首页.png">
+<meta property="og:image" content="//nicksors.cc/2018/06/03/Zabbix系列之《CentOS7快速安装Zabbix3-4》/环境依赖.png">
+<meta property="og:image" content="//nicksors.cc/2018/06/03/Zabbix系列之《CentOS7快速安装Zabbix3-4》/数据库配置.png">
+<meta property="og:image" content="//nicksors.cc/2018/06/03/Zabbix系列之《CentOS7快速安装Zabbix3-4》/Server信息配置.png">
+<meta property="og:image" content="//nicksors.cc/2018/06/03/Zabbix系列之《CentOS7快速安装Zabbix3-4》/配置信息总览.png">
+<meta property="og:image" content="//nicksors.cc/2018/06/03/Zabbix系列之《CentOS7快速安装Zabbix3-4》/登录窗口.png">
+<meta property="og:image" content="//nicksors.cc/2018/06/03/Zabbix系列之《CentOS7快速安装Zabbix3-4》/dashboard.png">
+<meta property="og:updated_time" content="2018-06-03T02:45:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Zabbix系列之《CentOS7快速安装Zabbix3-4》">
+<meta name="twitter:description" content="前言：这篇文章适合刚入行的运维同学，在运维领域学习技术最好的方式就是：先快速将它搭建起来，然后根据每个组件或知识点横向深入学习，这也是最佳实践，本文就是带领运维童鞋们快速安装和掌握监控领域的利器，zabbix！">
+<meta name="twitter:image" content="//nicksors.cc/2018/06/03/Zabbix系列之《CentOS7快速安装Zabbix3-4》/选择版本.png">
+
+
+
+
+
+
+  <link rel="canonical" href="//nicksors.cc/2018/06/03/Zabbix系列之《CentOS7快速安装Zabbix3-4》.html"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Zabbix系列之《CentOS7快速安装Zabbix3-4》 | 现在博客之站</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+<a href="https://github.com/nicksors"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">现在博客之站</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">没有白走的路，每一步都算数.</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="//nicksors.cc/2018/06/03/Zabbix系列之《CentOS7快速安装Zabbix3-4》.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="现在">
+      <meta itemprop="description" content="知识管理，时间管理，自我管理，阅读，思维导图，Wiz">
+      <meta itemprop="image" content="/static/images/stark.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="现在博客之站">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Zabbix系列之《CentOS7快速安装Zabbix3-4》
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-06-03 10:16:29 / 修改时间：10:45:34" itemprop="dateCreated datePublished" datetime="2018-06-03T10:16:29+08:00">2018-06-03</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Zabbix/" itemprop="url" rel="index"><span itemprop="name">Zabbix</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>前言：<br>这篇文章适合刚入行的运维同学，在运维领域学习技术最好的方式就是：先快速将它搭建起来，然后根据每个组件或知识点横向深入学习，这也是最佳实践，本文就是带领运维童鞋们快速安装和掌握监控领域的利器，zabbix！</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="选择你需要的版本进行安装"><a href="#选择你需要的版本进行安装" class="headerlink" title="选择你需要的版本进行安装"></a>选择你需要的版本进行安装</h1><p>你打开zabbix官网会发现，zabbix安装页面提供了非常详细的条件供你选择，能适应主流Linux发行版的需求。</p>
+<p>如题，我使用的是CentOS7.2版本，那么我选择的最佳实践就是通过yum安装，如果你没有那么高的定制需求，建议使用此方法。当然如果有特定需求或规范，你也可以选择源码编译安装。</p>
+<img src="/2018/06/03/Zabbix系列之《CentOS7快速安装Zabbix3-4》/选择版本.png" title="选择版本">
+<p>如上，是我选择的版本信息。</p>
+<h1 id="安装和初始化"><a href="#安装和初始化" class="headerlink" title="安装和初始化"></a>安装和初始化</h1><h2 id="安装zabbix"><a href="#安装zabbix" class="headerlink" title="安装zabbix"></a>安装zabbix</h2><p>1、CentOS7的yum源里默认不能安装zabbix，这使得zabbix自己提供了一个repo源，我们需要安装下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># rpm -i http://repo.zabbix.com/zabbix/3.4/rhel/7/x86_64/zabbix-release-3.4-2.el7.noarch.rpm</span></span><br></pre></td></tr></table></figure></p>
+<p>2、安装zabbix-server zabbix-agent zabbix-web前端<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># yum install zabbix-server-mysql zabbix-web-mysql zabbix-agent</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="安装数据库"><a href="#安装数据库" class="headerlink" title="安装数据库"></a>安装数据库</h2><p>1、CentOS7默认安装MariaDB，值得说一下的是，MariaDB与MySQL在使用上没有区别，咱们正常使用即可。</p>
+<p>快速安装数据库：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># yum -y install mariadb mariadb-server</span></span><br><span class="line"><span class="comment"># systemctl start mariadb</span></span><br><span class="line"><span class="comment"># systemctl enable mariadb</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化数据库</span></span><br><span class="line"><span class="comment"># mysql_secure_installation  &lt;== 会有很多提示，一路回车即可</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 登录数据库</span></span><br><span class="line">[root@nicksors ~]<span class="comment"># mysql</span></span><br><span class="line">Welcome to the MariaDB monitor.  Commands end with ; or \g.</span><br><span class="line">Your MariaDB connection id is 412</span><br><span class="line">Server version: 5.5.56-MariaDB MariaDB Server</span><br><span class="line"></span><br><span class="line">Copyright (c) 2000, 2017, Oracle, MariaDB Corporation Ab and others.</span><br><span class="line"></span><br><span class="line">Type <span class="string">'help;'</span> or <span class="string">'\h'</span> <span class="keyword">for</span> <span class="built_in">help</span>. Type <span class="string">'\c'</span> to clear the current input statement.</span><br><span class="line"></span><br><span class="line">MariaDB [(none)]&gt;</span><br></pre></td></tr></table></figure></p>
+<p>2、创建初始数据库<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># mysql  &lt;==进入数据库，并执行下面几条SQL语句</span></span><br><span class="line"></span><br><span class="line">mysql&gt; create database zabbix character <span class="built_in">set</span> utf8 collate utf8_bin;  &lt;==创建一个数据库，名称为zabbix</span><br><span class="line">mysql&gt; grant all privileges on zabbix.* to zabbix@localhost identified by <span class="string">'password'</span>;  &lt;==创建用户，并设置权限和密码</span><br><span class="line">mysql&gt; quit;</span><br></pre></td></tr></table></figure></p>
+<p>导入初始化数据库<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># zcat /usr/share/doc/zabbix-server-mysql*/create.sql.gz | mysql -uzabbix -p zabbix</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="给zabbix-server做一些配置"><a href="#给zabbix-server做一些配置" class="headerlink" title="给zabbix-server做一些配置"></a>给zabbix-server做一些配置</h2><p>1、首先你得告诉zabbix_server，你的数据库密码是什么？<br>编辑 <code>/etc/zabbix/zabbix_server.conf</code>文件，修改如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DBPassword=123123   （我设置的密码是123123，你自己设置的多少，填写到这里）</span><br></pre></td></tr></table></figure></p>
+<p>2、配置php的时间区域<br>编辑<code>/etc/httpd/conf.d/zabbix.conf</code>文件，取消下面这一行的注释<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># php_value date.timezone  Asia/Shanghai  &lt;==如果你是中国大陆用户，请设置时间区域为“亚洲/上海”</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="启动zabbix-server-和zabbix-agent进程"><a href="#启动zabbix-server-和zabbix-agent进程" class="headerlink" title="启动zabbix_server 和zabbix_agent进程"></a>启动zabbix_server 和zabbix_agent进程</h2><p>1、启动<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># systemctl restart zabbix-server zabbix-agent httpd</span></span><br><span class="line"><span class="comment"># systemctl enable zabbix-server zabbix-agent httpd</span></span><br></pre></td></tr></table></figure></p>
+<p>2、启动后保持检查的好习惯：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@nicksors ~]<span class="comment"># netstat -lntup|egrep "zabbix|http"</span></span><br><span class="line">tcp        0      0 0.0.0.0:10050          0.0.0.0:*              LISTEN      23007/zabbix_agentd</span><br><span class="line">tcp        0      0 0.0.0.0:10051          0.0.0.0:*              LISTEN      23022/zabbix_server</span><br><span class="line">tcp6      0      0 :::80                  :::*                    LISTEN      23205/httpd</span><br><span class="line">tcp6      0      0 :::10050                :::*                    LISTEN      23007/zabbix_agentd</span><br><span class="line">tcp6      0      0 :::10051                :::*                    LISTEN      23022/zabbix_server</span><br></pre></td></tr></table></figure></p>
+<p>zabbix_agent端口默认为10050<br>zabbix_server端口默认为10051</p>
+<p>3、访问<br>地址为：<a href="http://server_ip_or_name/zabbix" target="_blank" rel="noopener">http://server_ip_or_name/zabbix</a><br>请将server_ip_or_name换成你的主机IP地址</p>
+<h1 id="Web端配置zabbix"><a href="#Web端配置zabbix" class="headerlink" title="Web端配置zabbix"></a>Web端配置zabbix</h1><p>点击Next step<br><img src="/2018/06/03/Zabbix系列之《CentOS7快速安装Zabbix3-4》/配置首页.png" title="配置首页"></p>
+<p>这一步如果有“红叉”的，你需要满足，自行百度可以解决。点击Next step<br><img src="/2018/06/03/Zabbix系列之《CentOS7快速安装Zabbix3-4》/环境依赖.png" title="环境依赖"></p>
+<p>默认会选择MySQL，port填写3306，Password填写你设置的密码即可。点击Next step<br><img src="/2018/06/03/Zabbix系列之《CentOS7快速安装Zabbix3-4》/数据库配置.png" title="数据库配置"></p>
+<p>设置Zabbix Server信息，默认即可，Name写不写随你。点击Next step<br><img src="/2018/06/03/Zabbix系列之《CentOS7快速安装Zabbix3-4》/Server信息配置.png" title="Server信息配置"></p>
+<p>你的配置总览。点击Next step<br><img src="/2018/06/03/Zabbix系列之《CentOS7快速安装Zabbix3-4》/配置信息总览.png" title="配置信息总览"></p>
+<p>告诉你已经配置成功，配置文件在<code>/etc/zabbix/web/zabbix.conf.php</code>文件里，今后有变动需要更改配置，在这个文件更改就行。点击Finish跳转至登录页面</p>
+<p>默认用户名密码：Admin/zabbix<br><img src="/2018/06/03/Zabbix系列之《CentOS7快速安装Zabbix3-4》/登录窗口.png" title="登录窗口"></p>
+<p>Zabbix Dashboard<br><img src="/2018/06/03/Zabbix系列之《CentOS7快速安装Zabbix3-4》/dashboard.png" title="dashboard"></p>
+<p>到这里就完成了zabbix的安装部署啦，后续文章，敬请持续关注。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Zabbix/" rel="tag"><i class="fa fa-tag"></i> Zabbix</a>
+          
+            <a href="/tags/CentOS/" rel="tag"><i class="fa fa-tag"></i> CentOS</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/static/images/stark.jpg"
+                alt="现在" />
+            
+              <p class="site-author-name" itemprop="name">现在</p>
+              <p class="site-description motion-element" itemprop="description">知识管理，时间管理，自我管理，阅读，思维导图，Wiz</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">1</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                    <span class="site-state-item-count">1</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/nicksors" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#选择你需要的版本进行安装"><span class="nav-number">1.</span> <span class="nav-text">选择你需要的版本进行安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装和初始化"><span class="nav-number">2.</span> <span class="nav-text">安装和初始化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装zabbix"><span class="nav-number">2.1.</span> <span class="nav-text">安装zabbix</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装数据库"><span class="nav-number">2.2.</span> <span class="nav-text">安装数据库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#给zabbix-server做一些配置"><span class="nav-number">2.3.</span> <span class="nav-text">给zabbix-server做一些配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启动zabbix-server-和zabbix-agent进程"><span class="nav-number">2.4.</span> <span class="nav-text">启动zabbix_server 和zabbix_agent进程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Web端配置zabbix"><span class="nav-number">3.</span> <span class="nav-text">Web端配置zabbix</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">现在</span>
+
+
+  
+
+  
+</div>
+
+
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  访问用户:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<div class="powered-by">
+<i class="fa fa-eye"></i><span id="busuanzi_container_site_pv">
+   访问量:<span id="busuanzi_value_site_pv"></span>
+</span>
+</div>
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">全站共986字</span>
+</div>
+
+<!--
+<span class="post-meta-divider">|</span>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Mist</div>
+
+
+
+-->
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<!--<script type="text/javascript" src="/js/src/love.js"></script>-->

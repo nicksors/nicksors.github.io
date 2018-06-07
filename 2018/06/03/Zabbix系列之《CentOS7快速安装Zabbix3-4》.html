@@ -139,7 +139,7 @@
 <meta property="og:image" content="//nicksors.cc/2018/06/03/Zabbix系列之《CentOS7快速安装Zabbix3-4》/配置信息总览.png">
 <meta property="og:image" content="//nicksors.cc/2018/06/03/Zabbix系列之《CentOS7快速安装Zabbix3-4》/登录窗口.png">
 <meta property="og:image" content="//nicksors.cc/2018/06/03/Zabbix系列之《CentOS7快速安装Zabbix3-4》/dashboard.png">
-<meta property="og:updated_time" content="2018-06-07T08:26:57.000Z">
+<meta property="og:updated_time" content="2018-06-07T08:28:39.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Zabbix系列之《CentOS7快速安装Zabbix3-4》">
 <meta name="twitter:description" content="前言：这篇文章适合刚入行的运维同学，在运维领域学习技术最好的方式就是：先快速将它搭建起来，然后根据每个组件或知识点横向深入学习，这也是最佳实践，本文就是带领运维童鞋们快速安装和掌握监控领域的利器，zabbix！">
@@ -416,7 +416,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-06-07 16:26:57" itemprop="dateModified" datetime="2018-06-07T16:26:57+08:00">2018-06-07</time>
+                <time title="修改时间：2018-06-07 16:28:39" itemprop="dateModified" datetime="2018-06-07T16:28:39+08:00">2018-06-07</time>
               
             
           </span>
@@ -491,7 +491,7 @@
 <p>2、启动后保持检查的好习惯：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@nicksors ~]<span class="comment"># netstat -lntup|egrep "zabbix|http"</span></span><br><span class="line">tcp        0      0 0.0.0.0:10050          0.0.0.0:*              LISTEN      23007/zabbix_agentd</span><br><span class="line">tcp        0      0 0.0.0.0:10051          0.0.0.0:*              LISTEN      23022/zabbix_server</span><br><span class="line">tcp6      0      0 :::80                  :::*                    LISTEN      23205/httpd</span><br><span class="line">tcp6      0      0 :::10050                :::*                    LISTEN      23007/zabbix_agentd</span><br><span class="line">tcp6      0      0 :::10051                :::*                    LISTEN      23022/zabbix_server</span><br></pre></td></tr></table></figure></p>
 <p>zabbix_agent端口默认为10050<br>zabbix_server端口默认为10051</p>
 <p>3、访问<br>地址为：<a href="http://server_ip_or_name/zabbix" target="_blank" rel="noopener">http://server_ip_or_name/zabbix</a><br>请将server_ip_or_name换成你的主机IP地址</p>
-<h1 id="Web端配置zabbix"><a href="#Web端配置zabbix" class="headerlink" title="Web端配置zabbix"></a>Web端配置zabbix</h1><p>点击Next step<br><img src="/2018/06/03/Zabbix系列之《CentOS7快速安装Zabbix3-4》/配置首页.png" title="配置首页"></p>
+<h1 id="Web页面配置zabbix"><a href="#Web页面配置zabbix" class="headerlink" title="Web页面配置zabbix"></a>Web页面配置zabbix</h1><p>点击Next step<br><img src="/2018/06/03/Zabbix系列之《CentOS7快速安装Zabbix3-4》/配置首页.png" title="配置首页"></p>
 <p>这一步如果有“红叉”的，你需要满足，自行百度可以解决。点击Next step<br><img src="/2018/06/03/Zabbix系列之《CentOS7快速安装Zabbix3-4》/环境依赖.png" title="环境依赖"></p>
 <p>默认会选择MySQL，port填写3306，Password填写你设置的密码即可。点击Next step<br><img src="/2018/06/03/Zabbix系列之《CentOS7快速安装Zabbix3-4》/数据库配置.png" title="数据库配置"></p>
 <p>设置Zabbix Server信息，默认即可，Name写不写随你。点击Next step<br><img src="/2018/06/03/Zabbix系列之《CentOS7快速安装Zabbix3-4》/Server信息配置.png" title="Server信息配置"></p>
@@ -708,7 +708,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#系统环境准备"><span class="nav-number">1.</span> <span class="nav-text">系统环境准备</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#关闭selinux"><span class="nav-number">1.1.</span> <span class="nav-text">关闭selinux</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关闭防火墙"><span class="nav-number">1.2.</span> <span class="nav-text">关闭防火墙</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置系统时间同步"><span class="nav-number">1.3.</span> <span class="nav-text">配置系统时间同步</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#选择你需要的版本进行安装"><span class="nav-number">2.</span> <span class="nav-text">选择你需要的版本进行安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装和初始化"><span class="nav-number">3.</span> <span class="nav-text">安装和初始化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装zabbix"><span class="nav-number">3.1.</span> <span class="nav-text">安装zabbix</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装数据库"><span class="nav-number">3.2.</span> <span class="nav-text">安装数据库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#给zabbix-server做一些配置"><span class="nav-number">3.3.</span> <span class="nav-text">给zabbix-server做一些配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启动zabbix-server-和zabbix-agent进程"><span class="nav-number">3.4.</span> <span class="nav-text">启动zabbix_server 和zabbix_agent进程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Web端配置zabbix"><span class="nav-number">4.</span> <span class="nav-text">Web端配置zabbix</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#系统环境准备"><span class="nav-number">1.</span> <span class="nav-text">系统环境准备</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#关闭selinux"><span class="nav-number">1.1.</span> <span class="nav-text">关闭selinux</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关闭防火墙"><span class="nav-number">1.2.</span> <span class="nav-text">关闭防火墙</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置系统时间同步"><span class="nav-number">1.3.</span> <span class="nav-text">配置系统时间同步</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#选择你需要的版本进行安装"><span class="nav-number">2.</span> <span class="nav-text">选择你需要的版本进行安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装和初始化"><span class="nav-number">3.</span> <span class="nav-text">安装和初始化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装zabbix"><span class="nav-number">3.1.</span> <span class="nav-text">安装zabbix</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装数据库"><span class="nav-number">3.2.</span> <span class="nav-text">安装数据库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#给zabbix-server做一些配置"><span class="nav-number">3.3.</span> <span class="nav-text">给zabbix-server做一些配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启动zabbix-server-和zabbix-agent进程"><span class="nav-number">3.4.</span> <span class="nav-text">启动zabbix_server 和zabbix_agent进程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Web页面配置zabbix"><span class="nav-number">4.</span> <span class="nav-text">Web页面配置zabbix</span></a></li></ol></div>
             
 
           </div>

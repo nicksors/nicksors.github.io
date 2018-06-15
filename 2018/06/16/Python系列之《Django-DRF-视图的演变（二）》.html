@@ -142,7 +142,7 @@
 <meta property="og:image" content="//nicksors.cc/2018/06/16/Python系列之《Django-DRF-视图的演变（二）》/60988105.png">
 <meta property="og:image" content="//nicksors.cc/2018/06/16/Python系列之《Django-DRF-视图的演变（二）》/61040603.png">
 <meta property="og:image" content="//nicksors.cc/2018/06/16/Python系列之《Django-DRF-视图的演变（二）》/61231940.png">
-<meta property="og:updated_time" content="2018-06-15T10:27:24.000Z">
+<meta property="og:updated_time" content="2018-06-15T10:32:14.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python系列之《Django-DRF-视图的演变（二）》">
 <meta name="twitter:description" content="前言：本文是“Python系列之《Django-DRF-序列化模型（一）》”的姊妹篇，其中示例所用的内容也继承了它，这篇文章是比较高阶的内容，适合有一定基础的同学查阅。">
@@ -419,7 +419,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-06-15 18:27:24" itemprop="dateModified" datetime="2018-06-15T18:27:24+08:00">2018-06-15</time>
+                <time title="修改时间：2018-06-15 18:32:14" itemprop="dateModified" datetime="2018-06-15T18:32:14+08:00">2018-06-15</time>
               
             
           </span>
@@ -436,7 +436,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python开发/" itemprop="url" rel="index"><span itemprop="name">Python开发</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python开发-Django/" itemprop="url" rel="index"><span itemprop="name">Python开发 - Django</span></a></span>
 
                 
                 
@@ -527,6 +527,7 @@
 <p>从源码中能看出，ModelViewSet所继承的视图类，我们在前面几个版本中都重点继承并介绍过。所以，你知道它的原理了吧！</p>
 <p><strong>2、路由规则：</strong><br>$ vim idc/urls.py<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">###########################  版本七  ##############################</span></span><br><span class="line">from rest_framework.routers import DefaultRouter</span><br><span class="line"></span><br><span class="line">route = DefaultRouter()</span><br><span class="line">route.register(<span class="string">"idcs"</span>, views.IdcViewset_V7)</span><br><span class="line">urlpatterns = [</span><br><span class="line">    url(r<span class="string">'^'</span>, include(route.urls))</span><br><span class="line">]</span><br></pre></td></tr></table></figure></p>
 <p>最终版的规则使用了drf的DefaultRouter函数，通过实例化DefaultRouter得到route对象，使用route.register()你的app路由，有多个注册多个即可，使用也很简单。</p>
+<p>本文由“Rock”布道，本站学习和整理发布。</p>
 <p>如果你在阅读或使用文章中遇到问题，欢迎加入QQ群：32330026，我们是一群爱学习的人，期待与你一起学习进步。</p>
 
       
@@ -690,8 +691,6 @@
                 <div class="site-state-item site-state-categories">
                   <a href="/categories/index.html">
                     
-                    
-                      
                     
                       
                     

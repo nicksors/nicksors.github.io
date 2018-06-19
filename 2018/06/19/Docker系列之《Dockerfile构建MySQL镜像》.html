@@ -123,28 +123,27 @@
 
 
 
-  <meta name="description" content="前言：在上一篇文章里我们简单介绍了Docker Hub，这篇文章带着大家深入学习如何使用Docker开源的镜像托管仓库。对于个人制作的镜像而言，托管在Docker Hub镜像仓库上是一个非常不错的选择。">
-<meta name="keywords" content="DockerHub">
+  <meta name="description" content="前言: 学会使用Dockerfile制作自己需要的镜像是必备的技能，本文就通过实战的方式展示如何通过Dockerfile来制作MySQL镜像。">
+<meta name="keywords" content="Dockerfile,MySQL">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Docker系列之《善用DockerHub管理自己的镜像》">
-<meta property="og:url" content="//nicksors.cc/2018/06/12/Docker系列之《善用DockerHub管理自己的镜像》.html">
+<meta property="og:title" content="Docker系列之《Dockerfile构建MySQL镜像》">
+<meta property="og:url" content="//nicksors.cc/2018/06/19/Docker系列之《Dockerfile构建MySQL镜像》.html">
 <meta property="og:site_name" content="开元DevOps知识库">
-<meta property="og:description" content="前言：在上一篇文章里我们简单介绍了Docker Hub，这篇文章带着大家深入学习如何使用Docker开源的镜像托管仓库。对于个人制作的镜像而言，托管在Docker Hub镜像仓库上是一个非常不错的选择。">
+<meta property="og:description" content="前言: 学会使用Dockerfile制作自己需要的镜像是必备的技能，本文就通过实战的方式展示如何通过Dockerfile来制作MySQL镜像。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="//nicksors.cc/2018/06/12/Docker系列之《善用DockerHub管理自己的镜像》/登录页面.png">
-<meta property="og:image" content="//nicksors.cc/2018/06/12/Docker系列之《善用DockerHub管理自己的镜像》/hub列表.png">
-<meta property="og:updated_time" content="2018-06-12T11:33:56.000Z">
+<meta property="og:image" content="//nicksors.cc/2018/06/19/Docker系列之《Dockerfile构建MySQL镜像》/Hub-mysql.png">
+<meta property="og:updated_time" content="2018-06-19T04:26:38.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Docker系列之《善用DockerHub管理自己的镜像》">
-<meta name="twitter:description" content="前言：在上一篇文章里我们简单介绍了Docker Hub，这篇文章带着大家深入学习如何使用Docker开源的镜像托管仓库。对于个人制作的镜像而言，托管在Docker Hub镜像仓库上是一个非常不错的选择。">
-<meta name="twitter:image" content="//nicksors.cc/2018/06/12/Docker系列之《善用DockerHub管理自己的镜像》/登录页面.png">
+<meta name="twitter:title" content="Docker系列之《Dockerfile构建MySQL镜像》">
+<meta name="twitter:description" content="前言: 学会使用Dockerfile制作自己需要的镜像是必备的技能，本文就通过实战的方式展示如何通过Dockerfile来制作MySQL镜像。">
+<meta name="twitter:image" content="//nicksors.cc/2018/06/19/Docker系列之《Dockerfile构建MySQL镜像》/Hub-mysql.png">
 
 
 
 
 
 
-  <link rel="canonical" href="//nicksors.cc/2018/06/12/Docker系列之《善用DockerHub管理自己的镜像》.html"/>
+  <link rel="canonical" href="//nicksors.cc/2018/06/19/Docker系列之《Dockerfile构建MySQL镜像》.html"/>
 
 
 
@@ -154,7 +153,7 @@
   };
 </script>
 
-  <title>Docker系列之《善用DockerHub管理自己的镜像》 | 开元DevOps知识库</title>
+  <title>Docker系列之《Dockerfile构建MySQL镜像》 | 开元DevOps知识库</title>
   
 
 
@@ -351,7 +350,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="//nicksors.cc/2018/06/12/Docker系列之《善用DockerHub管理自己的镜像》.html">
+    <link itemprop="mainEntityOfPage" href="//nicksors.cc/2018/06/19/Docker系列之《Dockerfile构建MySQL镜像》.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="开元">
@@ -368,7 +367,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Docker系列之《善用DockerHub管理自己的镜像》
+          <h1 class="post-title" itemprop="name headline">Docker系列之《Dockerfile构建MySQL镜像》
               
             
           </h1>
@@ -393,7 +392,7 @@
                 
               
 
-              <time title="创建时间：2018-06-12 18:55:03 / 修改时间：19:33:56" itemprop="dateCreated datePublished" datetime="2018-06-12T18:55:03+08:00">2018-06-12</time>
+              <time title="创建时间：2018-06-19 12:16:43 / 修改时间：12:26:38" itemprop="dateCreated datePublished" datetime="2018-06-19T12:16:43+08:00">2018-06-19</time>
             
 
             
@@ -448,30 +447,27 @@
 
       
         <blockquote>
-<p>前言：在上一篇文章里我们简单介绍了Docker Hub，这篇文章带着大家深入学习如何使用Docker开源的镜像托管仓库。对于个人制作的镜像而言，托管在Docker Hub镜像仓库上是一个非常不错的选择。</p>
+<p>前言: 学会使用Dockerfile制作自己需要的镜像是必备的技能，本文就通过实战的方式展示如何通过Dockerfile来制作MySQL镜像。</p>
 </blockquote>
 <a id="more"></a>
-<p>Docker Hub的官网是：<a href="https://hub.docker.com/" target="_blank" rel="noopener">https://hub.docker.com/</a><br>它与同源代码托管服务的Github类似，不同的是Docker Hub提供的是镜像托管服务。利用Docker Hbu，我们可以搜索、创建、分享和管理镜像，还可以利用其提供的自动化构建技术直接在集群云服务器上构建镜像。</p>
-<p>Docker Hub为用户提供不限数目的公开镜像托管服务，但仅提供一个私有镜像托管服务。如果需要更多的私有镜像托管，需要额外付费。</p>
-<h2 id="镜像的分发"><a href="#镜像的分发" class="headerlink" title="镜像的分发"></a>镜像的分发</h2><p>想要将本机创建的镜像分发到互联网提供其他用户使用，最便捷的方式就是使用Docker Hub。首先登录Docker Hub官网注册<br><img src="/2018/06/12/Docker系列之《善用DockerHub管理自己的镜像》/登录页面.png" title="Harbor-登录页面"></p>
-<p>可以使用GitHub帐号登录，请自行探索。<br>注册成功后，在命令行登录我们刚注册的帐号：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># docker login</span></span><br><span class="line">Login with your Docker ID to push and pull images from Docker Hub. If you don<span class="string">'t have a Docker ID, head over to https://hub.docker.com to create one.</span></span><br><span class="line"><span class="string">Username: nicksors</span></span><br><span class="line"><span class="string">Password:</span></span><br><span class="line"><span class="string">Login Succeeded</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># cat /root/.docker/config.json # 这里是登录后的配置文件</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string">    "auths": &#123;</span></span><br><span class="line"><span class="string">        "https://index.docker.io/v1/": &#123;</span></span><br><span class="line"><span class="string">            "auth": "bmlja3NvcnM6YWJjMTIzISE="</span></span><br><span class="line"><span class="string">        &#125;</span></span><br><span class="line"><span class="string">    &#125;,</span></span><br><span class="line"><span class="string">    "HttpHeaders": &#123;</span></span><br><span class="line"><span class="string">        "User-Agent": "Docker-Client/18.03.1-ce (linux)"</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
-<p>用户名和密码通过哈希运算之后保存在auth字段，这样可以保证密码的安全性。当然，我们也可以在首次上传镜像时由Docker主动提示我们输入密码。</p>
-<p>登录成功后，使用push命令上传镜像，如果不指定镜像TAG，指定的仓库在本地的所有镜像上都会上传到Docker Hub。<br>下面的push将imported镜像上传到Docker Hub：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># docker images imported</span></span><br><span class="line">REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE</span><br><span class="line">imported            container           a5d0a399ea83        38 minutes ago      144.7 MB</span><br><span class="line">imported            v1                  a5d0a399ea83        38 minutes ago      144.7 MB</span><br><span class="line"><span class="comment"># docker push nicksors/imported # 将本地的imported推送到docker hub上的nicksors仓库里</span></span><br></pre></td></tr></table></figure>
-<p>遇到的错误1：在上传时，必须在镜像名字前面加用户ID ，否则会出现错误信息：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Error response from daemon: You cannot push a &quot;root&quot; repository. Please rename your repository to &lt;user&gt;/&lt;repo&gt; (ex: nicksors/imported)</span><br></pre></td></tr></table></figure></p>
-<p>解决方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># docker tag imported:v1 nicksors/imported:v1</span><br><span class="line"># docker push nicksors/imported:v1      #再执行就可以了</span><br></pre></td></tr></table></figure></p>
-<p>可以看到镜像正在上传，输出信息如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># docker push nicksors/imported:v1</span><br><span class="line"></span><br><span class="line">Do you really want to push to public registry? [y/n]: y</span><br><span class="line">The push refers to a repository [docker.io/nicksors/imported] (len: 1)</span><br><span class="line">a5d0a399ea83: Pushed </span><br><span class="line">v1: digest: sha256:01e7412fcf2bc44191d874a6be336988cb266ebbc0b4928fc63fdbd1dc5f9733 size: 1197</span><br></pre></td></tr></table></figure></p>
-<p>上传成功后可以在Docker Hub上看到提交的镜像：<br><img src="/2018/06/12/Docker系列之《善用DockerHub管理自己的镜像》/hub列表.png" title="hub列表"></p>
-<h2 id="上传到公网镜像仓库的一些重要注意事项"><a href="#上传到公网镜像仓库的一些重要注意事项" class="headerlink" title="上传到公网镜像仓库的一些重要注意事项"></a>上传到公网镜像仓库的一些重要注意事项</h2><ol>
-<li>要上传到公网镜像仓库时，要先给本地镜像打一个标签tag；</li>
-<li>本地镜像名中要包含公网的网址和账号；</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"> $ docker tag imported:v1 docker.io/nicksors/imported:v1</span><br><span class="line"></span><br><span class="line"> 然后再执行上传就可以了，</span><br><span class="line">$ docker push docker.io/nicksors/imported:v1</span><br></pre></td></tr></table></figure>
-<p>个人理解：</p>
-<p>Linux拷贝命令 cp 为例，<br>它含两个参数，<br>一个是源文件、另一个是目标文件，<br>cp 源文件 目标文件</p>
-<p>docker push 只有一个参数，<br>要想把本地的文件上传到公网或私有仓库中，<br>只有用docker tag 命令，<br>给本地镜像多打一个标签，<br>使得本地镜像包含公网或私有仓库的域名或IP地址信息，<br>这样执行docker push 时docker 就知道将进行上传到哪里了。</p>
-<p>怎么样，你学会如何使用Docker Hub了吗！</p>
+<h2 id="1、编写镜像Dockerfile"><a href="#1、编写镜像Dockerfile" class="headerlink" title="1、编写镜像Dockerfile"></a>1、编写镜像Dockerfile</h2><p>（1）创建Dockerfile文件，并在文件开始位置添加使用#注释的描述信息：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 名称：容器化的MySQL</span></span><br><span class="line"><span class="comment"># 用途：用作后端数据库持久化服务</span></span><br><span class="line"><span class="comment"># 创建时间：2018.06.11</span></span><br></pre></td></tr></table></figure></p>
+<p>（2）定义基础镜像<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FROM centos</span><br></pre></td></tr></table></figure></p>
+<p>（3）声明维护者信息<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MAINTAINER tanshuai 1432753451@qq.com</span><br></pre></td></tr></table></figure></p>
+<p>（4）定义工作目录<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">WORKDIR /root/</span><br></pre></td></tr></table></figure></p>
+<p>（5）安装相关软件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">RUN yum -y install wget</span><br><span class="line">RUN wget http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm</span><br><span class="line">RUN rpm -ivh /root/mysql-community-release-el7-5.noarch.rpm</span><br></pre></td></tr></table></figure></p>
+<p>（6）使用yum安装MySQL服务<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">RUN yum install mysql-server -y</span><br><span class="line"><span class="comment"># 安装好MySQL后，默认并没有建立数据库，需要使用musql_install_db创建一个数据库：</span></span><br><span class="line">RUN mysql_install_db --user=mysql</span><br></pre></td></tr></table></figure></p>
+<p>（7）通过环境变量指定MySQL使用的用户名和密码，MySQL拥有一个默认的用户root，但root用户默认只能在本地访问，所以这里定一了一个额外的用户test：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ENV MYSQL_USER <span class="built_in">test</span></span><br><span class="line">ENV MYSQL_PASS =mypassword</span><br></pre></td></tr></table></figure></p>
+<p>（8）让容器支持中文，centos容器默认是不支持中文的<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ENV LC_ALL en_US.UTF-8</span><br></pre></td></tr></table></figure></p>
+<p>（9）导出3306端口（这里是MYSQL使用的端口），以后外部使用可以访问它<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXPOSE 3306</span><br></pre></td></tr></table></figure></p>
+<p>（10）定义默认的启动命令，这里使用一个脚本来启动MySQL<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ADD run.sh /root/run.sh</span><br><span class="line">RUN chmod u+x /root/run.sh</span><br><span class="line">CMD /root/run.sh</span><br></pre></td></tr></table></figure></p>
+<h2 id="2、完整的Dockerfile："><a href="#2、完整的Dockerfile：" class="headerlink" title="2、完整的Dockerfile："></a>2、完整的Dockerfile：</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 名称：容器化的MySQL</span></span><br><span class="line"><span class="comment"># 用途：用作后端数据库持久化服务</span></span><br><span class="line"><span class="comment"># 创建时间：2018.06.11</span></span><br><span class="line">FROM centos</span><br><span class="line">MAINTAINER tanshuai 1432753451@qq.com</span><br><span class="line">WORKDIR /root/</span><br><span class="line">RUN yum -y install wget</span><br><span class="line">RUN wget http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm</span><br><span class="line">RUN rpm -ivh /root/mysql-community-release-el7-5.noarch.rpm</span><br><span class="line">RUN yum install mysql-server -y</span><br><span class="line">RUN mysql_install_db --user=mysql</span><br><span class="line">ENV MYSQL_USER <span class="built_in">test</span></span><br><span class="line">ENV MYSQL_PASS =mypassword</span><br><span class="line">ENV LC_ALL en_US.UTF-8</span><br><span class="line">EXPOSE 3306</span><br><span class="line">ADD run.sh /root/run.sh</span><br><span class="line">RUN chmod u+x /root/run.sh</span><br><span class="line">CMD /root/run.sh</span><br></pre></td></tr></table></figure>
+<p>（1）run.sh定义了容器的默认启动行为，这里只是拉起MySQL，其内容为：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">mysqld_safe</span><br></pre></td></tr></table></figure></p>
+<h2 id="3、构建和上传镜像"><a href="#3、构建和上传镜像" class="headerlink" title="3、构建和上传镜像"></a>3、构建和上传镜像</h2><p>Dockerfile和必要的文件都准备好了，接下来就可以使用docker build 命令来后街镜像了：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">$ docker build -t docker.io/nicksors/mysql:latest /root/build_images/build_mysql</span><br><span class="line">Sending build context to Docker daemon 3.584 kB</span><br><span class="line">Step 1 : FROM centos</span><br><span class="line"> ---&gt; 0584b3d2cf6d</span><br><span class="line">Step 2 : MAINTAINER tanshuai 1432753451@qq.com</span><br><span class="line"> ---&gt; Running <span class="keyword">in</span> ebbb7a8b003a</span><br><span class="line"> ---&gt; 19316ea8b554</span><br><span class="line">Removing intermediate container ebbb7a8b003a</span><br><span class="line">Step 3 : WORKDIR /root/</span><br><span class="line"> ---&gt; Running <span class="keyword">in</span> 83e6594d48db</span><br><span class="line"> ---&gt; dd4a9e06196c</span><br><span class="line">~~~中间太长自动略过~~~</span><br><span class="line">Step 15 : CMD /root/run.sh</span><br><span class="line"> ---&gt; Running <span class="keyword">in</span> 98e4b96d656e</span><br><span class="line"> ---&gt; b340df2bc01f</span><br><span class="line">Removing intermediate container 98e4b96d656e</span><br><span class="line">Successfully built b340df2bc01f</span><br></pre></td></tr></table></figure></p>
+<h2 id="4、启动MySQL容器"><a href="#4、启动MySQL容器" class="headerlink" title="4、启动MySQL容器"></a>4、启动MySQL容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -d -p 3306:3306 --name=mysql docker.io/nicksors/mysql /root/run.sh</span><br><span class="line">abc07ad4db8eef4d38d7b7abda99d6609f9108704aa8f45e0499459610ccef2f</span><br><span class="line">$ docker ps </span><br><span class="line">CONTAINER ID        IMAGE                      COMMAND             CREATED             STATUS              PORTS                    NAMES</span><br><span class="line">abc07ad4db8e        docker.io/nicksors/mysql   <span class="string">"/root/run.sh"</span>      52 seconds ago      Up 51 seconds       0.0.0.0:3306-&gt;3306/tcp   mysql</span><br></pre></td></tr></table></figure>
+<p>构建好镜像之后，通过docker push命令将镜像提交到Docker Hub：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ docker push docker.io/nicksors/mysql</span><br><span class="line">a2db66ccbd56: Pushed </span><br><span class="line">157fa65fbf3b: Pushed </span><br><span class="line">8ed28c549a06: Pushed </span><br><span class="line">4ded80e382c6: Pushing [=====&gt;                                             ] 49.42 MB/423.7 MB</span><br><span class="line">dee17d2fbb38: Pushed </span><br><span class="line">0074ce8e9d38: Pushed </span><br><span class="line">d2193e3db81f: Pushing [=====================&gt;                             ] 46.14 MB/109.5 MB</span><br><span class="line">97ca462ad9ee: Mounted from library/centos </span><br><span class="line">97ca462ad9ee: Preparing </span><br><span class="line">97ca462ad9ee: Mounted from library/centos </span><br><span class="line">latest: digest: sha256:d0f8c127884437a8aa8798340be021b8dd56929cfab51bf4822afd435f8ce0a6 size: 1975</span><br></pre></td></tr></table></figure>
+<p>现在MySQL镜像就创建好了，并且可以在任何可以上网的机器上从Docker Hub拉取。</p>
+ <img src="/2018/06/19/Docker系列之《Dockerfile构建MySQL镜像》/Hub-mysql.png" title="Hub-mysql">
 
       
     </div>
@@ -499,7 +495,7 @@
       </li>
       <li class="post-copyright-link">
         <strong>本文链接：</strong>
-        <a href="/2018/06/12/Docker系列之《善用DockerHub管理自己的镜像》.html" title="Docker系列之《善用DockerHub管理自己的镜像》">2018/06/12/Docker系列之《善用DockerHub管理自己的镜像》.html</a>
+        <a href="/2018/06/19/Docker系列之《Dockerfile构建MySQL镜像》.html" title="Docker系列之《Dockerfile构建MySQL镜像》">2018/06/19/Docker系列之《Dockerfile构建MySQL镜像》.html</a>
       </li>
       <li class="post-copyright-license">
         <strong>版权声明： </strong>
@@ -523,7 +519,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/DockerHub/" rel="tag"><i class="fa fa-tag"></i> DockerHub</a>
+            <a href="/tags/Dockerfile/" rel="tag"><i class="fa fa-tag"></i> Dockerfile</a>
+          
+            <a href="/tags/MySQL/" rel="tag"><i class="fa fa-tag"></i> MySQL</a>
           
         </div>
       
@@ -536,8 +534,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/11/Docker系列之《企业级私有仓库解决方案》.html" rel="next" title="Docker系列之《企业级私有仓库解决方案》">
-                <i class="fa fa-chevron-left"></i> Docker系列之《企业级私有仓库解决方案》
+              <a href="/2018/06/16/Python系列之《Django-DRF-视图的演变（二）》.html" rel="next" title="Python系列之《Django-DRF-视图的演变（二）》">
+                <i class="fa fa-chevron-left"></i> Python系列之《Django-DRF-视图的演变（二）》
               </a>
             
           </div>
@@ -545,10 +543,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/06/14/Zabbix系列之《WEB场景监控》.html" rel="prev" title="Zabbix系列之《WEB场景监控》">
-                Zabbix系列之《WEB场景监控》 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -729,7 +723,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#镜像的分发"><span class="nav-number">1.</span> <span class="nav-text">镜像的分发</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#上传到公网镜像仓库的一些重要注意事项"><span class="nav-number">2.</span> <span class="nav-text">上传到公网镜像仓库的一些重要注意事项</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、编写镜像Dockerfile"><span class="nav-number">1.</span> <span class="nav-text">1、编写镜像Dockerfile</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、完整的Dockerfile："><span class="nav-number">2.</span> <span class="nav-text">2、完整的Dockerfile：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、构建和上传镜像"><span class="nav-number">3.</span> <span class="nav-text">3、构建和上传镜像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4、启动MySQL容器"><span class="nav-number">4.</span> <span class="nav-text">4、启动MySQL容器</span></a></li></ol></div>
             
 
           </div>

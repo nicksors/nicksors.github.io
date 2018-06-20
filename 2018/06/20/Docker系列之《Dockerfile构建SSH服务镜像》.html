@@ -123,38 +123,25 @@
 
 
 
-  <meta name="description" content="前言，本文将介绍zabbix强大功能之一，自动化发现主机并将其添加到zabbix监控平台，思考一下，如果贵公司上线20台物理机或云主机，需要将这些主机添加到监控平台，如果一台一台添加的话那基础设施运维就有活干了！那本文就是介绍zabbix是如何解决这个问题的。">
-<meta name="keywords" content="自动发现">
+  <meta name="description" content="前言：这又是一篇对Dockerfile实例应用的文章，如果你将本站的几篇Dockerfile文章学完，相信你对docker的理解又提升了不少。">
+<meta name="keywords" content="Dockerfile">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Zabbix系列之《自动化发现主机并添加监控》">
-<meta property="og:url" content="//nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》.html">
+<meta property="og:title" content="Docker系列之《Dockerfile构建SSH服务镜像》">
+<meta property="og:url" content="//nicksors.cc/2018/06/20/Docker系列之《Dockerfile构建SSH服务镜像》.html">
 <meta property="og:site_name" content="开元DevOps知识库">
-<meta property="og:description" content="前言，本文将介绍zabbix强大功能之一，自动化发现主机并将其添加到zabbix监控平台，思考一下，如果贵公司上线20台物理机或云主机，需要将这些主机添加到监控平台，如果一台一台添加的话那基础设施运维就有活干了！那本文就是介绍zabbix是如何解决这个问题的。">
+<meta property="og:description" content="前言：这又是一篇对Dockerfile实例应用的文章，如果你将本站的几篇Dockerfile文章学完，相信你对docker的理解又提升了不少。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="//nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/创建动作.png">
-<meta property="og:image" content="//nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/填写动作名称.png">
-<meta property="og:image" content="//nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/配置条件.png">
-<meta property="og:image" content="//nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/填写新的条件信息.png">
-<meta property="og:image" content="//nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/设置动作添加主机组.png">
-<meta property="og:image" content="//nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/添加操作.png">
-<meta property="og:image" content="//nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/设置动作添加主机.png">
-<meta property="og:image" content="//nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/添加关联模板.png">
-<meta property="og:image" content="//nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/添加完成.png">
-<meta property="og:image" content="//nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/创建发现规则.png">
-<meta property="og:image" content="//nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/配置自动发现.png">
-<meta property="og:image" content="//nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/已添加的主机.png">
-<meta property="og:updated_time" content="2018-06-14T03:26:20.000Z">
+<meta property="og:updated_time" content="2018-06-20T07:37:09.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Zabbix系列之《自动化发现主机并添加监控》">
-<meta name="twitter:description" content="前言，本文将介绍zabbix强大功能之一，自动化发现主机并将其添加到zabbix监控平台，思考一下，如果贵公司上线20台物理机或云主机，需要将这些主机添加到监控平台，如果一台一台添加的话那基础设施运维就有活干了！那本文就是介绍zabbix是如何解决这个问题的。">
-<meta name="twitter:image" content="//nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/创建动作.png">
+<meta name="twitter:title" content="Docker系列之《Dockerfile构建SSH服务镜像》">
+<meta name="twitter:description" content="前言：这又是一篇对Dockerfile实例应用的文章，如果你将本站的几篇Dockerfile文章学完，相信你对docker的理解又提升了不少。">
 
 
 
 
 
 
-  <link rel="canonical" href="//nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》.html"/>
+  <link rel="canonical" href="//nicksors.cc/2018/06/20/Docker系列之《Dockerfile构建SSH服务镜像》.html"/>
 
 
 
@@ -164,7 +151,7 @@
   };
 </script>
 
-  <title>Zabbix系列之《自动化发现主机并添加监控》 | 开元DevOps知识库</title>
+  <title>Docker系列之《Dockerfile构建SSH服务镜像》 | 开元DevOps知识库</title>
   
 
 
@@ -361,7 +348,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="//nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》.html">
+    <link itemprop="mainEntityOfPage" href="//nicksors.cc/2018/06/20/Docker系列之《Dockerfile构建SSH服务镜像》.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="开元">
@@ -378,7 +365,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Zabbix系列之《自动化发现主机并添加监控》
+          <h1 class="post-title" itemprop="name headline">Docker系列之《Dockerfile构建SSH服务镜像》
               
             
           </h1>
@@ -403,7 +390,7 @@
                 
               
 
-              <time title="创建时间：2018-06-14 10:44:35 / 修改时间：11:26:20" itemprop="dateCreated datePublished" datetime="2018-06-14T10:44:35+08:00">2018-06-14</time>
+              <time title="创建时间：2018-06-20 15:16:12 / 修改时间：15:37:09" itemprop="dateCreated datePublished" datetime="2018-06-20T15:16:12+08:00">2018-06-20</time>
             
 
             
@@ -425,7 +412,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Zabbix/" itemprop="url" rel="index"><span itemprop="name">Zabbix</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Docker/" itemprop="url" rel="index"><span itemprop="name">Docker</span></a></span>
 
                 
                 
@@ -458,61 +445,19 @@
 
       
         <blockquote>
-<p>前言，本文将介绍zabbix强大功能之一，自动化发现主机并将其添加到zabbix监控平台，思考一下，如果贵公司上线20台物理机或云主机，需要将这些主机添加到监控平台，如果一台一台添加的话那基础设施运维就有活干了！那本文就是介绍zabbix是如何解决这个问题的。</p>
+<p>前言：这又是一篇对Dockerfile实例应用的文章，如果你将本站的几篇Dockerfile文章学完，相信你对docker的理解又提升了不少。</p>
 </blockquote>
 <a id="more"></a>
-<h2 id="创建思路"><a href="#创建思路" class="headerlink" title="创建思路"></a>创建思路</h2><p>首先说下自动发现强大的功能，到底可以完成什么工作：</p>
-<ol>
-<li>快速发现并添加主机;</li>
-<li>简单的管理;</li>
-<li>随着环境的改变而快速搭建监控系统;</li>
-</ol>
-<p>自动发现基于网络发现功能，而网络发现又基于以下信息：</p>
-<ol>
-<li>IP地址段;</li>
-<li>基于服务的FTP、SSH、Web、POP3、IMAP、TCP等;</li>
-<li>从Zabbix-agent端接收的信息;</li>
-<li>从SNMP agent端接受的信息;</li>
-</ol>
-<p>可以理解创建自动发现的过程为，zabbix-server会扫描添加的IP地址段。比如需要添加IP地址段为192.168.80.100到192.168.80.199这个区间的机器，设定好网络区间。当zabbix-server扫描到已经启动的些机器时，下一步需要触发动作，什么类型的机器进行什么操作。比如linux机器添加linux模板，并且添加到KVM虚拟机的分组当中。当完成了这些操作，zabbix主机的添加也就已经完成了。下面先进行动作的设置。</p>
-<h2 id="创建动作"><a href="#创建动作" class="headerlink" title="创建动作"></a>创建动作</h2><p>上面简单介绍了下创建思路，有了简单的了解，那么下面来看看是如何创建的<br><img src="/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/创建动作.png" title="创建动作"></p>
-<p>依次点击以下位置：</p>
-<ol>
-<li>配置</li>
-<li>动作</li>
-<li>自动发现</li>
-<li>创建动作</li>
-</ol>
-<p>填写动作位置名称，这里设置的是自动发现，当然可以设置多个动作，就像上边说的不同主机不同动作。<br><img src="/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/填写动作名称.png" title="填写动作名称"></p>
-<p>点击动作旁边的条件选项，下拉选择主机地址，并设置符合条件的IP地址区间段。<br><img src="/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/配置条件.png" title="配置条件"></p>
-<p>选择新的触发条件选择下拉框中的服务类型，在选择Zabbix客户端<br><img src="/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/填写新的条件信息.png" title="填写新的条件信息"></p>
-<ol>
-<li>点击操作</li>
-<li>选择操作类型为：添加到主机群组</li>
-<li>选择要添加的主机群组</li>
-<li>先点击里面的添加</li>
-<li>再点击外边的添加 （4和5这个步骤是zabbix的老毛病了，注意好顺序。）</li>
-</ol>
-<img src="/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/设置动作添加主机组.png" title="设置动作添加主机组">
-<p>此处就是外边的那个添加。<br><img src="/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/添加操作.png" title="添加操作"></p>
-<p>添加操作为主机选择添加主机。<br><img src="/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/设置动作添加主机.png" title="设置动作添加主机"></p>
-<p>添加关联模板<br><img src="/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/添加关联模板.png" title="添加关联模板"></p>
-<p>添加完成<br><img src="/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/添加完成.png" title="添加完成"></p>
-<h2 id="创建发现规则"><a href="#创建发现规则" class="headerlink" title="创建发现规则"></a>创建发现规则</h2><p>上面的创建动作完成后，紧接着就需要创建发现规则，因为有了这个规则，才能完成一系列自动发现、自动添加监控、触发告警等动作。</p>
-<p>点击自动发现→创建发现规则<br><img src="/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/创建发现规则.png" title="创建发现规则"></p>
-<p>点击主机 自动发现：</p>
-<ol>
-<li>填写名称</li>
-<li>由agent代理程序自动发现</li>
-<li>IP范围：填写发现范围</li>
-<li>延迟：此处按秒计算</li>
-<li>添加检查：此处添加zabbix的uname</li>
-<li>设备唯一性准则：按IP地址区分</li>
-</ol>
-<p>最后点击启用，添加。<br><img src="/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/配置自动发现.png" title="配置自动发现"></p>
-<p>自动发现就添加完成了，点击到首页仪表板，在agent配置没问题的情况下，应该添加到主机了。<br><img src="/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/已添加的主机.png" title="已添加的主机"></p>
-<p>已经有机器被发现并自动添加到zabbix监控平台。</p>
-<p>本文来源于作者：“祁成” 投稿，由本站整理发布，感谢作者辛勤付出。</p>
+<h3 id="1、基于commit命令的方式"><a href="#1、基于commit命令的方式" class="headerlink" title="1、基于commit命令的方式"></a>1、基于commit命令的方式</h3><p>先运行一个centos或ubuntu镜像，然后安装ssh，然后commit镜像，然后运行即可；<br>大概步骤：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -it centos </span><br><span class="line">$ yum install openssh-server openssh -y</span><br><span class="line">$ docker commit 容器ID ssh:commit</span><br></pre></td></tr></table></figure></p>
+<p>上面就已经将容器配置好啦，接下来是使用容器<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -d -p 52113:22 ssh:commit /root/run.sh</span><br></pre></td></tr></table></figure></p>
+<h3 id="2、基于Dockerfile的方式（推荐）"><a href="#2、基于Dockerfile的方式（推荐）" class="headerlink" title="2、基于Dockerfile的方式（推荐）"></a>2、基于Dockerfile的方式（推荐）</h3><p><strong>1、准备工作</strong><br>创建一个存放Dockerfile相关文件的工作目录：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir /root/Dockerfile/</span><br></pre></td></tr></table></figure></p>
+<p>在该目录下，需要创建3个文件：Dockerfile、run.sh和authorized_keys，Dockerfile用于构建镜像，run.sh是启动SSH服务的脚本文件，authorized_keys则是包含需要远程登录的用户公钥。<br>run.sh脚本文件的内容如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">/usr/sbin/sshd -D</span><br></pre></td></tr></table></figure></p>
+<p>authorized_keys文件内容如下：<br>在宿主机上生成一对ssh密钥<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ssh-keygen -t rsa    <span class="comment">#一路回车即可</span></span><br><span class="line">$ cat ~/.ssh/id_rsa.pub &gt;authorized_keys</span><br></pre></td></tr></table></figure></p>
+<p><strong>2、编写Dockerfile</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#使用的基础镜像</span></span><br><span class="line">FROM centos</span><br><span class="line"></span><br><span class="line"><span class="comment">#添加作者信息</span></span><br><span class="line">MAINTAINER tanyanhong&lt;tanyanhong@moxiu.net&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment">#安装阿里epel源</span></span><br><span class="line">RUN rpm -ivh http://mirrors.aliyun.com/epel/epel-release-latest-7.noarch.rpm</span><br><span class="line"></span><br><span class="line"><span class="comment">#安装SSH服务</span></span><br><span class="line">RUN yum install openssh openssh-server -y </span><br><span class="line">RUN mkdir -p /var/run/sshd</span><br><span class="line">RUN mkdir -p /root/.ssh</span><br><span class="line"><span class="comment">#取消pam登录限制</span></span><br><span class="line">RUN sed -ri <span class="string">'s/session    required     pam_loginuid.so/#session    required     pam_loginuid.so/g'</span> /etc/pam.d/sshd</span><br><span class="line">RUN sed -i <span class="string">'s/HostKey \/etc\/ssh\/ssh_host_rsa_key/#HostKey \/etc\/ssh\/ssh_host_rsa_key/g'</span> /etc/ssh/sshd_config</span><br><span class="line">RUN sed -i <span class="string">'s/HostKey \/etc\/ssh\/ssh_host_ecdsa_key/#HostKey \/etc\/ssh\/ssh_host_ecdsa_key/g'</span> /etc/ssh/sshd_config</span><br><span class="line">RUN sed -i <span class="string">'s/HostKey \/etc\/ssh\/ssh_host_ed25519_key/#HostKey \/etc\/ssh\/ssh_host_ed25519_key/g'</span> /etc/ssh/sshd_config</span><br><span class="line"></span><br><span class="line"><span class="comment">#添加认证文件和启动脚本</span></span><br><span class="line">ADD authorized_keys /root/.ssh/authorized_keys</span><br><span class="line">ADD run.sh /root/run.sh</span><br><span class="line">RUN chmod u+x /root/run.sh</span><br><span class="line"></span><br><span class="line"><span class="comment">#暴露端口</span></span><br><span class="line">EXPOSE 22</span><br><span class="line"></span><br><span class="line"><span class="comment">#设置默认的启动命令</span></span><br><span class="line">CMD [<span class="string">"/root/run.sh"</span>]</span><br></pre></td></tr></table></figure></p>
+<p><strong>3、创建镜像</strong><br>运行docker build目录，生成目标镜像：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">$ docker build -t docker.io/nicksors/ssh:latest /root/Dockerfile/</span><br><span class="line"><span class="comment"># -t 指定tag，我打了自己的仓库标签</span></span><br><span class="line">Sending build context to Docker daemon 4.608 kB</span><br><span class="line">Step 1 : FROM centos</span><br><span class="line"> ---&gt; 0584b3d2cf6d</span><br><span class="line">Step 2 : MAINTAINER tanyanhong&lt;tanyanhong@moxiu.net&gt;</span><br><span class="line"> ---&gt; Running <span class="keyword">in</span> 0364d111928e</span><br><span class="line"> ---&gt; c4adaaf68ddb</span><br><span class="line">Removing intermediate container 0364d111928e</span><br><span class="line">Step 3 : RUN rpm -ivh http://mirrors.aliyun.com/epel/epel-release-latest-7.noarch.rpm</span><br><span class="line"> ---&gt; Running <span class="keyword">in</span> d351669fb7b4</span><br><span class="line">warning: /var/tmp/rpm-tmp.cIXtaq: Header V3 RSA/SHA256 Signature, key ID 352c64e5: NOKEY</span><br><span class="line">Retrieving http://mirrors.aliyun.com/epel/epel-release-latest-7.noarch.rpm</span><br><span class="line">Preparing...                          <span class="comment">########################################</span></span><br><span class="line">Updating / installing...</span><br><span class="line">epel-release-7-8                      <span class="comment">########################################</span></span><br><span class="line"> ---&gt; fdbef0ca575e</span><br><span class="line">Removing intermediate container d351669fb7b4</span><br><span class="line">Step 4 : RUN yum install openssh openssh-server -y</span><br><span class="line">···略···</span><br><span class="line">Removing intermediate container d6b4d4ece952</span><br><span class="line">Step 11 : ADD authorized_keys /root/.ssh/authorized_keys</span><br><span class="line"> ---&gt; a9a0f7224e8d</span><br><span class="line">Removing intermediate container 6133f320df7a</span><br><span class="line">Step 12 : ADD run.sh /root/run.sh</span><br><span class="line"> ---&gt; 3c9ce2d1a03c</span><br><span class="line">Removing intermediate container 2124700e28eb</span><br><span class="line">Step 13 : RUN chmod u+x /root/run.sh</span><br><span class="line"> ---&gt; Running <span class="keyword">in</span> f787f85cc2b4</span><br><span class="line"> ---&gt; 5e81e48e260f</span><br><span class="line">Removing intermediate container f787f85cc2b4</span><br><span class="line">Step 14 : EXPOSE 22</span><br><span class="line"> ---&gt; Running <span class="keyword">in</span> d78bd239eeaf</span><br><span class="line"> ---&gt; 5598dc68af4d</span><br><span class="line">Removing intermediate container d78bd239eeaf</span><br><span class="line">Step 15 : CMD /root/run.sh</span><br><span class="line"> ---&gt; Running <span class="keyword">in</span> e1bb50e4f1c7</span><br><span class="line"> ---&gt; 7ea2a68e47db</span><br><span class="line">Removing intermediate container e1bb50e4f1c7</span><br><span class="line">Successfully built 7ea2a68e47db</span><br></pre></td></tr></table></figure></p>
+<p>看到最后的Successfully built，就表明镜像成功生成了，其中7ea2a68e47db是镜像ID。<br>使用docker images命令查看本地镜像，可以看到我们刚刚生成的镜像，相关代码如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ docker images</span><br><span class="line">REPOSITORY                 TAG                 IMAGE ID            CREATED             SIZE</span><br><span class="line">docker.io/nicksors/ssh     latest              7ea2a68e47db        25 minutes ago      354.8 MB</span><br><span class="line">docker.io/centos           latest              0584b3d2cf6d        2 weeks ago         196.5 MB</span><br></pre></td></tr></table></figure></p>
+<p><strong>4、启动并连接容器</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -d -p 52113:22 --name=ssh docker.io/nicksors/ssh /root/run.sh</span><br><span class="line"><span class="comment"># 说明</span></span><br><span class="line">-p 指定宿主机与容器的端口映射</span><br><span class="line">镜像后面的/root/run.sh是启动镜像是需要执行的命令</span><br></pre></td></tr></table></figure></p>
+<p>然后再打开一个属主机终端，并ssh连接到容器里：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh 10.0.10.181 -p 52113</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -540,7 +485,7 @@
       </li>
       <li class="post-copyright-link">
         <strong>本文链接：</strong>
-        <a href="/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》.html" title="Zabbix系列之《自动化发现主机并添加监控》">2018/06/14/Zabbix系列之《自动化发现主机并添加监控》.html</a>
+        <a href="/2018/06/20/Docker系列之《Dockerfile构建SSH服务镜像》.html" title="Docker系列之《Dockerfile构建SSH服务镜像》">2018/06/20/Docker系列之《Dockerfile构建SSH服务镜像》.html</a>
       </li>
       <li class="post-copyright-license">
         <strong>版权声明： </strong>
@@ -564,7 +509,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/自动发现/" rel="tag"><i class="fa fa-tag"></i> 自动发现</a>
+            <a href="/tags/Dockerfile/" rel="tag"><i class="fa fa-tag"></i> Dockerfile</a>
           
         </div>
       
@@ -577,8 +522,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/14/Zabbix系列之《WEB场景监控》.html" rel="next" title="Zabbix系列之《WEB场景监控》">
-                <i class="fa fa-chevron-left"></i> Zabbix系列之《WEB场景监控》
+              <a href="/2018/06/19/Docker系列之《Dockerfile构建MySQL镜像》.html" rel="next" title="Docker系列之《Dockerfile构建MySQL镜像》">
+                <i class="fa fa-chevron-left"></i> Docker系列之《Dockerfile构建MySQL镜像》
               </a>
             
           </div>
@@ -586,10 +531,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/06/15/Python系列之《Django-DRF-序列化模型（一）》.html" rel="prev" title="Python系列之《Django-DRF-序列化模型（一）》">
-                Python系列之《Django-DRF-序列化模型（一）》 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -770,7 +711,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#创建思路"><span class="nav-number">1.</span> <span class="nav-text">创建思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建动作"><span class="nav-number">2.</span> <span class="nav-text">创建动作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建发现规则"><span class="nav-number">3.</span> <span class="nav-text">创建发现规则</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、基于commit命令的方式"><span class="nav-number">1.</span> <span class="nav-text">1、基于commit命令的方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、基于Dockerfile的方式（推荐）"><span class="nav-number">2.</span> <span class="nav-text">2、基于Dockerfile的方式（推荐）</span></a></li></ol></div>
             
 
           </div>

@@ -131,7 +131,7 @@
 <meta property="og:site_name" content="开元DevOps知识库">
 <meta property="og:description" content="前言：这又是一篇对Dockerfile实例应用的文章，如果你将本站的几篇Dockerfile文章学完，相信你对docker的理解又提升了不少。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-06-20T07:37:09.000Z">
+<meta property="og:updated_time" content="2018-06-20T07:37:58.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Docker系列之《Dockerfile构建SSH服务镜像》">
 <meta name="twitter:description" content="前言：这又是一篇对Dockerfile实例应用的文章，如果你将本站的几篇Dockerfile文章学完，相信你对docker的理解又提升了不少。">
@@ -390,7 +390,7 @@
                 
               
 
-              <time title="创建时间：2018-06-20 15:16:12 / 修改时间：15:37:09" itemprop="dateCreated datePublished" datetime="2018-06-20T15:16:12+08:00">2018-06-20</time>
+              <time title="创建时间：2018-06-20 15:16:12 / 修改时间：15:37:58" itemprop="dateCreated datePublished" datetime="2018-06-20T15:16:12+08:00">2018-06-20</time>
             
 
             
@@ -448,9 +448,9 @@
 <p>前言：这又是一篇对Dockerfile实例应用的文章，如果你将本站的几篇Dockerfile文章学完，相信你对docker的理解又提升了不少。</p>
 </blockquote>
 <a id="more"></a>
-<h3 id="1、基于commit命令的方式"><a href="#1、基于commit命令的方式" class="headerlink" title="1、基于commit命令的方式"></a>1、基于commit命令的方式</h3><p>先运行一个centos或ubuntu镜像，然后安装ssh，然后commit镜像，然后运行即可；<br>大概步骤：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -it centos </span><br><span class="line">$ yum install openssh-server openssh -y</span><br><span class="line">$ docker commit 容器ID ssh:commit</span><br></pre></td></tr></table></figure></p>
+<h3 id="基于commit命令的方式"><a href="#基于commit命令的方式" class="headerlink" title="基于commit命令的方式"></a>基于commit命令的方式</h3><p>先运行一个centos或ubuntu镜像，然后安装ssh，然后commit镜像，然后运行即可；<br>大概步骤：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -it centos </span><br><span class="line">$ yum install openssh-server openssh -y</span><br><span class="line">$ docker commit 容器ID ssh:commit</span><br></pre></td></tr></table></figure></p>
 <p>上面就已经将容器配置好啦，接下来是使用容器<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -d -p 52113:22 ssh:commit /root/run.sh</span><br></pre></td></tr></table></figure></p>
-<h3 id="2、基于Dockerfile的方式（推荐）"><a href="#2、基于Dockerfile的方式（推荐）" class="headerlink" title="2、基于Dockerfile的方式（推荐）"></a>2、基于Dockerfile的方式（推荐）</h3><p><strong>1、准备工作</strong><br>创建一个存放Dockerfile相关文件的工作目录：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir /root/Dockerfile/</span><br></pre></td></tr></table></figure></p>
+<h3 id="基于Dockerfile的方式（推荐）"><a href="#基于Dockerfile的方式（推荐）" class="headerlink" title="基于Dockerfile的方式（推荐）"></a>基于Dockerfile的方式（推荐）</h3><p><strong>1、准备工作</strong><br>创建一个存放Dockerfile相关文件的工作目录：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir /root/Dockerfile/</span><br></pre></td></tr></table></figure></p>
 <p>在该目录下，需要创建3个文件：Dockerfile、run.sh和authorized_keys，Dockerfile用于构建镜像，run.sh是启动SSH服务的脚本文件，authorized_keys则是包含需要远程登录的用户公钥。<br>run.sh脚本文件的内容如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">/usr/sbin/sshd -D</span><br></pre></td></tr></table></figure></p>
 <p>authorized_keys文件内容如下：<br>在宿主机上生成一对ssh密钥<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ssh-keygen -t rsa    <span class="comment">#一路回车即可</span></span><br><span class="line">$ cat ~/.ssh/id_rsa.pub &gt;authorized_keys</span><br></pre></td></tr></table></figure></p>
 <p><strong>2、编写Dockerfile</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#使用的基础镜像</span></span><br><span class="line">FROM centos</span><br><span class="line"></span><br><span class="line"><span class="comment">#添加作者信息</span></span><br><span class="line">MAINTAINER tanyanhong&lt;tanyanhong@moxiu.net&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment">#安装阿里epel源</span></span><br><span class="line">RUN rpm -ivh http://mirrors.aliyun.com/epel/epel-release-latest-7.noarch.rpm</span><br><span class="line"></span><br><span class="line"><span class="comment">#安装SSH服务</span></span><br><span class="line">RUN yum install openssh openssh-server -y </span><br><span class="line">RUN mkdir -p /var/run/sshd</span><br><span class="line">RUN mkdir -p /root/.ssh</span><br><span class="line"><span class="comment">#取消pam登录限制</span></span><br><span class="line">RUN sed -ri <span class="string">'s/session    required     pam_loginuid.so/#session    required     pam_loginuid.so/g'</span> /etc/pam.d/sshd</span><br><span class="line">RUN sed -i <span class="string">'s/HostKey \/etc\/ssh\/ssh_host_rsa_key/#HostKey \/etc\/ssh\/ssh_host_rsa_key/g'</span> /etc/ssh/sshd_config</span><br><span class="line">RUN sed -i <span class="string">'s/HostKey \/etc\/ssh\/ssh_host_ecdsa_key/#HostKey \/etc\/ssh\/ssh_host_ecdsa_key/g'</span> /etc/ssh/sshd_config</span><br><span class="line">RUN sed -i <span class="string">'s/HostKey \/etc\/ssh\/ssh_host_ed25519_key/#HostKey \/etc\/ssh\/ssh_host_ed25519_key/g'</span> /etc/ssh/sshd_config</span><br><span class="line"></span><br><span class="line"><span class="comment">#添加认证文件和启动脚本</span></span><br><span class="line">ADD authorized_keys /root/.ssh/authorized_keys</span><br><span class="line">ADD run.sh /root/run.sh</span><br><span class="line">RUN chmod u+x /root/run.sh</span><br><span class="line"></span><br><span class="line"><span class="comment">#暴露端口</span></span><br><span class="line">EXPOSE 22</span><br><span class="line"></span><br><span class="line"><span class="comment">#设置默认的启动命令</span></span><br><span class="line">CMD [<span class="string">"/root/run.sh"</span>]</span><br></pre></td></tr></table></figure></p>
@@ -532,6 +532,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2018/06/22/Zabbix系列之《监控MySQL主从同步》.html" rel="prev" title="Zabbix系列之《监控MySQL主从同步》">
+                Zabbix系列之《监控MySQL主从同步》 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -604,7 +608,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">12</span>
+                    <span class="site-state-item-count">13</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -711,7 +715,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、基于commit命令的方式"><span class="nav-number">1.</span> <span class="nav-text">1、基于commit命令的方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、基于Dockerfile的方式（推荐）"><span class="nav-number">2.</span> <span class="nav-text">2、基于Dockerfile的方式（推荐）</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#基于commit命令的方式"><span class="nav-number">1.</span> <span class="nav-text">基于commit命令的方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基于Dockerfile的方式（推荐）"><span class="nav-number">2.</span> <span class="nav-text">基于Dockerfile的方式（推荐）</span></a></li></ol></div>
             
 
           </div>
@@ -768,7 +772,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">全站共18.3k字</span>
+  <span class="post-count">全站共19.3k字</span>
 </div>
 
 <!--

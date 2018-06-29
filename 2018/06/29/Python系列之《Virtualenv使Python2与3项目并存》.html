@@ -123,27 +123,25 @@
 
 
 
-  <meta name="description" content="Dockerfile是docker构建镜像的基础，也是docker区别于其他容器的重要特征，正是有了Dockerfile，docker的自动化和可移植性才成为可能。">
-<meta name="keywords" content="Dockerfile">
+  <meta name="description" content="前言：我在开发公司的运维cmdb平台时，使用的环境是python2.7，但有些项目我需要用到python3的环境来做，因此一个环境不能满足我需求，当然我想过很多方法，比如：虚拟机、docker？；但在我了解virtualenv过后，发现这个东西能实现我的需求，而且非常便捷。">
+<meta name="keywords" content="Virtualenv">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Docker系列之《Dockerfile介绍与实战应用》">
-<meta property="og:url" content="//nicksors.cc/2018/06/19/Docker系列之《Dockerfile介绍与实战应用》.html">
+<meta property="og:title" content="Python系列之《Virtualenv使Python2与3项目并存》">
+<meta property="og:url" content="//nicksors.cc/2018/06/29/Python系列之《Virtualenv使Python2与3项目并存》.html">
 <meta property="og:site_name" content="开元DevOps知识库">
-<meta property="og:description" content="Dockerfile是docker构建镜像的基础，也是docker区别于其他容器的重要特征，正是有了Dockerfile，docker的自动化和可移植性才成为可能。">
+<meta property="og:description" content="前言：我在开发公司的运维cmdb平台时，使用的环境是python2.7，但有些项目我需要用到python3的环境来做，因此一个环境不能满足我需求，当然我想过很多方法，比如：虚拟机、docker？；但在我了解virtualenv过后，发现这个东西能实现我的需求，而且非常便捷。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="//nicksors.cc/2018/06/19/Docker系列之《Dockerfile介绍与实战应用》/nginx.png">
-<meta property="og:updated_time" content="2018-06-19T07:08:19.000Z">
+<meta property="og:updated_time" content="2018-06-29T02:50:56.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Docker系列之《Dockerfile介绍与实战应用》">
-<meta name="twitter:description" content="Dockerfile是docker构建镜像的基础，也是docker区别于其他容器的重要特征，正是有了Dockerfile，docker的自动化和可移植性才成为可能。">
-<meta name="twitter:image" content="//nicksors.cc/2018/06/19/Docker系列之《Dockerfile介绍与实战应用》/nginx.png">
+<meta name="twitter:title" content="Python系列之《Virtualenv使Python2与3项目并存》">
+<meta name="twitter:description" content="前言：我在开发公司的运维cmdb平台时，使用的环境是python2.7，但有些项目我需要用到python3的环境来做，因此一个环境不能满足我需求，当然我想过很多方法，比如：虚拟机、docker？；但在我了解virtualenv过后，发现这个东西能实现我的需求，而且非常便捷。">
 
 
 
 
 
 
-  <link rel="canonical" href="//nicksors.cc/2018/06/19/Docker系列之《Dockerfile介绍与实战应用》.html"/>
+  <link rel="canonical" href="//nicksors.cc/2018/06/29/Python系列之《Virtualenv使Python2与3项目并存》.html"/>
 
 
 
@@ -153,7 +151,7 @@
   };
 </script>
 
-  <title>Docker系列之《Dockerfile介绍与实战应用》 | 开元DevOps知识库</title>
+  <title>Python系列之《Virtualenv使Python2与3项目并存》 | 开元DevOps知识库</title>
   
 
 
@@ -350,7 +348,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="//nicksors.cc/2018/06/19/Docker系列之《Dockerfile介绍与实战应用》.html">
+    <link itemprop="mainEntityOfPage" href="//nicksors.cc/2018/06/29/Python系列之《Virtualenv使Python2与3项目并存》.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="开元">
@@ -367,7 +365,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Docker系列之《Dockerfile介绍与实战应用》
+          <h1 class="post-title" itemprop="name headline">Python系列之《Virtualenv使Python2与3项目并存》
               
             
           </h1>
@@ -392,7 +390,7 @@
                 
               
 
-              <time title="创建时间：2018-06-19 10:33:17 / 修改时间：15:08:19" itemprop="dateCreated datePublished" datetime="2018-06-19T10:33:17+08:00">2018-06-19</time>
+              <time title="创建时间：2018-06-29 10:40:36 / 修改时间：10:50:56" itemprop="dateCreated datePublished" datetime="2018-06-29T10:40:36+08:00">2018-06-29</time>
             
 
             
@@ -414,7 +412,14 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Docker/" itemprop="url" rel="index"><span itemprop="name">Docker</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python开发/" itemprop="url" rel="index"><span itemprop="name">Python开发</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python开发/日常技巧/" itemprop="url" rel="index"><span itemprop="name">日常技巧</span></a></span>
 
                 
                 
@@ -446,40 +451,25 @@
       
 
       
-        <blockquote>
-<p>Dockerfile是docker构建镜像的基础，也是docker区别于其他容器的重要特征，正是有了Dockerfile，docker的自动化和可移植性才成为可能。</p>
-</blockquote>
+        <p>前言：我在开发公司的运维cmdb平台时，使用的环境是python2.7，但有些项目我需要用到python3的环境来做，因此一个环境不能满足我需求，当然我想过很多方法，比如：虚拟机、docker？；但在我了解virtualenv过后，发现这个东西能实现我的需求，而且非常便捷。</p>
 <a id="more"></a>
-<p>不论是开发还是运维，学会编写Dockerfile几乎是必备的，这有助于你理解整个容器的运行。</p>
-<h3 id="FROM，从一个基础镜像构建新的镜像"><a href="#FROM，从一个基础镜像构建新的镜像" class="headerlink" title="FROM，从一个基础镜像构建新的镜像"></a>FROM，从一个基础镜像构建新的镜像</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FROM ubuntu</span><br></pre></td></tr></table></figure>
-<h3 id="MAINTAINER，维护者信息"><a href="#MAINTAINER，维护者信息" class="headerlink" title="MAINTAINER，维护者信息"></a>MAINTAINER，维护者信息</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MAINTAINER tanyanhong&lt;tanyanhong@moxiu.net&gt;</span><br></pre></td></tr></table></figure>
-<h3 id="ENV，设置环境变量"><a href="#ENV，设置环境变量" class="headerlink" title="ENV，设置环境变量"></a>ENV，设置环境变量</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ENV TEST 1</span><br></pre></td></tr></table></figure>
-<h3 id="RUN，非交互式运行shell命令"><a href="#RUN，非交互式运行shell命令" class="headerlink" title="RUN，非交互式运行shell命令"></a>RUN，非交互式运行shell命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">RUN apt-get -y update</span><br><span class="line">RUN apt-get -y install nginx</span><br></pre></td></tr></table></figure>
-<h3 id="ADD，将外部文件拷贝到镜像里src可以为url"><a href="#ADD，将外部文件拷贝到镜像里src可以为url" class="headerlink" title="ADD，将外部文件拷贝到镜像里src可以为url"></a>ADD，将外部文件拷贝到镜像里src可以为url</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ADD http://www.moxiu.com/test.tar /data/test.tar</span><br></pre></td></tr></table></figure>
-<h3 id="WORKDIR-path-to-workdir，设置工作目录"><a href="#WORKDIR-path-to-workdir，设置工作目录" class="headerlink" title="WORKDIR   /path/to/workdir，设置工作目录"></a>WORKDIR   /path/to/workdir，设置工作目录</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">WORKDIR  /var/www</span><br></pre></td></tr></table></figure>
-<h3 id="USER，设置用户ID"><a href="#USER，设置用户ID" class="headerlink" title="USER，设置用户ID"></a>USER，设置用户ID</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">USER nginx</span><br></pre></td></tr></table></figure>
-<h3 id="VOLUME，设置volume"><a href="#VOLUME，设置volume" class="headerlink" title="VOLUME，设置volume"></a>VOLUME，设置volume</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">VOLUME [<span class="string">'/data'</span>]</span><br></pre></td></tr></table></figure>
-<h3 id="EXPOSE，暴露哪些端口"><a href="#EXPOSE，暴露哪些端口" class="headerlink" title="EXPOSE，暴露哪些端口"></a>EXPOSE，暴露哪些端口</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXPOSE 80 442</span><br></pre></td></tr></table></figure>
-<h3 id="ENTRYPOINT-‘executable’-‘param1’-’param2’-执行命令"><a href="#ENTRYPOINT-‘executable’-‘param1’-’param2’-执行命令" class="headerlink" title="ENTRYPOINT [‘executable’, ‘param1’,’param2’]执行命令"></a>ENTRYPOINT [‘executable’, ‘param1’,’param2’]执行命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ENTRYPOINT [<span class="string">"/usr/sbin/nginx"</span>]</span><br></pre></td></tr></table></figure>
-<h3 id="CMD-“param1”-”param2”"><a href="#CMD-“param1”-”param2”" class="headerlink" title="CMD [“param1”,”param2”]"></a>CMD [“param1”,”param2”]</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CMD [<span class="string">"start"</span>]</span><br></pre></td></tr></table></figure>
-<p>docker创建、启动container时执行的命令，如果设置了ENTRYPOINT，则CMD将作为参数.</p>
-<h3 id="两个实战案例"><a href="#两个实战案例" class="headerlink" title="两个实战案例"></a>两个实战案例</h3><h4 id="Dockerfile构建MongoDB镜像"><a href="#Dockerfile构建MongoDB镜像" class="headerlink" title="Dockerfile构建MongoDB镜像"></a>Dockerfile构建MongoDB镜像</h4><p>1、完整的Dockerfile</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 名称：容器化的MongoDB</span></span><br><span class="line"><span class="comment"># 用途：用作后端数据持久化服务</span></span><br><span class="line"><span class="comment"># 创建时间：2018.06.11</span></span><br><span class="line">FROM centos</span><br><span class="line">MAINTAINER tanshuai 1432753451@qq.com</span><br><span class="line">RUN rpm -ivh http://mirrors.aliyun.com/epel/epel-release-latest-7.noarch.rpm</span><br><span class="line">RUN yum -y install mongodb mongodb-server</span><br><span class="line">RUN mkdir -p /data/db</span><br><span class="line">EXPOSE 27017</span><br><span class="line">ENTRYPOINT [<span class="string">"/usr/bin/mongod"</span>]</span><br></pre></td></tr></table></figure>
-<p>2、构建并上传镜像</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">$ docker build -t docker.io/nicksors/mongodb:latest /root/build_images/build_mongodb/</span><br><span class="line">Sending build context to Docker daemon 2.048 kB</span><br><span class="line">Step 1 : FROM centos</span><br><span class="line"> ---&gt; 0584b3d2cf6d</span><br><span class="line">Step 2 : MAINTAINER tanshuai 1432753451@qq.com</span><br><span class="line"> ---&gt; Using cache</span><br><span class="line"> ---&gt; 19316ea8b554</span><br><span class="line">Step 3 : RUN rpm -ivh http://mirrors.aliyun.com/epel/epel-release-latest-7.noarch.rpm</span><br><span class="line"> ---&gt; Using cache</span><br><span class="line"> ---&gt; 502f4a9df04d</span><br><span class="line">Step 4 : RUN yum -y install mongodb mongodb-server</span><br><span class="line"> ---&gt; Using cache</span><br><span class="line"> ---&gt; 3b3e3fa7b714</span><br><span class="line">Step 5 : RUN mkdir -p /data/db</span><br><span class="line"> ---&gt; Running <span class="keyword">in</span> 8a13c217fa0d</span><br><span class="line"> ---&gt; b143715ca281</span><br><span class="line">Removing intermediate container 8a13c217fa0d</span><br><span class="line">Step 6 : EXPOSE 27017</span><br><span class="line"> ---&gt; Running <span class="keyword">in</span> 38082f2ca4e1</span><br><span class="line"> ---&gt; f435f91790f0</span><br><span class="line">Removing intermediate container 38082f2ca4e1</span><br><span class="line">Step 7 : ENTRYPOINT /usr/bin/mongod</span><br><span class="line"> ---&gt; Running <span class="keyword">in</span> 5f208c460f9c</span><br><span class="line"> ---&gt; 5550b91f642c</span><br><span class="line">Removing intermediate container 5f208c460f9c</span><br><span class="line">Successfully built 5550b91f642c</span><br></pre></td></tr></table></figure>
-<p>3、构建好镜像之后，通过docker push命令将镜像提交到Docker Hub：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ docker push docker.io/nicksors/mongodb</span><br><span class="line">The push refers to a repository [docker.io/nicksors/mongodb]</span><br><span class="line">9f89394eb43a: Pushed </span><br><span class="line">8d78ca8ae7c5: Pushed </span><br><span class="line">6a5a8df2ecbc: Pushed </span><br><span class="line">97ca462ad9ee: Mounted from library/centos </span><br><span class="line">latest: digest: sha256:cdb622243fa2e292b857c70855b87f347e76d968d1ce04f16ee8f8359fa2c687 size: 1138</span><br></pre></td></tr></table></figure>
-<p>4、启动并连接MongoDB</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -d -p 27017:27017 --name=mongodb docker.io/nicksors/mongodb</span><br><span class="line">$ mongo 10.0.10.181:27017</span><br></pre></td></tr></table></figure>
-<h4 id="Dockerfile构建Nginx镜像"><a href="#Dockerfile构建Nginx镜像" class="headerlink" title="Dockerfile构建Nginx镜像"></a>Dockerfile构建Nginx镜像</h4><p>1、编写Dockerfile文件</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@docker nginx]<span class="comment"># mkdir /opt/dockerfille/nginx -p</span></span><br><span class="line">[root@docker nginx]<span class="comment"># cat Dockerfile </span></span><br><span class="line"><span class="comment"># 名称：容器化的Nginx</span></span><br><span class="line"><span class="comment"># 用途：Web服务</span></span><br><span class="line"><span class="comment"># 创建时间：2018.06.11</span></span><br><span class="line">FROM centos</span><br><span class="line">MAINTAINER tanshuai 1432753451@qq.com</span><br><span class="line">RUN rpm -ivh http://mirrors.aliyun.com/epel/epel-release-latest-7.noarch.rpm</span><br><span class="line">RUN yum install -y nginx</span><br><span class="line">ADD index.html /usr/share/nginx/html/index.html</span><br><span class="line">RUN <span class="built_in">echo</span> <span class="string">"daemon off;"</span> &gt;&gt;/etc/nginx/nginx.conf</span><br><span class="line">EXPOSE 80</span><br><span class="line">CMD [<span class="string">"nginx"</span>]</span><br></pre></td></tr></table></figure>
-<p>2、使用docker build 执行dockerfile构建镜像</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">[root@docker nginx]<span class="comment"># docker build -t docker.io/nicksors/nginx:latest /opt/dockerfille/nginx/</span></span><br><span class="line">Sending build context to Docker daemon  5.12 kB</span><br><span class="line">Step 0 : FROM centos</span><br><span class="line"> ---&gt; 60e65a8e4030</span><br><span class="line">Step 1 : MAINTAINER tanshuai 1432753451@qq.com</span><br><span class="line"> ---&gt; Running <span class="keyword">in</span> 0fd1cef13b99</span><br><span class="line"> ---&gt; 43b217395619</span><br><span class="line">Removing intermediate container 0fd1cef13b99</span><br><span class="line">Step 2 : RUN rpm -ivh http://mirrors.aliyun.com/epel/epel-release-latest-7.noarch.rpm</span><br><span class="line"> ---&gt; Running <span class="keyword">in</span> 2679fe3aa727</span><br><span class="line">·</span><br><span class="line">·</span><br><span class="line">·</span><br><span class="line">·</span><br><span class="line">Removing intermediate container 87666c3126df</span><br><span class="line">Step 4 : ADD index.html /usr/share/nginx/html/index.html</span><br><span class="line"> ---&gt; 64d3f3fc81a7</span><br><span class="line">Removing intermediate container 38ac7440e293</span><br><span class="line">Step 5 : RUN <span class="built_in">echo</span> <span class="string">"daemon off;"</span> &gt;&gt;/etc/nginx/nginx.conf</span><br><span class="line"> ---&gt; Running <span class="keyword">in</span> 96ed8d13dc48</span><br><span class="line"> ---&gt; 6455c0d9c3f4</span><br><span class="line">Removing intermediate container 96ed8d13dc48</span><br><span class="line">Step 6 : EXPOSE 80</span><br><span class="line"> ---&gt; Running <span class="keyword">in</span> 5fefac8445b8</span><br><span class="line"> ---&gt; 9992a1075d2f</span><br><span class="line">Removing intermediate container 5fefac8445b8</span><br><span class="line">Step 7 : CMD nginx</span><br><span class="line"> ---&gt; Running <span class="keyword">in</span> 12b47409d774</span><br><span class="line"> ---&gt; 6dc5ae1d99df</span><br><span class="line">Removing intermediate container 12b47409d774</span><br><span class="line">Successfully built 6dc5ae1d99df</span><br></pre></td></tr></table></figure>
-<p>3、查看使用dockerfile构建的镜像</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@docker nginx]<span class="comment"># docker images</span></span><br><span class="line">REPOSITORY           TAG                 IMAGE ID            CREATED             VIRTUAL SIZE</span><br><span class="line">docker.io/nicksors/nginx    latest     d57cda7dac3c     11 minutes ago          347.7 MB</span><br></pre></td></tr></table></figure>
-<p>4、运行构建的docker容器</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@docker nginx]<span class="comment"># docker run -d --name nginx -p 80:80 docker.io/nicksors/nginx  </span></span><br><span class="line">b988f45e5847e1942219cf03783d19615f39c57d92a956c2acfc2a6c4cf14b89</span><br></pre></td></tr></table></figure>
-<p>5、访问<br><img src="/2018/06/19/Docker系列之《Dockerfile介绍与实战应用》/nginx.png" title="nginx"></p>
+<p>ps : python2系统默认的环境，所以本文我们主要讲解python3如何使用Virtualenv来创建我们想要的项目环境。这是我在mac环境下配置的过程。</p>
+<h3 id="python-环境说明"><a href="#python-环境说明" class="headerlink" title="python 环境说明"></a>python 环境说明</h3><p>mac自带有python2.7，我在mac上又安装了python3.6，安装方法就是在python官网下载一个Mac的包，然后以Mac安装包方式安装即可，安装好后会在这里出现：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tanshuai@tanshuaideMacBook-Pro <span class="comment"># ls -lh /Library/Frameworks/Python.framework/Versions/</span></span><br><span class="line">total 8</span><br><span class="line">drwxrwxr-x  10 root  admin  340B  7 29 12:17 2.7            &lt;==系统自带</span><br><span class="line">drwxrwxr-x  10 root  admin  340B  9 26 12:34 3.6            &lt;==官网下载安装的</span><br><span class="line">lrwxr-xr-x  1 root  wheel    3B  7 29 12:17 Current -&gt; 2.7</span><br></pre></td></tr></table></figure></p>
+<p>安装好python3后，记得做环境变量：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tanshuai@tanshuaideMacBook-Pro <span class="comment"># vim .bash_profile</span></span><br><span class="line">PATH=<span class="string">"/Library/Frameworks/Python.framework/Versions/3.6/bin:<span class="variable">$&#123;PATH&#125;</span>"</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="首先，安装virtualenv"><a href="#首先，安装virtualenv" class="headerlink" title="首先，安装virtualenv"></a>首先，安装virtualenv</h3><p>第一步：查看pip是哪个版本<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">tanshuai@tanshuaideMacBook-Pro <span class="comment"># which pip</span></span><br><span class="line">/usr/<span class="built_in">local</span>/bin/pip</span><br><span class="line">tanshuai@tanshuaideMacBook-Pro <span class="comment"># ls -lh /usr/local/bin/pip</span></span><br><span class="line">lrwxrwxr-x  1 root  admin    65B  7 29 12:17 /usr/<span class="built_in">local</span>/bin/pip -&gt; ../../../Library/Frameworks/Python.framework/Versions/2.7/bin/pip</span><br><span class="line">tanshuai@tanshuaideMacBook-Pro <span class="comment"># which pip3</span></span><br><span class="line">/Library/Frameworks/Python.framework/Versions/3.6/bin/pip3</span><br></pre></td></tr></table></figure></p>
+<p>从上能看到pip默认是2.7版本的，因为python3.6版本叫pip3</p>
+<p>第二步：安装virtualenv<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tanshuai@tanshuaideMacBook-Pro <span class="comment"># pip3 install virtualenv # 使用php3版本安装virtualenv</span></span><br><span class="line">tanshuai@tanshuaideMacBook-Pro <span class="comment"># pip3 list|grep virtualenv</span></span><br><span class="line">virtualenv 15.1.0</span><br><span class="line">tanshuai@tanshuaideMacBook-Pro <span class="comment"># which virtualenv </span></span><br><span class="line">/Library/Frameworks/Python.framework/Versions/3.6/bin/virtualenv   &lt;==注意，一定要使用python3.6环境下的virtualenv，创建出来才会是python3.6环境（python2同理）</span><br></pre></td></tr></table></figure></p>
+<h3 id="使用virtualenv"><a href="#使用virtualenv" class="headerlink" title="使用virtualenv"></a>使用virtualenv</h3><p>第一步：创建目录<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tanshuai@tanshuaideMacBook-Pro <span class="comment"># mkdir -p ~/Projects/Python/3.6/VirtualSource</span></span><br><span class="line">tanshuai@tanshuaideMacBook-Pro <span class="comment"># cd ~/Projects/Python/3.6/VirtualSource</span></span><br></pre></td></tr></table></figure></p>
+<p>第二步：创建一个独立的Python运行环境，命名为mxcmdb：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">tanshuai@tanshuaideMacBook-Pro <span class="comment"># virtualenv --no-site-packages mxcmdb</span></span><br><span class="line">Using base prefix <span class="string">'/Library/Frameworks/Python.framework/Versions/3.6'</span></span><br><span class="line">New python executable <span class="keyword">in</span> /Users/tanshuai/Projects/Python/3.6/VirtualSource/venv/bin/python3.6</span><br><span class="line">Also creating executable <span class="keyword">in</span> /Users/tanshuai/Projects/Python/3.6/VirtualSource/venv/bin/python</span><br><span class="line">Installing setuptools, pip, wheel...done.</span><br><span class="line">tanshuai@tanshuaideMacBook-Pro <span class="comment"># ls -lh</span></span><br><span class="line">total 0</span><br><span class="line">drwxr-xr-x  7 tanshuai  staff  238B  9 26 13:39 mxcmdb</span><br></pre></td></tr></table></figure></p>
+<p>使用命令<code>virtualenv</code>就可以创建一个独立的Python运行环境，我们还加上了参数–no-site-packages，这样，已经安装到系统Python环境中的所有第三方包都不会复制过来，这样，我们就得到了一个不带任何第三方包的“干净”的Python运行环境。</p>
+<p>新建的Python环境被放到当前目录下的mxcmdb目录。有了mxcmdb这个Python环境，可以用source进入该环境：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tanshuai@tanshuaideMacBook-Pro <span class="comment"># source mxcmdb/bin/activate</span></span><br><span class="line">(mxcmdb)  tanshuai@tanshuaideMacBook-Pro <span class="comment">#</span></span><br></pre></td></tr></table></figure></p>
+<p>注意到命令提示符变了，有了个<code>(mxcmdb)</code>前缀，表示当前环境下是一个名为mxcmdb的环境。</p>
+<p>在这个环境下可以安装你想要的环境，如：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(mxcmdb)  tanshuai@tanshuaideMacBook-Pro <span class="comment"># pip install jinja2</span></span><br><span class="line">(mxcmdb)  tanshuai@tanshuaideMacBook-Pro <span class="comment"># pip list|grep Jinja2</span></span><br><span class="line">Jinja2          2.9.6</span><br></pre></td></tr></table></figure></p>
+<p>在mxcmdb环境下，用pip安装的包都被安装到mxcmdb这个环境下，系统Python环境不受任何影响。</p>
+<p>退出当前的mxcmdb环境，使用deactivate命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(mxcmdb)  tanshuai@tanshuaideMacBook-Pro <span class="comment"># deactivate</span></span><br><span class="line">tanshuai@tanshuaideMacBook-Pro <span class="comment">#</span></span><br></pre></td></tr></table></figure></p>
+<p>此时就回到了正常的环境，现在pip或python均是在系统Python环境下执行。</p>
+<h3 id="virtualenv原理"><a href="#virtualenv原理" class="headerlink" title="virtualenv原理"></a>virtualenv原理</h3><p>virtualenv是如何创建“独立”的Python运行环境的呢？原理很简单，就是把系统Python复制一份到virtualenv的环境，用命令source venv/bin/activate进入一个virtualenv环境时，virtualenv会修改相关环境变量，让命令python和pip均指向当前的virtualenv环境。<br>小结：<br>virtualenv为应用提供了隔离的Python运行环境，解决了不同应用间多版本的冲突问题。</p>
+<p>参考博文：<br>Python–Virtualenv简明教程：<a href="http://www.jianshu.com/p/08c657bd34f1" target="_blank" rel="noopener">http://www.jianshu.com/p/08c657bd34f1</a><br><a href="https://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/001432712108300322c61f256c74803b43bfd65c6f8d0d0000" target="_blank" rel="noopener">virtualenv - 廖雪峰的官方网站</a></p>
 
       
     </div>
@@ -507,7 +497,7 @@
       </li>
       <li class="post-copyright-link">
         <strong>本文链接：</strong>
-        <a href="/2018/06/19/Docker系列之《Dockerfile介绍与实战应用》.html" title="Docker系列之《Dockerfile介绍与实战应用》">2018/06/19/Docker系列之《Dockerfile介绍与实战应用》.html</a>
+        <a href="/2018/06/29/Python系列之《Virtualenv使Python2与3项目并存》.html" title="Python系列之《Virtualenv使Python2与3项目并存》">2018/06/29/Python系列之《Virtualenv使Python2与3项目并存》.html</a>
       </li>
       <li class="post-copyright-license">
         <strong>版权声明： </strong>
@@ -531,7 +521,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Dockerfile/" rel="tag"><i class="fa fa-tag"></i> Dockerfile</a>
+            <a href="/tags/Virtualenv/" rel="tag"><i class="fa fa-tag"></i> Virtualenv</a>
           
         </div>
       
@@ -544,8 +534,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/16/Python系列之《Django-DRF-视图的演变（二）》.html" rel="next" title="Python系列之《Django-DRF-视图的演变（二）》">
-                <i class="fa fa-chevron-left"></i> Python系列之《Django-DRF-视图的演变（二）》
+              <a href="/2018/06/22/Zabbix系列之《监控MySQL主从同步》.html" rel="next" title="Zabbix系列之《监控MySQL主从同步》">
+                <i class="fa fa-chevron-left"></i> Zabbix系列之《监控MySQL主从同步》
               </a>
             
           </div>
@@ -553,10 +543,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/06/19/Docker系列之《Dockerfile构建MySQL镜像》.html" rel="prev" title="Docker系列之《Dockerfile构建MySQL镜像》">
-                Docker系列之《Dockerfile构建MySQL镜像》 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -741,7 +727,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#FROM，从一个基础镜像构建新的镜像"><span class="nav-number">1.</span> <span class="nav-text">FROM，从一个基础镜像构建新的镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MAINTAINER，维护者信息"><span class="nav-number">2.</span> <span class="nav-text">MAINTAINER，维护者信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ENV，设置环境变量"><span class="nav-number">3.</span> <span class="nav-text">ENV，设置环境变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RUN，非交互式运行shell命令"><span class="nav-number">4.</span> <span class="nav-text">RUN，非交互式运行shell命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ADD，将外部文件拷贝到镜像里src可以为url"><span class="nav-number">5.</span> <span class="nav-text">ADD，将外部文件拷贝到镜像里src可以为url</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WORKDIR-path-to-workdir，设置工作目录"><span class="nav-number">6.</span> <span class="nav-text">WORKDIR   /path/to/workdir，设置工作目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#USER，设置用户ID"><span class="nav-number">7.</span> <span class="nav-text">USER，设置用户ID</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#VOLUME，设置volume"><span class="nav-number">8.</span> <span class="nav-text">VOLUME，设置volume</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EXPOSE，暴露哪些端口"><span class="nav-number">9.</span> <span class="nav-text">EXPOSE，暴露哪些端口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ENTRYPOINT-‘executable’-‘param1’-’param2’-执行命令"><span class="nav-number">10.</span> <span class="nav-text">ENTRYPOINT [‘executable’, ‘param1’,’param2’]执行命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CMD-“param1”-”param2”"><span class="nav-number">11.</span> <span class="nav-text">CMD [“param1”,”param2”]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#两个实战案例"><span class="nav-number">12.</span> <span class="nav-text">两个实战案例</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Dockerfile构建MongoDB镜像"><span class="nav-number">12.1.</span> <span class="nav-text">Dockerfile构建MongoDB镜像</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Dockerfile构建Nginx镜像"><span class="nav-number">12.2.</span> <span class="nav-text">Dockerfile构建Nginx镜像</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#python-环境说明"><span class="nav-number">1.</span> <span class="nav-text">python 环境说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#首先，安装virtualenv"><span class="nav-number">2.</span> <span class="nav-text">首先，安装virtualenv</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用virtualenv"><span class="nav-number">3.</span> <span class="nav-text">使用virtualenv</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#virtualenv原理"><span class="nav-number">4.</span> <span class="nav-text">virtualenv原理</span></a></li></ol></div>
             
 
           </div>

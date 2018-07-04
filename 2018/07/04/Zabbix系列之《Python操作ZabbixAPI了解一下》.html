@@ -123,24 +123,25 @@
 
 
 
-  <meta name="description" content="知识管理，时间管理，自我管理">
-<meta name="keywords" content="Geek,Developer,Python,Django,Flask,Html,Css,Js,Jq,Bootstrap,Vue,Ops,ELKF,OpenStack,K8s,Docker,Ceph,FastDFS,GlusterFS,Gentoo">
-<meta property="og:type" content="website">
-<meta property="og:title" content="开元DevOps知识库">
-<meta property="og:url" content="//nicksors.cc/tags/Zabbix/index.html">
+  <meta name="description" content="前言，本文讲解Zabbix API的使用及经验技巧。">
+<meta name="keywords" content="Python,ZabbixApi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Zabbix系列之《Python操作ZabbixAPI了解一下》">
+<meta property="og:url" content="//nicksors.cc/2018/07/04/Zabbix系列之《Python操作ZabbixAPI了解一下》.html">
 <meta property="og:site_name" content="开元DevOps知识库">
-<meta property="og:description" content="知识管理，时间管理，自我管理">
+<meta property="og:description" content="前言，本文讲解Zabbix API的使用及经验技巧。">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-07-04T10:55:29.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="开元DevOps知识库">
-<meta name="twitter:description" content="知识管理，时间管理，自我管理">
+<meta name="twitter:title" content="Zabbix系列之《Python操作ZabbixAPI了解一下》">
+<meta name="twitter:description" content="前言，本文讲解Zabbix API的使用及经验技巧。">
 
 
 
 
 
 
-  <link rel="canonical" href="//nicksors.cc/tags/Zabbix/"/>
+  <link rel="canonical" href="//nicksors.cc/2018/07/04/Zabbix系列之《Python操作ZabbixAPI了解一下》.html"/>
 
 
 
@@ -150,7 +151,7 @@
   };
 </script>
 
-  <title>标签: Zabbix | 开元DevOps知识库</title>
+  <title>Zabbix系列之《Python操作ZabbixAPI了解一下》 | 开元DevOps知识库</title>
   
 
 
@@ -197,7 +198,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 <a href="https://github.com/nicksors"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
 
@@ -247,7 +248,7 @@
         
         
           
-          <li class="menu-item menu-item-tags menu-item-active">
+          <li class="menu-item menu-item-tags">
     <a href="/tags/" rel="section">
       <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
   </li>
@@ -283,25 +284,6 @@
 
   
     
-
-    
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-    
-
-  
-
 
   
 
@@ -350,82 +332,234 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>Zabbix<small>标签</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
+
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="//nicksors.cc/2018/07/04/Zabbix系列之《Python操作ZabbixAPI了解一下》.html">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="开元">
+      <meta itemprop="description" content="知识管理，时间管理，自我管理">
+      <meta itemprop="image" content="/static/images/stark.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="开元DevOps知识库">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2018/06/07/Zabbix系列之《安装Agent客户端并添加主机监控》.html" itemprop="url">
-              
-                <span itemprop="name">Zabbix系列之《安装Agent客户端并添加主机监控》</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">Zabbix系列之《Python操作ZabbixAPI了解一下》
+              
+            
+          </h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-06-07T17:46:29+08:00"
-              content="2018-06-07" >
-          06-07
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
 
-    </header>
-  </article>
+            
+            
+            
 
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-07-04 18:52:57 / 修改时间：18:55:29" itemprop="dateCreated datePublished" datetime="2018-07-04T18:52:57+08:00">2018-07-04</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Zabbix/" itemprop="url" rel="index"><span itemprop="name">Zabbix</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-        
+      
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/06/03/Zabbix系列之《CentOS7快速安装Zabbix3-4》.html" itemprop="url">
-              
-                <span itemprop="name">Zabbix系列之《CentOS7快速安装Zabbix3-4》</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-06-03T10:16:29+08:00"
-              content="2018-06-03" >
-          06-03
-        </time>
-      </div>
-
-    </header>
-  </article>
-
+      
+        <blockquote>
+<p>前言，本文讲解Zabbix API的使用及经验技巧。</p>
+</blockquote>
+<a id="more"></a>
+<h2 id="一、Zabbix-API介绍"><a href="#一、Zabbix-API介绍" class="headerlink" title="一、Zabbix API介绍"></a>一、Zabbix API介绍</h2><p>Zabbix api为批量操作，第三方软件集成以及其他可编程的操作提供可编程接口。所有的zabbix的移动客户端都是基于api开发的，甚至原生的web前端也是基于他之上的。它允许你通过json RPC协议来创建，获取，更新zabbix的对象，当然了你可以通过它做任何你想做的操作。</p>
+<p><strong>zabbix API提供的主要的功能</strong></p>
+<ul>
+<li>远程管理zabbix的配置；</li>
+<li>远程检索配置和历史信息。</li>
+</ul>
+<p><strong>API的请求</strong></p>
+<p>Zabbix 采用的是Json-RPC实现的。这也就是说，zabbix请求和响应都是Json类型，传的参数的类型也应该是Json类型。</p>
+<h2 id="二、API请求方式"><a href="#二、API请求方式" class="headerlink" title="二、API请求方式"></a>二、API请求方式</h2><p>Zabbix API是通过<code>api_jsonrpc.php</code>文件来接收一个HTTP POST请求进行执行指令的，例如，你安装好的Zabbix地址为：<a href="http://you_ip/zabbix，那么请求方式如下：" target="_blank" rel="noopener">http://you_ip/zabbix，那么请求方式如下：</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 请求头部为：</span><br><span class="line">&#123;&quot;Content-Type&quot;: &quot;application/json-rpc&quot;&#125;</span><br><span class="line"></span><br><span class="line"># 请求的URL为：</span><br><span class="line">http://you_ip/zabbix/api_jsonrpc.php</span><br></pre></td></tr></table></figure></p>
+<h2 id="三、用法案例"><a href="#三、用法案例" class="headerlink" title="三、用法案例"></a>三、用法案例</h2><p>接下来以Python调用API为例，进行演示。</p>
+<h3 id="3-1、测试连接是否成功"><a href="#3-1、测试连接是否成功" class="headerlink" title="3.1、测试连接是否成功"></a>3.1、测试连接是否成功</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">import requests</span><br><span class="line">import json</span><br><span class="line">url = <span class="string">"http://172.16.194.128/zabbix/api_jsonrpc.php"</span> </span><br><span class="line">header = &#123;<span class="string">"Content-Type"</span>: <span class="string">"application/json-rpc"</span>&#125;</span><br><span class="line">data = &#123;<span class="string">"jsonrpc"</span>:<span class="string">"2.0"</span>,<span class="string">"method"</span>:<span class="string">"apiinfo.version"</span>,<span class="string">"id"</span>:1,<span class="string">"auth"</span>:None,<span class="string">"params"</span>:&#123;&#125;&#125;</span><br><span class="line">request = requests.post(url=url, headers=header, data=json.dumps(data))</span><br><span class="line"><span class="built_in">print</span> request.content</span><br></pre></td></tr></table></figure>
+<p>上面的data用来测试是否可连接成功，官方文档中auth的值为null，但在python中null用None表示，所以需要改成None。</p>
+<p>成功后返回值如下，会显示zabbix版本<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;result&quot;:&quot;3.4.9&quot;,&quot;id&quot;:1&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="3-2、获取Token"><a href="#3-2、获取Token" class="headerlink" title="3.2、获取Token"></a>3.2、获取Token</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">import requests</span><br><span class="line">import json</span><br><span class="line">url = &quot;http://172.16.194.128/zabbix/api_jsonrpc.php&quot; </span><br><span class="line">header = &#123;&quot;Content-Type&quot;: &quot;application/json-rpc&quot;&#125;</span><br><span class="line">data = &#123;&quot;jsonrpc&quot;: &quot;2.0&quot;,&quot;method&quot;: &quot;user.login&quot;,&quot;params&quot;: &#123;&quot;user&quot;: &quot;Admin&quot;,&quot;password&quot;: &quot;zabbix&quot;&#125;,&quot;id&quot;: 1,&quot;auth&quot;: None&#125;</span><br><span class="line">request = requests.post(url=url, headers=header, data=json.dumps(data))</span><br><span class="line">print request.content</span><br></pre></td></tr></table></figure>
+<p>执行成功后返回值如下：result字段就是Token，你可以拿着它去zabbix系统里干你想干的事情！<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;result&quot;:&quot;9fc0b8d5508a4d18ac34279ddce78667&quot;,&quot;id&quot;:1&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="3-3、获取所有主机信息"><a href="#3-3、获取所有主机信息" class="headerlink" title="3.3、获取所有主机信息"></a>3.3、获取所有主机信息</h3><p>这里使用一个完整的Python脚本通过API来获取；<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/python</span><br><span class="line">#coding:utf:8</span><br><span class="line"></span><br><span class="line">import requests</span><br><span class="line">import json</span><br><span class="line"></span><br><span class="line">class Zabbix:</span><br><span class="line">    def __init__(self, url, header, username, password):</span><br><span class="line">        self.url = url</span><br><span class="line">        self.header = header</span><br><span class="line">        self.username = username</span><br><span class="line">        self.password = password</span><br><span class="line"></span><br><span class="line">    def getToken(self):</span><br><span class="line">        #获取Token并返回字符Token字符串</span><br><span class="line">        data = &#123;&quot;jsonrpc&quot;: &quot;2.0&quot;,</span><br><span class="line">                &quot;method&quot;: &quot;user.login&quot;,</span><br><span class="line">                &quot;params&quot;: &#123;</span><br><span class="line">                    &quot;user&quot;: self.username,</span><br><span class="line">                    &quot;password&quot;: self.password</span><br><span class="line">                &#125;,</span><br><span class="line">                &quot;id&quot;: 1,</span><br><span class="line">                &quot;auth&quot;: None</span><br><span class="line">                &#125;</span><br><span class="line">        token = requests.post(url=self.url, headers=self.header, data=json.dumps(data))</span><br><span class="line">        return json.loads(token.content)[&quot;result&quot;]</span><br><span class="line"></span><br><span class="line">    def getAllHost(self):</span><br><span class="line">        #获取所有主机信息</span><br><span class="line">        data = &#123;&quot;jsonrpc&quot;: &quot;2.0&quot;,</span><br><span class="line">                &quot;method&quot;: &quot;host.get&quot;,</span><br><span class="line">                &quot;params&quot;: &#123;</span><br><span class="line">                    &quot;output&quot;: [</span><br><span class="line">                        &quot;hostid&quot;,</span><br><span class="line">                        &quot;host&quot;,</span><br><span class="line">                    ],</span><br><span class="line">                    &quot;selectGroups&quot;: &quot;extend&quot;,</span><br><span class="line">                    &quot;selectInterfaces&quot;: [</span><br><span class="line">                        &quot;interfaceid&quot;,</span><br><span class="line">                        &quot;ip&quot;</span><br><span class="line">                    ]</span><br><span class="line">                &#125;,</span><br><span class="line">                &quot;id&quot;: 2,</span><br><span class="line">                &quot;auth&quot;: self.getToken()</span><br><span class="line">                &#125;</span><br><span class="line">        hosts = requests.post(url=self.url, headers=self.header, data=json.dumps(data))</span><br><span class="line">        return json.loads(hosts.content)[&quot;result&quot;]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &quot;__main__&quot;:</span><br><span class="line">    header = &#123;&quot;Content-Type&quot;: &quot;application/json-rpc&quot;&#125;</span><br><span class="line">    url=&quot;http://172.16.194.128/zabbix/api_jsonrpc.php&quot;</span><br><span class="line">    test = Zabbix(url=url, header=header, username=&quot;Admin&quot;, password=&quot;zabbix&quot;)</span><br><span class="line">    print(test.getAllHost())</span><br></pre></td></tr></table></figure></p>
+<p>通过以上的学习相信大家对Zabbix API已经有一个初步的认识，后面将会通过API去完成主机的自动添加，自动化报表等使用<br><!-- 参考博文：http://blog.51cto.com/270142877/1955120，感谢原作者。 --></p>
 
       
     </div>
 
+    
+
+    
+    
+    
+
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+<div>    
+ 
+ 
+    <ul class="post-copyright">
+      <li class="post-copyright-author">
+          <strong>本文作者：</strong>开元
+      </li>
+      <li class="post-copyright-link">
+        <strong>本文链接：</strong>
+        <a href="/2018/07/04/Zabbix系列之《Python操作ZabbixAPI了解一下》.html" title="Zabbix系列之《Python操作ZabbixAPI了解一下》">2018/07/04/Zabbix系列之《Python操作ZabbixAPI了解一下》.html</a>
+      </li>
+      <li class="post-copyright-license">
+        <strong>版权声明： </strong>
+        Copyright©2018 NICKSORS.CC 版权所有 未经许可 请勿转载
+	<!--本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0 CN</a> 许可协议。转载请注明出处！-->
+      </li>
+    </ul>
+  
+</div>
+
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Python/" rel="tag"><i class="fa fa-tag"></i> Python</a>
+          
+            <a href="/tags/ZabbixApi/" rel="tag"><i class="fa fa-tag"></i> ZabbixApi</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/04/Zabbix系列之《Zabbix-API了解一下-》.html" rel="next" title="Zabbix系列之《Zabbix-API了解一下?》">
+                <i class="fa fa-chevron-left"></i> Zabbix系列之《Zabbix-API了解一下?》
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -450,8 +584,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -577,6 +720,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、Zabbix-API介绍"><span class="nav-number">1.</span> <span class="nav-text">一、Zabbix API介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、API请求方式"><span class="nav-number">2.</span> <span class="nav-text">二、API请求方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、用法案例"><span class="nav-number">3.</span> <span class="nav-text">三、用法案例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1、测试连接是否成功"><span class="nav-number">3.1.</span> <span class="nav-text">3.1、测试连接是否成功</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2、获取Token"><span class="nav-number">3.2.</span> <span class="nav-text">3.2、获取Token</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3、获取所有主机信息"><span class="nav-number">3.3.</span> <span class="nav-text">3.3、获取所有主机信息</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -736,6 +895,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
 
   
 

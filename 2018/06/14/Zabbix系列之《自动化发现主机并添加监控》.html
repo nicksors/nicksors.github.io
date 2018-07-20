@@ -127,34 +127,34 @@
 <meta name="keywords" content="自动发现">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Zabbix系列之《自动化发现主机并添加监控》">
-<meta property="og:url" content="http://blog.nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》.html">
+<meta property="og:url" content="//blog.nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》.html">
 <meta property="og:site_name" content="开元DevOps知识库">
 <meta property="og:description" content="前言，本文将介绍zabbix强大功能之一，自动化发现主机并将其添加到zabbix监控平台，思考一下，如果贵公司上线20台物理机或云主机，需要将这些主机添加到监控平台，如果一台一台添加的话那基础设施运维就有活干了！那本文就是介绍zabbix是如何解决这个问题的。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://blog.nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/创建动作.png">
-<meta property="og:image" content="http://blog.nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/填写动作名称.png">
-<meta property="og:image" content="http://blog.nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/配置条件.png">
-<meta property="og:image" content="http://blog.nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/填写新的条件信息.png">
-<meta property="og:image" content="http://blog.nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/设置动作添加主机组.png">
-<meta property="og:image" content="http://blog.nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/添加操作.png">
-<meta property="og:image" content="http://blog.nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/设置动作添加主机.png">
-<meta property="og:image" content="http://blog.nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/添加关联模板.png">
-<meta property="og:image" content="http://blog.nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/添加完成.png">
-<meta property="og:image" content="http://blog.nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/创建发现规则.png">
-<meta property="og:image" content="http://blog.nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/配置自动发现.png">
-<meta property="og:image" content="http://blog.nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/已添加的主机.png">
+<meta property="og:image" content="//blog.nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/创建动作.png">
+<meta property="og:image" content="//blog.nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/填写动作名称.png">
+<meta property="og:image" content="//blog.nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/配置条件.png">
+<meta property="og:image" content="//blog.nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/填写新的条件信息.png">
+<meta property="og:image" content="//blog.nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/设置动作添加主机组.png">
+<meta property="og:image" content="//blog.nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/添加操作.png">
+<meta property="og:image" content="//blog.nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/设置动作添加主机.png">
+<meta property="og:image" content="//blog.nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/添加关联模板.png">
+<meta property="og:image" content="//blog.nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/添加完成.png">
+<meta property="og:image" content="//blog.nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/创建发现规则.png">
+<meta property="og:image" content="//blog.nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/配置自动发现.png">
+<meta property="og:image" content="//blog.nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/已添加的主机.png">
 <meta property="og:updated_time" content="2018-06-14T03:26:20.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Zabbix系列之《自动化发现主机并添加监控》">
 <meta name="twitter:description" content="前言，本文将介绍zabbix强大功能之一，自动化发现主机并将其添加到zabbix监控平台，思考一下，如果贵公司上线20台物理机或云主机，需要将这些主机添加到监控平台，如果一台一台添加的话那基础设施运维就有活干了！那本文就是介绍zabbix是如何解决这个问题的。">
-<meta name="twitter:image" content="http://blog.nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/创建动作.png">
+<meta name="twitter:image" content="//blog.nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》/创建动作.png">
 
 
 
 
 
 
-  <link rel="canonical" href="http://blog.nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》.html"/>
+  <link rel="canonical" href="//blog.nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》.html"/>
 
 
 
@@ -361,7 +361,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://blog.nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》.html">
+    <link itemprop="mainEntityOfPage" href="//blog.nicksors.cc/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="开元">

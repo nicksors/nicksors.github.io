@@ -123,35 +123,29 @@
 
 
 
-  <meta name="description" content="前言：本文将带你了解Zabbix在监控日常web业务上会有哪些优异的表现。">
-<meta name="keywords" content="Web">
+  <meta name="description" content="DRF 分页了解一下 ^_^.">
+<meta name="keywords" content="Python,Django,DRF,Pagination">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Zabbix系列之《WEB场景监控》">
-<meta property="og:url" content="//blog.nicksors.cc/2018/06/14/Zabbix系列之《WEB场景监控》.html">
+<meta property="og:title" content="Python系列之《Django-DRF-分页》">
+<meta property="og:url" content="//blog.nicksors.cc/2018/07/23/Python系列之《Django-DRF-分页》.html">
 <meta property="og:site_name" content="开元DevOps知识库">
-<meta property="og:description" content="前言：本文将带你了解Zabbix在监控日常web业务上会有哪些优异的表现。">
+<meta property="og:description" content="DRF 分页了解一下 ^_^.">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="//blog.nicksors.cc/2018/06/14/Zabbix系列之《WEB场景监控》/创建Webscenarios.png">
-<meta property="og:image" content="//blog.nicksors.cc/2018/06/14/Zabbix系列之《WEB场景监控》/打开首页.png">
-<meta property="og:image" content="//blog.nicksors.cc/2018/06/14/Zabbix系列之《WEB场景监控》/登录.png">
-<meta property="og:image" content="//blog.nicksors.cc/2018/06/14/Zabbix系列之《WEB场景监控》/登录验证.png">
-<meta property="og:image" content="//blog.nicksors.cc/2018/06/14/Zabbix系列之《WEB场景监控》/退出登录.png">
-<meta property="og:image" content="//blog.nicksors.cc/2018/06/14/Zabbix系列之《WEB场景监控》/保存配置.png">
-<meta property="og:image" content="//blog.nicksors.cc/2018/06/14/Zabbix系列之《WEB场景监控》/查看结果.png">
-<meta property="og:image" content="//blog.nicksors.cc/2018/06/14/Zabbix系列之《WEB场景监控》/Zabbix登陆失败触发器.png">
-<meta property="og:image" content="//blog.nicksors.cc/2018/06/14/Zabbix系列之《WEB场景监控》/step运行触发器.png">
-<meta property="og:updated_time" content="2018-06-14T04:03:53.000Z">
+<meta property="og:image" content="//blog.nicksors.cc/2018/07/23/Python系列之《Django-DRF-分页》/访问显示.png">
+<meta property="og:image" content="//blog.nicksors.cc/2018/07/23/Python系列之《Django-DRF-分页》/page_size失效.png">
+<meta property="og:image" content="//blog.nicksors.cc/2018/07/23/Python系列之《Django-DRF-分页》/page_size生效.png">
+<meta property="og:updated_time" content="2018-07-23T11:41:12.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Zabbix系列之《WEB场景监控》">
-<meta name="twitter:description" content="前言：本文将带你了解Zabbix在监控日常web业务上会有哪些优异的表现。">
-<meta name="twitter:image" content="//blog.nicksors.cc/2018/06/14/Zabbix系列之《WEB场景监控》/创建Webscenarios.png">
+<meta name="twitter:title" content="Python系列之《Django-DRF-分页》">
+<meta name="twitter:description" content="DRF 分页了解一下 ^_^.">
+<meta name="twitter:image" content="//blog.nicksors.cc/2018/07/23/Python系列之《Django-DRF-分页》/访问显示.png">
 
 
 
 
 
 
-  <link rel="canonical" href="//blog.nicksors.cc/2018/06/14/Zabbix系列之《WEB场景监控》.html"/>
+  <link rel="canonical" href="//blog.nicksors.cc/2018/07/23/Python系列之《Django-DRF-分页》.html"/>
 
 
 
@@ -161,7 +155,7 @@
   };
 </script>
 
-  <title>Zabbix系列之《WEB场景监控》 | 开元DevOps知识库</title>
+  <title>Python系列之《Django-DRF-分页》 | 开元DevOps知识库</title>
   
 
 
@@ -358,7 +352,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="//blog.nicksors.cc/2018/06/14/Zabbix系列之《WEB场景监控》.html">
+    <link itemprop="mainEntityOfPage" href="//blog.nicksors.cc/2018/07/23/Python系列之《Django-DRF-分页》.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="开元">
@@ -375,7 +369,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Zabbix系列之《WEB场景监控》
+          <h1 class="post-title" itemprop="name headline">Python系列之《Django-DRF-分页》
               
             
           </h1>
@@ -400,7 +394,7 @@
                 
               
 
-              <time title="创建时间：2018-06-14 10:34:09 / 修改时间：12:03:53" itemprop="dateCreated datePublished" datetime="2018-06-14T10:34:09+08:00">2018-06-14</time>
+              <time title="创建时间：2018-07-23 19:35:04 / 修改时间：19:41:12" itemprop="dateCreated datePublished" datetime="2018-07-23T19:35:04+08:00">2018-07-23</time>
             
 
             
@@ -422,7 +416,14 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Zabbix/" itemprop="url" rel="index"><span itemprop="name">Zabbix</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python开发/" itemprop="url" rel="index"><span itemprop="name">Python开发</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python开发/Django/" itemprop="url" rel="index"><span itemprop="name">Django</span></a></span>
 
                 
                 
@@ -455,32 +456,45 @@
 
       
         <blockquote>
-<p>前言：本文将带你了解Zabbix在监控日常web业务上会有哪些优异的表现。</p>
+<p>DRF 分页了解一下 ^_^.</p>
 </blockquote>
 <a id="more"></a>
-<p>回想一下你曾今登录JD Shopping的时候，都经历了哪些步骤呢？</p>
-<p>因此我进行了分析，步骤大致如下：</p>
-<p>打开页面–&gt;登录–&gt;登录验证–&gt;退出。</p>
-<p>在工作中，有些业务是需要监控web平台的登录是否正常，有些平台的登录认证也比较复杂，那如果做简单的监控室无法实现的。<br>因此，我们通过下面的例子来进行模拟，监控的是本身的zabbix网站，因为zabbix本身是有用户认证功能的。</p>
-<h2 id="检测流程"><a href="#检测流程" class="headerlink" title="检测流程"></a>检测流程</h2><ol>
-<li>打开网站：如果http code为200，并且响应的html中包含Zabbix SIA表示打开成功（zabbix页面有这个标示）</li>
-<li>登陆后台：post用户名和密码到index.php，如果响应200，那表示post成功。并且通过正则表达式从响应的html中匹配sid，这个sid也就是一个宏变量，退出可以使用到</li>
-<li>验证登陆：打开首页，检索html中是否包含Profile（只有登陆成功，才会有Profile出现，它在成功页面的右上角，一个按钮）</li>
-<li>退出账号：传递参数sid给index.php即可退出，响应200即表示退出成功。可以使用item key来获取每个step的速度以及响应时间或者说最新的一个错误消息，自己去研究吧，不难。</li>
+<h2 id="一、PageNumberPagination"><a href="#一、PageNumberPagination" class="headerlink" title="一、PageNumberPagination"></a>一、PageNumberPagination</h2><p>此分页样式在请求查询参数中接受单个数字页码。</p>
+<p>请求：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET http://127.0.0.1:8000/users/?page=3</span><br></pre></td></tr></table></figure></p>
+<p>返回：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">HTTP 200 OK</span><br><span class="line">&#123;</span><br><span class="line">    &quot;count&quot;: 197,</span><br><span class="line">    &quot;next&quot;: &quot;http://127.0.0.1:8000/users/?page=4&quot;,</span><br><span class="line">    &quot;previous&quot;: &quot;http://127.0.0.1:8000/users/?page=2&quot;,</span><br><span class="line">    &quot;results&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;id&quot;: 21,</span><br><span class="line">            &quot;username&quot;: &quot;pwd-2&quot;,</span><br><span class="line">            &quot;email&quot;: &quot;pwd-2@nicksors.cc&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="1-配置方法"><a href="#1-配置方法" class="headerlink" title="1. 配置方法"></a>1. 配置方法</h3><p>要全局启用<code>PageNumberPagination</code>分页样式，请使用以下配置，并根据需要设置<code>PAGE_SIZE</code>：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">REST_FRAMEWORK = &#123;</span><br><span class="line">    &apos;DEFAULT_PAGINATION_CLASS&apos;: &apos;rest_framework.pagination.PageNumberPagination&apos;,</span><br><span class="line">    &apos;PAGE_SIZE&apos;: 10  # 每页显示十条数据</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>PageNumberPagination类允许你重写属性来修改分页的样式，其中有部分常用属性如下：</p>
+<ul>
+<li><code>page_size</code> - 表示页面大小的数值。如果设置，则会覆盖PAGE_SIZE设置。默认为与PAGE_SIZE设置键相同的值。</li>
+<li>其他的参数，官网介绍比较详细。</li>
+</ul>
+<h3 id="2-基本使用"><a href="#2-基本使用" class="headerlink" title="2. 基本使用"></a>2. 基本使用</h3><h4 id="2-1-配置setting-py"><a href="#2-1-配置setting-py" class="headerlink" title="2.1 配置setting.py"></a>2.1 配置setting.py</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ vim setting.py</span><br><span class="line"></span><br><span class="line">REST_FRAMEWORK = &#123;</span><br><span class="line">    #分页</span><br><span class="line">    &apos;PAGE_SIZE&apos;:10   #每页显示多少条数据</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2-2-App视图使用"><a href="#2-2-App视图使用" class="headerlink" title="2.2 App视图使用"></a>2.2 App视图使用</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">$ vim users/views.py</span><br><span class="line"></span><br><span class="line">from rest_framework.pagination import PageNumberPagination</span><br><span class="line"></span><br><span class="line">class UserViewset(viewsets.ReadOnlyModelViewSet):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    retrieve:</span><br><span class="line">        返回指定用户信息</span><br><span class="line">    list:</span><br><span class="line">        返回用户列表</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    queryset = User.objects.all()</span><br><span class="line">    serializer_class = UserSerializer</span><br><span class="line">    pagination_class = PageNumberPagination  # viewsets.ReadOnlyModelViewSet 里提供的 pagination_class 方法，可以从源码里看出，这里直接指定PageNumberPagination使用即可。</span><br></pre></td></tr></table></figure>
+<h4 id="2-3-访问显示"><a href="#2-3-访问显示" class="headerlink" title="2.3 访问显示"></a>2.3 访问显示</h4><img src="/2018/07/23/Python系列之《Django-DRF-分页》/访问显示.png" title="访问显示">
+<p>很简单，基本就完成了分页需求。</p>
+<h4 id="2-4-全局配置"><a href="#2-4-全局配置" class="headerlink" title="2.4 全局配置"></a>2.4 全局配置</h4><p>如果我们有非常多个非常多的App，非常多的viewset，那是不是需写很多次呢？答案是否定的。<br>其实我们可以实现配置一次，全局生效.</p>
+<ol>
+<li><p>setting.py</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">REST_FRAMEWORK = &#123;</span><br><span class="line">    &apos;DEFAULT_PAGINATION_CLASS&apos;: &apos;rest_framework.pagination.PageNumberPagination&apos;,</span><br><span class="line">    &apos;PAGE_SIZE&apos;: 10,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>views.py<br>去除viewset 视图里的<code>pagination_class = PageNumberPagination</code> </p>
+</li>
 </ol>
-<h2 id="创建Web-scenarios"><a href="#创建Web-scenarios" class="headerlink" title="创建Web scenarios"></a>创建Web scenarios</h2><img src="/2018/06/14/Zabbix系列之《WEB场景监控》/创建Webscenarios.png" title="创建Webscenarios">
-<p>在这里填写登录zabbix的用户名密码，设定为变量。</p>
-<h2 id="打开首页"><a href="#打开首页" class="headerlink" title="打开首页"></a>打开首页</h2><img src="/2018/06/14/Zabbix系列之《WEB场景监控》/打开首页.png" title="打开首页">
-<h2 id="登录"><a href="#登录" class="headerlink" title="登录"></a>登录</h2><img src="/2018/06/14/Zabbix系列之《WEB场景监控》/登录.png" title="登录">
-<h2 id="登录验证"><a href="#登录验证" class="headerlink" title="登录验证"></a>登录验证</h2><img src="/2018/06/14/Zabbix系列之《WEB场景监控》/登录验证.png" title="登录验证">
-<h2 id="退出登录"><a href="#退出登录" class="headerlink" title="退出登录"></a>退出登录</h2><img src="/2018/06/14/Zabbix系列之《WEB场景监控》/退出登录.png" title="退出登录">
-<h2 id="保存配置"><a href="#保存配置" class="headerlink" title="保存配置"></a>保存配置</h2><p>全部填写完成之后记得保存<br><img src="/2018/06/14/Zabbix系列之《WEB场景监控》/保存配置.png" title="保存配置"></p>
-<h2 id="查看结果"><a href="#查看结果" class="headerlink" title="查看结果"></a>查看结果</h2><p>monitorning-&gt;web-&gt;筛选出你的主机-&gt;查看“zabbix性能监控”，结果如下图<br>各个阶段的响应时间、速度、返回状态码以及总的响应时间<br><img src="/2018/06/14/Zabbix系列之《WEB场景监控》/查看结果.png" title="查看结果"></p>
-<h2 id="创建触发器"><a href="#创建触发器" class="headerlink" title="创建触发器"></a>创建触发器</h2><p>系统为每个step创建了3个item，分别是DownloadSpeed页面下载速度/ResponseCode响应代码/ResponseTime响应时间，为整个Web Scenario创建了一个web.test.fail的item和一个web.test.error的item，可以分别为其创建trigger。</p>
-<h3 id="创建一个监控Zabbix登陆失败的触发器"><a href="#创建一个监控Zabbix登陆失败的触发器" class="headerlink" title="创建一个监控Zabbix登陆失败的触发器"></a>创建一个监控Zabbix登陆失败的触发器</h3><img src="/2018/06/14/Zabbix系列之《WEB场景监控》/Zabbix登陆失败触发器.png" title="Zabbix登陆失败触发器">
-<h3 id="创建一个监控整个web-scenario所有step运行是否成功的触发器"><a href="#创建一个监控整个web-scenario所有step运行是否成功的触发器" class="headerlink" title="创建一个监控整个web scenario所有step运行是否成功的触发器"></a>创建一个监控整个web scenario所有step运行是否成功的触发器</h3><img src="/2018/06/14/Zabbix系列之《WEB场景监控》/step运行触发器.png" title="step运行触发器">
-<p>返回值为0表示整个web scenario的所有step都执行成功了，第几步的step执行失败就返回数字几，且后续的step都不会继续执行下去。</p>
-<p>本文来源于作者：“祁成” 投稿，由本站整理发布，感谢作者辛勤付出。</p>
+<p>访问结果与上面一样。</p>
+<h4 id="2-5-自定义分页类"><a href="#2-5-自定义分页类" class="headerlink" title="2.5 自定义分页类"></a>2.5 自定义分页类</h4><p>page_size是分页的一个BUG，如下面请求：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET http://127.0.0.1:8000/users/?page=5&amp;page_size=5</span><br></pre></td></tr></table></figure>
+<p>这里指定page_size显示5条数据，但结果依旧是默认的10条，如下：<br><img src="/2018/07/23/Python系列之《Django-DRF-分页》/page_size失效.png" title="page_size失效"></p>
+<p>这是什么原因导致的呢？通过调试源码发现问题：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">class PageNumberPagination(BasePagination):</span><br><span class="line">    </span><br><span class="line">    ···略···</span><br><span class="line"></span><br><span class="line">    page_size_query_param = None</span><br><span class="line"></span><br><span class="line">    ···略···</span><br><span class="line"></span><br><span class="line">    def get_page_size(self, request):</span><br><span class="line">        if self.page_size_query_param:</span><br><span class="line">            try:</span><br><span class="line">                return _positive_int(</span><br><span class="line">                    request.query_params[self.page_size_query_param],</span><br><span class="line">                    strict=True,</span><br><span class="line">                    cutoff=self.max_page_size</span><br><span class="line">                )</span><br><span class="line">            except (KeyError, ValueError):</span><br><span class="line">                pass</span><br><span class="line"></span><br><span class="line">        return self.page_size</span><br><span class="line"></span><br><span class="line">    ···略···</span><br></pre></td></tr></table></figure>
+<p><strong>原因：</strong><br>上面get_page_size函数调用page_size_query_param有问题，我们在前设置page_size_query_param = ‘page_size’ 不生效。所以导致get_page_size在判断的时候直接返回了self.page_size 而这个值就是默认的10条。</p>
+<p><strong>解决：</strong><br>通过分析我们找到了原因，解决办法也就清晰了，直接将get_page_size重写即可，来看我这边如何处理</p>
+<p>1）编写自定义分页类</p>
+<p>vim opt/pagination.py<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">from rest_framework.pagination import PageNumberPagination</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Pagination(PageNumberPagination):</span><br><span class="line"></span><br><span class="line">    def get_page_size(self, request):</span><br><span class="line">        try:</span><br><span class="line">            page_size = int(request.query_params.get(&apos;page_size&apos;, 0))</span><br><span class="line">            if page_size &lt; 0:</span><br><span class="line">                return self.page_size</span><br><span class="line">            return page_size</span><br><span class="line">        except:</span><br><span class="line">            pass</span><br><span class="line">        return self.page_size</span><br></pre></td></tr></table></figure></p>
+<p>2）配置全局调用<br>vim setting.py<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">REST_FRAMEWORK = &#123;</span><br><span class="line">    &apos;DEFAULT_PAGINATION_CLASS&apos;: &apos;ops.pagination.Pagination&apos;,  # 这里调用我们写的自定义分页类</span><br><span class="line">    &apos;PAGE_SIZE&apos;: 10,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>3）查看效果<br><img src="/2018/07/23/Python系列之《Django-DRF-分页》/page_size生效.png" title="page_size生效"></p>
+<p>没问题，使用DRF分页就到这里。</p>
+<h2 id="二、后言"><a href="#二、后言" class="headerlink" title="二、后言"></a>二、后言</h2><p>DRF除了提供<code>PageNumberPagination</code>分页以外，还提供了<code>LimitOffsetPagination</code>和<code>CursorPagination</code>，那这两个分页大家可以参考下官网的介绍，作者使用后两个分页不是太多，那这里就不做过多介绍了。</p>
+<p>下一篇将介绍DRF的搜索及使用，尽请关注。</p>
 
       
     </div>
@@ -508,7 +522,7 @@
       </li>
       <li class="post-copyright-link">
         <strong>本文链接：</strong>
-        <a href="/2018/06/14/Zabbix系列之《WEB场景监控》.html" title="Zabbix系列之《WEB场景监控》">2018/06/14/Zabbix系列之《WEB场景监控》.html</a>
+        <a href="/2018/07/23/Python系列之《Django-DRF-分页》.html" title="Python系列之《Django-DRF-分页》">2018/07/23/Python系列之《Django-DRF-分页》.html</a>
       </li>
       <li class="post-copyright-license">
         <strong>版权声明： </strong>
@@ -532,7 +546,13 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Web/" rel="tag"><i class="fa fa-tag"></i> Web</a>
+            <a href="/tags/Python/" rel="tag"><i class="fa fa-tag"></i> Python</a>
+          
+            <a href="/tags/Django/" rel="tag"><i class="fa fa-tag"></i> Django</a>
+          
+            <a href="/tags/DRF/" rel="tag"><i class="fa fa-tag"></i> DRF</a>
+          
+            <a href="/tags/Pagination/" rel="tag"><i class="fa fa-tag"></i> Pagination</a>
           
         </div>
       
@@ -545,8 +565,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/12/Docker系列之《善用DockerHub管理自己的镜像》.html" rel="next" title="Docker系列之《善用DockerHub管理自己的镜像》">
-                <i class="fa fa-chevron-left"></i> Docker系列之《善用DockerHub管理自己的镜像》
+              <a href="/2018/07/20/Prometheus系列之《HTTP-API的使用》.html" rel="next" title="Prometheus系列之《HTTP-API的使用》">
+                <i class="fa fa-chevron-left"></i> Prometheus系列之《HTTP-API的使用》
               </a>
             
           </div>
@@ -554,10 +574,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》.html" rel="prev" title="Zabbix系列之《自动化发现主机并添加监控》">
-                Zabbix系列之《自动化发现主机并添加监控》 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -750,7 +766,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#检测流程"><span class="nav-number">1.</span> <span class="nav-text">检测流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建Web-scenarios"><span class="nav-number">2.</span> <span class="nav-text">创建Web scenarios</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#打开首页"><span class="nav-number">3.</span> <span class="nav-text">打开首页</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#登录"><span class="nav-number">4.</span> <span class="nav-text">登录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#登录验证"><span class="nav-number">5.</span> <span class="nav-text">登录验证</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#退出登录"><span class="nav-number">6.</span> <span class="nav-text">退出登录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#保存配置"><span class="nav-number">7.</span> <span class="nav-text">保存配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查看结果"><span class="nav-number">8.</span> <span class="nav-text">查看结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建触发器"><span class="nav-number">9.</span> <span class="nav-text">创建触发器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建一个监控Zabbix登陆失败的触发器"><span class="nav-number">9.1.</span> <span class="nav-text">创建一个监控Zabbix登陆失败的触发器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建一个监控整个web-scenario所有step运行是否成功的触发器"><span class="nav-number">9.2.</span> <span class="nav-text">创建一个监控整个web scenario所有step运行是否成功的触发器</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、PageNumberPagination"><span class="nav-number">1.</span> <span class="nav-text">一、PageNumberPagination</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-配置方法"><span class="nav-number">1.1.</span> <span class="nav-text">1. 配置方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-基本使用"><span class="nav-number">1.2.</span> <span class="nav-text">2. 基本使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-配置setting-py"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1 配置setting.py</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-App视图使用"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2 App视图使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-访问显示"><span class="nav-number">1.2.3.</span> <span class="nav-text">2.3 访问显示</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4-全局配置"><span class="nav-number">1.2.4.</span> <span class="nav-text">2.4 全局配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-5-自定义分页类"><span class="nav-number">1.2.5.</span> <span class="nav-text">2.5 自定义分页类</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、后言"><span class="nav-number">2.</span> <span class="nav-text">二、后言</span></a></li></ol></div>
             
 
           </div>

@@ -123,20 +123,20 @@
 
 
 
-  <meta name="description" content="[TOC]  REST框架的通用列表视图的默认行为是返回模型管理器的整个查询集。通常，您会希望API限制查询集返回的项目。">
+  <meta name="description" content="在GenericAPIView类里有个get_queryset()方法，重写此方法允许以多种不同方式自定义视图返回的查询集。">
 <meta name="keywords" content="Python,Django,DRF,Filter">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Python系列之《Django-DRF-搜索》">
 <meta property="og:url" content="//blog.nicksors.cc/2018/07/24/Python系列之《Django-DRF-搜索》.html">
 <meta property="og:site_name" content="开元DevOps知识库">
-<meta property="og:description" content="[TOC]  REST框架的通用列表视图的默认行为是返回模型管理器的整个查询集。通常，您会希望API限制查询集返回的项目。">
+<meta property="og:description" content="在GenericAPIView类里有个get_queryset()方法，重写此方法允许以多种不同方式自定义视图返回的查询集。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="//blog.nicksors.cc/2018/07/24/Python系列之《Django-DRF-搜索》/搜索框.png">
 <meta property="og:image" content="//blog.nicksors.cc/2018/07/24/Python系列之《Django-DRF-搜索》/高级搜索.png">
-<meta property="og:updated_time" content="2018-07-24T04:40:09.000Z">
+<meta property="og:updated_time" content="2018-07-24T06:17:07.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python系列之《Django-DRF-搜索》">
-<meta name="twitter:description" content="[TOC]  REST框架的通用列表视图的默认行为是返回模型管理器的整个查询集。通常，您会希望API限制查询集返回的项目。">
+<meta name="twitter:description" content="在GenericAPIView类里有个get_queryset()方法，重写此方法允许以多种不同方式自定义视图返回的查询集。">
 <meta name="twitter:image" content="//blog.nicksors.cc/2018/07/24/Python系列之《Django-DRF-搜索》/搜索框.png">
 
 
@@ -393,7 +393,7 @@
                 
               
 
-              <time title="创建时间：2018-07-24 12:36:37 / 修改时间：12:40:09" itemprop="dateCreated datePublished" datetime="2018-07-24T12:36:37+08:00">2018-07-24</time>
+              <time title="创建时间：2018-07-24 12:36:37 / 修改时间：14:17:07" itemprop="dateCreated datePublished" datetime="2018-07-24T12:36:37+08:00">2018-07-24</time>
             
 
             
@@ -454,12 +454,10 @@
       
 
       
-        <p>[TOC]</p>
-<blockquote>
-<p>REST框架的通用列表视图的默认行为是返回模型管理器的整个查询集。通常，您会希望API限制查询集返回的项目。</p>
+        <blockquote>
+<p>在GenericAPIView类里有个get_queryset()方法，重写此方法允许以多种不同方式自定义视图返回的查询集。</p>
 </blockquote>
 <a id="more"></a>
-<p>在GenericAPIView类里有个get_queryset()方法，重写此方法允许以多种不同方式自定义视图返回的查询集。</p>
 <p><strong>例如：搜索用户</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">class UserViewset(viewsets.ReadOnlyModelViewSet):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    retrieve:</span><br><span class="line">        返回指定用户信息</span><br><span class="line">    list:</span><br><span class="line">        返回用户列表</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    queryset = User.objects.all()</span><br><span class="line">    serializer_class = UserSerializer  </span><br><span class="line"></span><br><span class="line">    def get_queryset(self):</span><br><span class="line">        queryset = super(UserViewset, self).get_queryset()</span><br><span class="line">        username = self.request.query_params.get(&quot;username&quot;, &quot;&quot;)</span><br><span class="line">        if username:</span><br><span class="line">            queryset = queryset.filter(username__icontains=username)</span><br><span class="line">        return queryset</span><br></pre></td></tr></table></figure></p>
 <p><strong>请求：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET http://127.0.0.1:8000/users/?username=admin</span><br></pre></td></tr></table></figure></p>
 <p><strong>返回：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">HTTP 200 OK</span><br><span class="line">Allow: GET, HEAD, OPTIONS</span><br><span class="line">Content-Type: application/json</span><br><span class="line">Vary: Accept</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    &quot;count&quot;: 1,</span><br><span class="line">    &quot;next&quot;: null,</span><br><span class="line">    &quot;previous&quot;: null,</span><br><span class="line">    &quot;results&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;id&quot;: 96,</span><br><span class="line">            &quot;username&quot;: &quot;admin&quot;,</span><br><span class="line">            &quot;email&quot;: &quot;tanshuai@nicksors.cc&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
@@ -467,7 +465,7 @@
 <p>GitHub项目地址：<a href="https://github.com/carltongibson/django-filter" target="_blank" rel="noopener">https://github.com/carltongibson/django-filter</a></p>
 <h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>使用pip安装即可<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install django-filter</span><br></pre></td></tr></table></figure></p>
 <p>在setting.py文件里的INSTALLED_APPS配置下添加<code>django_filters</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">INSTALLED_APPS = [</span><br><span class="line">    ...</span><br><span class="line">    &apos;django_filters&apos;,</span><br><span class="line">]</span><br></pre></td></tr></table></figure></p>
-<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="创建过滤器"><a href="#创建过滤器" class="headerlink" title="创建过滤器"></a>创建过滤器</h3><p>每个需要搜索的app，都需要创建。内容如下：</p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="创建过滤器"><a href="#创建过滤器" class="headerlink" title="创建过滤器"></a>创建过滤器</h3><p>如果你有多个App，需要在每个App目录下创建filters文件，然后写好过滤器，提供该App使用。<br>这里以User App为例，创建过滤器内容如下：</p>
 <p>vim users/filters.py<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">from django.contrib.auth import get_user_model</span><br><span class="line">User = get_user_model()</span><br><span class="line">import django_filters</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class UserFilter(django_filters.FilterSet):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    用户过滤器类</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    username = django_filters.CharFilter(name=&quot;username&quot;, lookup_expr=&apos;icontains&apos;)</span><br><span class="line"></span><br><span class="line">    class Meta:</span><br><span class="line">        model = User</span><br><span class="line">        fields = [&apos;username&apos;, ]</span><br></pre></td></tr></table></figure></p>
 <p><strong>技术点说明：</strong></p>
 <ol>
@@ -822,7 +820,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">全站共24.8k字</span>
+  <span class="post-count">全站共24.7k字</span>
 </div>
 
 <!--

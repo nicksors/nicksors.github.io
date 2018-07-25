@@ -123,25 +123,36 @@
 
 
 
-  <meta name="description" content="前言：我在开发公司的运维cmdb平台时，使用的环境是python2.7，但有些项目我需要用到python3的环境来做，因此一个环境不能满足我需求，当然我想过很多方法，比如：虚拟机、docker？；但在我了解virtualenv过后，发现这个东西能实现我的需求，而且非常便捷。">
-<meta name="keywords" content="Virtualenv">
+  <meta name="description" content="DRF系列的姊妹篇，了解一下.">
+<meta name="keywords" content="Python,Django,DRF,Permission">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Python系列之《Virtualenv使Python2与3项目并存》">
-<meta property="og:url" content="//blog.nicksors.cc/2018/06/29/Python系列之《Virtualenv使Python2与3项目并存》.html">
+<meta property="og:title" content="Python系列之《Django-DRF-权限》">
+<meta property="og:url" content="//blog.nicksors.cc/2018/07/25/Python系列之《Django-DRF-权限》.html">
 <meta property="og:site_name" content="开元DevOps知识库">
-<meta property="og:description" content="前言：我在开发公司的运维cmdb平台时，使用的环境是python2.7，但有些项目我需要用到python3的环境来做，因此一个环境不能满足我需求，当然我想过很多方法，比如：虚拟机、docker？；但在我了解virtualenv过后，发现这个东西能实现我的需求，而且非常便捷。">
+<meta property="og:description" content="DRF系列的姊妹篇，了解一下.">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-06-29T02:50:56.000Z">
+<meta property="og:image" content="//blog.nicksors.cc/2018/07/25/Python系列之《Django-DRF-权限》/登录接口.png">
+<meta property="og:image" content="//blog.nicksors.cc/2018/07/25/Python系列之《Django-DRF-权限》/登录成功.png">
+<meta property="og:image" content="//blog.nicksors.cc/2018/07/25/Python系列之《Django-DRF-权限》/数据库存储Session.png">
+<meta property="og:image" content="//blog.nicksors.cc/2018/07/25/Python系列之《Django-DRF-权限》/认证成功.png">
+<meta property="og:image" content="//blog.nicksors.cc/2018/07/25/Python系列之《Django-DRF-权限》/接口权限验证.png">
+<meta property="og:image" content="//blog.nicksors.cc/2018/07/25/Python系列之《Django-DRF-权限》/删除权限认证.png">
+<meta property="og:image" content="//blog.nicksors.cc/2018/07/25/Python系列之《Django-DRF-权限》/自定义Get权限.png">
+<meta property="og:image" content="//blog.nicksors.cc/2018/07/25/Python系列之《Django-DRF-权限》/视图模型类.png">
+<meta property="og:image" content="//blog.nicksors.cc/2018/07/25/Python系列之《Django-DRF-权限》/GET权限认证.png">
+<meta property="og:image" content="//blog.nicksors.cc/2018/07/25/Python系列之《Django-DRF-权限》/GetOne.png">
+<meta property="og:updated_time" content="2018-07-25T03:17:16.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Python系列之《Virtualenv使Python2与3项目并存》">
-<meta name="twitter:description" content="前言：我在开发公司的运维cmdb平台时，使用的环境是python2.7，但有些项目我需要用到python3的环境来做，因此一个环境不能满足我需求，当然我想过很多方法，比如：虚拟机、docker？；但在我了解virtualenv过后，发现这个东西能实现我的需求，而且非常便捷。">
+<meta name="twitter:title" content="Python系列之《Django-DRF-权限》">
+<meta name="twitter:description" content="DRF系列的姊妹篇，了解一下.">
+<meta name="twitter:image" content="//blog.nicksors.cc/2018/07/25/Python系列之《Django-DRF-权限》/登录接口.png">
 
 
 
 
 
 
-  <link rel="canonical" href="//blog.nicksors.cc/2018/06/29/Python系列之《Virtualenv使Python2与3项目并存》.html"/>
+  <link rel="canonical" href="//blog.nicksors.cc/2018/07/25/Python系列之《Django-DRF-权限》.html"/>
 
 
 
@@ -151,7 +162,7 @@
   };
 </script>
 
-  <title>Python系列之《Virtualenv使Python2与3项目并存》 | 开元DevOps知识库</title>
+  <title>Python系列之《Django-DRF-权限》 | 开元DevOps知识库</title>
   
 
 
@@ -348,7 +359,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="//blog.nicksors.cc/2018/06/29/Python系列之《Virtualenv使Python2与3项目并存》.html">
+    <link itemprop="mainEntityOfPage" href="//blog.nicksors.cc/2018/07/25/Python系列之《Django-DRF-权限》.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="开元">
@@ -365,7 +376,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Python系列之《Virtualenv使Python2与3项目并存》
+          <h1 class="post-title" itemprop="name headline">Python系列之《Django-DRF-权限》
               
             
           </h1>
@@ -390,7 +401,7 @@
                 
               
 
-              <time title="创建时间：2018-06-29 10:40:36 / 修改时间：10:50:56" itemprop="dateCreated datePublished" datetime="2018-06-29T10:40:36+08:00">2018-06-29</time>
+              <time title="创建时间：2018-07-25 10:57:58 / 修改时间：11:17:16" itemprop="dateCreated datePublished" datetime="2018-07-25T10:57:58+08:00">2018-07-25</time>
             
 
             
@@ -419,7 +430,7 @@
                   ，
                 
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python开发/日常技巧/" itemprop="url" rel="index"><span itemprop="name">日常技巧</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python开发/Django/" itemprop="url" rel="index"><span itemprop="name">Django</span></a></span>
 
                 
                 
@@ -451,25 +462,78 @@
       
 
       
-        <p>前言：我在开发公司的运维cmdb平台时，使用的环境是python2.7，但有些项目我需要用到python3的环境来做，因此一个环境不能满足我需求，当然我想过很多方法，比如：虚拟机、docker？；但在我了解virtualenv过后，发现这个东西能实现我的需求，而且非常便捷。</p>
-<a id="more"></a>
-<p>ps : python2系统默认的环境，所以本文我们主要讲解python3如何使用Virtualenv来创建我们想要的项目环境。这是我在mac环境下配置的过程。</p>
-<h3 id="python-环境说明"><a href="#python-环境说明" class="headerlink" title="python 环境说明"></a>python 环境说明</h3><p>mac自带有python2.7，我在mac上又安装了python3.6，安装方法就是在python官网下载一个Mac的包，然后以Mac安装包方式安装即可，安装好后会在这里出现：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tanshuai@tanshuaideMacBook-Pro <span class="comment"># ls -lh /Library/Frameworks/Python.framework/Versions/</span></span><br><span class="line">total 8</span><br><span class="line">drwxrwxr-x  10 root  admin  340B  7 29 12:17 2.7            &lt;==系统自带</span><br><span class="line">drwxrwxr-x  10 root  admin  340B  9 26 12:34 3.6            &lt;==官网下载安装的</span><br><span class="line">lrwxr-xr-x  1 root  wheel    3B  7 29 12:17 Current -&gt; 2.7</span><br></pre></td></tr></table></figure></p>
-<p>安装好python3后，记得做环境变量：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tanshuai@tanshuaideMacBook-Pro <span class="comment"># vim .bash_profile</span></span><br><span class="line">PATH=<span class="string">"/Library/Frameworks/Python.framework/Versions/3.6/bin:<span class="variable">$&#123;PATH&#125;</span>"</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="首先，安装virtualenv"><a href="#首先，安装virtualenv" class="headerlink" title="首先，安装virtualenv"></a>首先，安装virtualenv</h3><p>第一步：查看pip是哪个版本<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">tanshuai@tanshuaideMacBook-Pro <span class="comment"># which pip</span></span><br><span class="line">/usr/<span class="built_in">local</span>/bin/pip</span><br><span class="line">tanshuai@tanshuaideMacBook-Pro <span class="comment"># ls -lh /usr/local/bin/pip</span></span><br><span class="line">lrwxrwxr-x  1 root  admin    65B  7 29 12:17 /usr/<span class="built_in">local</span>/bin/pip -&gt; ../../../Library/Frameworks/Python.framework/Versions/2.7/bin/pip</span><br><span class="line">tanshuai@tanshuaideMacBook-Pro <span class="comment"># which pip3</span></span><br><span class="line">/Library/Frameworks/Python.framework/Versions/3.6/bin/pip3</span><br></pre></td></tr></table></figure></p>
-<p>从上能看到pip默认是2.7版本的，因为python3.6版本叫pip3</p>
-<p>第二步：安装virtualenv<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tanshuai@tanshuaideMacBook-Pro <span class="comment"># pip3 install virtualenv # 使用php3版本安装virtualenv</span></span><br><span class="line">tanshuai@tanshuaideMacBook-Pro <span class="comment"># pip3 list|grep virtualenv</span></span><br><span class="line">virtualenv 15.1.0</span><br><span class="line">tanshuai@tanshuaideMacBook-Pro <span class="comment"># which virtualenv </span></span><br><span class="line">/Library/Frameworks/Python.framework/Versions/3.6/bin/virtualenv   &lt;==注意，一定要使用python3.6环境下的virtualenv，创建出来才会是python3.6环境（python2同理）</span><br></pre></td></tr></table></figure></p>
-<h3 id="使用virtualenv"><a href="#使用virtualenv" class="headerlink" title="使用virtualenv"></a>使用virtualenv</h3><p>第一步：创建目录<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tanshuai@tanshuaideMacBook-Pro <span class="comment"># mkdir -p ~/Projects/Python/3.6/VirtualSource</span></span><br><span class="line">tanshuai@tanshuaideMacBook-Pro <span class="comment"># cd ~/Projects/Python/3.6/VirtualSource</span></span><br></pre></td></tr></table></figure></p>
-<p>第二步：创建一个独立的Python运行环境，命名为mxcmdb：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">tanshuai@tanshuaideMacBook-Pro <span class="comment"># virtualenv --no-site-packages mxcmdb</span></span><br><span class="line">Using base prefix <span class="string">'/Library/Frameworks/Python.framework/Versions/3.6'</span></span><br><span class="line">New python executable <span class="keyword">in</span> /Users/tanshuai/Projects/Python/3.6/VirtualSource/venv/bin/python3.6</span><br><span class="line">Also creating executable <span class="keyword">in</span> /Users/tanshuai/Projects/Python/3.6/VirtualSource/venv/bin/python</span><br><span class="line">Installing setuptools, pip, wheel...done.</span><br><span class="line">tanshuai@tanshuaideMacBook-Pro <span class="comment"># ls -lh</span></span><br><span class="line">total 0</span><br><span class="line">drwxr-xr-x  7 tanshuai  staff  238B  9 26 13:39 mxcmdb</span><br></pre></td></tr></table></figure></p>
-<p>使用命令<code>virtualenv</code>就可以创建一个独立的Python运行环境，我们还加上了参数–no-site-packages，这样，已经安装到系统Python环境中的所有第三方包都不会复制过来，这样，我们就得到了一个不带任何第三方包的“干净”的Python运行环境。</p>
-<p>新建的Python环境被放到当前目录下的mxcmdb目录。有了mxcmdb这个Python环境，可以用source进入该环境：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tanshuai@tanshuaideMacBook-Pro <span class="comment"># source mxcmdb/bin/activate</span></span><br><span class="line">(mxcmdb)  tanshuai@tanshuaideMacBook-Pro <span class="comment">#</span></span><br></pre></td></tr></table></figure></p>
-<p>注意到命令提示符变了，有了个<code>(mxcmdb)</code>前缀，表示当前环境下是一个名为mxcmdb的环境。</p>
-<p>在这个环境下可以安装你想要的环境，如：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(mxcmdb)  tanshuai@tanshuaideMacBook-Pro <span class="comment"># pip install jinja2</span></span><br><span class="line">(mxcmdb)  tanshuai@tanshuaideMacBook-Pro <span class="comment"># pip list|grep Jinja2</span></span><br><span class="line">Jinja2          2.9.6</span><br></pre></td></tr></table></figure></p>
-<p>在mxcmdb环境下，用pip安装的包都被安装到mxcmdb这个环境下，系统Python环境不受任何影响。</p>
-<p>退出当前的mxcmdb环境，使用deactivate命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(mxcmdb)  tanshuai@tanshuaideMacBook-Pro <span class="comment"># deactivate</span></span><br><span class="line">tanshuai@tanshuaideMacBook-Pro <span class="comment">#</span></span><br></pre></td></tr></table></figure></p>
-<p>此时就回到了正常的环境，现在pip或python均是在系统Python环境下执行。</p>
-<h3 id="virtualenv原理"><a href="#virtualenv原理" class="headerlink" title="virtualenv原理"></a>virtualenv原理</h3><p>virtualenv是如何创建“独立”的Python运行环境的呢？原理很简单，就是把系统Python复制一份到virtualenv的环境，用命令source venv/bin/activate进入一个virtualenv环境时，virtualenv会修改相关环境变量，让命令python和pip均指向当前的virtualenv环境。<br>小结：<br>virtualenv为应用提供了隔离的Python运行环境，解决了不同应用间多版本的冲突问题。</p>
-<p>参考博文：<br>Python–Virtualenv简明教程：<a href="http://www.jianshu.com/p/08c657bd34f1" target="_blank" rel="noopener">http://www.jianshu.com/p/08c657bd34f1</a><br><a href="https://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/001432712108300322c61f256c74803b43bfd65c6f8d0d0000" target="_blank" rel="noopener">virtualenv - 廖雪峰的官方网站</a></p>
+        <blockquote>
+<p>DRF系列的姊妹篇，了解一下.</p>
+</blockquote>
+<a id="more"></a>&gt;<br><br>## 一、认证<br>### 1. 启用DRF登录接口<br>在drf源码文件<code>rest_framework.urls.py</code>中能看到如下信息：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">urlpatterns = [</span><br><span class="line">    url(r&apos;^login/$&apos;, login, login_kwargs, name=&apos;login&apos;),</span><br><span class="line">    url(r&apos;^logout/$&apos;, logout, name=&apos;logout&apos;),</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>会发现DRF在这里将登录、登出的接口都已经写好了，直接使用即可。</p>
+<p>全局urls.py文件里增加如下配置，来启用登录接口：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">urlpatterns = [</span><br><span class="line">    ······</span><br><span class="line">    url(r&apos;^api-auth&apos;, include(&quot;rest_framework.urls&quot;, namespace=&quot;rest_framework&quot;)),</span><br><span class="line">]</span><br></pre></td></tr></table></figure></p>
+<p>然后，去页面登录：<br><img src="/2018/07/25/Python系列之《Django-DRF-权限》/登录接口.png" title="登录接口"></p>
+<p>输入账号登录，查看浏览器保存的Session：<br><img src="/2018/07/25/Python系列之《Django-DRF-权限》/登录成功.png" title="登录成功"></p>
+<p>你在数据库中，也能看到Session的存储信息.<br><img src="/2018/07/25/Python系列之《Django-DRF-权限》/数据库存储Session.png" title="数据库存储Session"></p>
+<h3 id="2-User接口使用Session登录认证"><a href="#2-User接口使用Session登录认证" class="headerlink" title="2. User接口使用Session登录认证"></a>2. User接口使用Session登录认证</h3><p>这里来个使用案例，了解下如何在App里使用认证；<br>vim users/views.py<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">from rest_framework.authentication import SessionAuthentication</span><br><span class="line">from rest_framework.permissions import IsAuthenticated</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class UserViewset(viewsets.ReadOnlyModelViewSet):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    retrieve:</span><br><span class="line">        返回指定用户信息</span><br><span class="line">    list:</span><br><span class="line">        返回用户列表</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    queryset = User.objects.all()</span><br><span class="line">    serializer_class = UserSerializer</span><br><span class="line">    authentication_classes = (SessionAuthentication, ) # 将认证的key, 存放在数据库里;[局部使用方法/可以全局配置]</span><br><span class="line">    permission_classes = (IsAuthenticated, ) # 启用登录认证,即:登录就可以访问.</span><br></pre></td></tr></table></figure></p>
+<p>把上面的登录用户退出，然后访问User接口：<br><img src="/2018/07/25/Python系列之《Django-DRF-权限》/认证成功.png" title="认证成功"></p>
+<p>用户没有登录，不让访问信息，认证成功。只有在用户登录时，才可访问用户数据。</p>
+<h3 id="3-Session认证全局配置"><a href="#3-Session认证全局配置" class="headerlink" title="3. Session认证全局配置"></a>3. Session认证全局配置</h3><p>vim setting.py<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">REST_FRAMEWORK = &#123;</span><br><span class="line">    ······</span><br><span class="line">    &apos;DEFAULT_AUTHENTICATION_CLASSES&apos;: (</span><br><span class="line">        &apos;rest_framework_jwt.authentication.JSONWebTokenAuthentication&apos;,</span><br><span class="line">        &apos;rest_framework.authentication.SessionAuthentication&apos;,</span><br><span class="line">        &apos;rest_framework.authentication.BasicAuthentication&apos;</span><br><span class="line">    ),</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>当然，除了SessionAuthentication认证以外，还有其他认证方式，也可以配置多个，取决于你使用到什么就配置什么好了。</p>
+<p>那现在就可以去将User里的Session配置去掉，访问效果一样。</p>
+<p>本文只讲了SessionAuthentication的认证方式和使用，其他认证方式在后面文章中会陆续讲解。</p>
+<p>那认证讲完了，接下来看看权限.</p>
+<h2 id="二、权限"><a href="#二、权限" class="headerlink" title="二、权限"></a>二、权限</h2><h3 id="1-简单了解权限"><a href="#1-简单了解权限" class="headerlink" title="1. 简单了解权限"></a>1. 简单了解权限</h3><p>其实在上面已经使用过权限了，你注意到了吗？</p>
+<p>上面users/views.py文件里写到：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">permission_classes = (IsAuthenticated, ) # 启用登录认证,即:登录就可以访问.</span><br></pre></td></tr></table></figure></p>
+<p>这个配置是指定登录认证，其实还有很多种认证方式，如下：</p>
+<ul>
+<li><code>IsAuthenticated</code> -  登录权限</li>
+<li><code>IsAdminUser</code> - 管理员权限</li>
+<li><code>IsAuthenticatedOrReadOnly</code> - 登录或只读权限</li>
+<li><code>DjangoModelPermissions</code> - 模型权限验证权限</li>
+<li><code>DjangoModelPermissionsOrAnonReadOnly</code> - 模型权限只读认证</li>
+<li><code>DjangoObjectPermissions</code> - 对象权限认证</li>
+</ul>
+<p>当然，这些认证都基于<code>BasePermission</code>权限，源码内容如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">class BasePermission(object):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    A base class from which all permission classes should inherit.</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">    def has_permission(self, request, view):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        Return `True` if permission is granted, `False` otherwise.</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        return True</span><br><span class="line"></span><br><span class="line">    def has_object_permission(self, request, view, obj):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        Return `True` if permission is granted, `False` otherwise.</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        return True</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>has_permission，检查权限</li>
+<li>has_object_permission，检查对象权限</li>
+</ul>
+<p>我们也可以继承BasePermission权限，进行自定义权限。</p>
+<h3 id="2-DjangoModelPermissions"><a href="#2-DjangoModelPermissions" class="headerlink" title="2. DjangoModelPermissions"></a>2. DjangoModelPermissions</h3><p>Django模型权限，是我们用的最多的，这里也准备对它的使用展开讲解下。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">class DjangoModelPermissions(BasePermission):</span><br><span class="line"></span><br><span class="line">    perms_map = &#123;</span><br><span class="line">        &apos;GET&apos;: [],</span><br><span class="line">        &apos;OPTIONS&apos;: [],</span><br><span class="line">        &apos;HEAD&apos;: [],</span><br><span class="line">        &apos;POST&apos;: [&apos;%(app_label)s.add_%(model_name)s&apos;],</span><br><span class="line">        &apos;PUT&apos;: [&apos;%(app_label)s.change_%(model_name)s&apos;],</span><br><span class="line">        &apos;PATCH&apos;: [&apos;%(app_label)s.change_%(model_name)s&apos;],</span><br><span class="line">        &apos;DELETE&apos;: [&apos;%(app_label)s.delete_%(model_name)s&apos;],</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>从它的源码中能看出，这个权限给我们设置好了很多方法的权限认证，增删改查的接口操作都给做了，我们只需要使用它即可。不得不感叹DRF的强大，以前在使用MVC框架模式开发中，权限得一个个去控制，其过程可以用恶心来形容。</p>
+<p>DRF的安全请求方法:<br>在rest_framework.permissions中配置了如下安全方法，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SAFE_METHODS = (&apos;GET&apos;, &apos;HEAD&apos;, &apos;OPTIONS&apos;)</span><br></pre></td></tr></table></figure></p>
+<p>也就是只允许这些方法在没有权限的情况下，能访问资源。</p>
+<h4 id="2-1-配置DjangoModelPermissions权限"><a href="#2-1-配置DjangoModelPermissions权限" class="headerlink" title="2.1 配置DjangoModelPermissions权限"></a>2.1 配置DjangoModelPermissions权限</h4><p>vim setting.py<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">REST_FRAMEWORK = &#123;</span><br><span class="line">    ······</span><br><span class="line">    &apos;DEFAULT_PERMISSION_CLASSES&apos;: (</span><br><span class="line">        &apos;rest_framework.permissions.DjangoModelPermissions&apos;,</span><br><span class="line">    ),</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>直接在全局配置文件里进行配置，</p>
+<p><strong>优点：</strong> 不用在每个视图里去写了，<br><strong>缺点：</strong> 如果你一但写一个viewset没有queryset的话，将会出错，解决：使用permission_classes = (IsAuthenticated, ) 写在你的viewset里，自己定义其他认证方式，覆盖全局的配置即可。</p>
+<h4 id="2-2-权限验证"><a href="#2-2-权限验证" class="headerlink" title="2.2 权限验证"></a>2.2 权限验证</h4><p>使用普通用户登录，查看idc的一个资源：<br><img src="/2018/07/25/Python系列之《Django-DRF-权限》/接口权限验证.png" title="接口权限验证"></p>
+<p>可以看到只允许安全方法中 GET方法 来访问数据，而曾，删，改方法，都被禁止。</p>
+<p>给nicksors-1授权idc的删除权限：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">In [1]: from django.contrib.auth.models import User</span><br><span class="line"></span><br><span class="line">In [2]: from django.contrib.auth.models import Permission</span><br><span class="line"></span><br><span class="line">In [3]: user = User.objects.get(username=&apos;nicksors-1&apos;)</span><br><span class="line"></span><br><span class="line">In [4]: Permission.objects.get(pk=21)</span><br><span class="line">Out[4]: &lt;Permission: idcs | idc | Can delete idc&gt;</span><br><span class="line"></span><br><span class="line">In [5]: del_idc = Permission.objects.get(pk=21)</span><br><span class="line"></span><br><span class="line">In [6]: user.user_permissions = [del_idc]</span><br><span class="line">manage.py:1: RemovedInDjango20Warning: Direct assignment to the forward side of a many-to-many set is deprecated due to the implicit save() that happens. Use user_permissions.set() instead.</span><br><span class="line">  #!/usr/bin/env python</span><br><span class="line"></span><br><span class="line">In [7]: user.user_permissions.all()</span><br><span class="line">Out[7]: &lt;QuerySet [&lt;Permission: idcs | idc | Can delete idc&gt;]&gt;</span><br></pre></td></tr></table></figure></p>
+<p>再次刷新页面，你能看到<code>DELETE</code>权限已经有了，其他权限就不挨个测试了哈，原理一样。</p>
+<img src="/2018/07/25/Python系列之《Django-DRF-权限》/删除权限认证.png" title="删除权限认证">
+<h4 id="2-3-自定义GET权限"><a href="#2-3-自定义GET权限" class="headerlink" title="2.3 自定义GET权限"></a>2.3 自定义GET权限</h4><p>因为GET方法在DjangoModelPermissions权限认证中，属于安全权限， 意思是可以直接查看。</p>
+<p>试想一下，如果我们有接口不想被GET查看，那如何控制呢？这就需要我们自己来定义实现了。</p>
+<p><strong>动刀：</strong><br>在 setting.py同级目录下创建permissions.py文件：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">from rest_framework.permissions import DjangoModelPermissions</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class ModelPermissions(DjangoModelPermissions):</span><br><span class="line"></span><br><span class="line">    def get_custom_perms(self, view, method): # 接收请求的视图，以及请求方法</span><br><span class="line">        if hasattr(view, &apos;extra_perm_map&apos;):  # 判断视图是否定义了extra_perm_map</span><br><span class="line">            if isinstance(view.extra_perm_map, dict): # 判断extra_perm_map属性必须是一个dict</span><br><span class="line">                return view.extra_perm_map.get(method, []) # 返回extra_perm_map里定义的参数，默认为空list</span><br><span class="line">        return []</span><br><span class="line"></span><br><span class="line">    def has_permission(self, request, view):</span><br><span class="line">        # Workaround to ensure DjangoModelPermissions are not applied</span><br><span class="line">        # to the root view when using DefaultRouter.</span><br><span class="line">        if getattr(view, &apos;_ignore_model_permissions&apos;, False):</span><br><span class="line">            return True</span><br><span class="line"></span><br><span class="line">        if not request.user or (</span><br><span class="line">          not request.user.is_authenticated and self.authenticated_users_only):</span><br><span class="line">            return False</span><br><span class="line"></span><br><span class="line">        queryset = self._queryset(view)</span><br><span class="line">        perms = self.get_required_permissions(request.method, queryset.model)</span><br><span class="line">        perms.extend(self.get_custom_perms(view, request.method)) # 两个列表相加，将请求方法加入DjangoModelPermissions里的perms_map中.</span><br><span class="line">        return request.user.has_perms(perms)</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li>自定义了ModelPermissions权限，继承DjangoModelPermissions权限类；</li>
+<li>上面这一串代码其实就是在更改DjangoModelPermissions里的perms_map列表，将perms_map列表里原有GET = []  改写成我们自定义的权限认证信息. 且看下面如何使用。</li>
+</ol>
+<h4 id="2-4-配置全局使用"><a href="#2-4-配置全局使用" class="headerlink" title="2.4 配置全局使用"></a>2.4 配置全局使用</h4><p>在全局配置文件中将DjangoModelPermissions注释，换成我们上面自定义的ModelPermissions权限类<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">REST_FRAMEWORK = &#123;</span><br><span class="line">    ······</span><br><span class="line">    &apos;DEFAULT_PERMISSION_CLASSES&apos;: (</span><br><span class="line">        # &apos;rest_framework.permissions.DjangoModelPermissions&apos;,</span><br><span class="line">        &apos;ops.permissions.ModelPermissions&apos;,</span><br><span class="line">    ),</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="2-5-使用自定义GET权限"><a href="#2-5-使用自定义GET权限" class="headerlink" title="2.5 使用自定义GET权限"></a>2.5 使用自定义GET权限</h4><p>还是拿User作为示例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">class UserViewset(viewsets.ReadOnlyModelViewSet):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    retrieve:</span><br><span class="line">        返回指定用户信息</span><br><span class="line">    list:</span><br><span class="line">        返回用户列表</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    queryset = User.objects.all()</span><br><span class="line">    serializer_class = UserSerializer</span><br><span class="line">    ······</span><br><span class="line">    extra_perm_map = &#123;</span><br><span class="line">        &quot;GET&quot;: [&apos;auth.view_user&apos;, ]</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里extra_perm_map字段指定了GET方法，意思是User接口的GET方法得有auth.view_user权限才能访问。</p>
+<p>访问User接口页面：<br><img src="/2018/07/25/Python系列之《Django-DRF-权限》/自定义Get权限.png" title="自定义Get权限"></p>
+<p>嗯，显示没有GET权限，满足我们的需求，哈哈。</p>
+<p>当然，auth.view_user权限默认是没有的，你需要添加权限，然后赋权给登录的用户，才能使用这个权限。</p>
+<h3 id="3-视图接口控制权限"><a href="#3-视图接口控制权限" class="headerlink" title="3 视图接口控制权限"></a>3 视图接口控制权限</h3><p>DjangoModelPermissions的perms_map变量里记录着增删改查的权限，那viewset视图如何控制这些权限呢？</p>
+<p>先介绍下rest_framework.viewsets里的模型类：<br><img src="/2018/07/25/Python系列之《Django-DRF-权限》/视图模型类.png" title="视图模型类"></p>
+<p>视同中常用的模型是ModelViewSet，因为它帮我们实现了增删改查操作，那有些接口只能有增加权限，这里如何控制？</p>
+<p>答案很简单：<code>通过在视图里指定模型方法来控制权限</code>，例如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">class UserViewset(viewsets.GenericViewSet,</span><br><span class="line">                    mixins.ListModelMixin,</span><br><span class="line">                    mixins.UpdateModelMixin,):</span><br></pre></td></tr></table></figure></p>
+<p>相信你很容易能看出，这个接口只允许GET和PUT请求，我们来访问看看</p>
+<p>获取用户列表是没问题的，这是<code>mixins.ListModelMixin</code>定义的功能；</p>
+<img src="/2018/07/25/Python系列之《Django-DRF-权限》/GET权限认证.png" title="GET权限认证">
+<p>获取和更新单个用户：<br><img src="/2018/07/25/Python系列之《Django-DRF-权限》/GetOne.png" title="GetOne"></p>
+<p>提示GET方法不被允许，而PUT可以，什么原因呢？如果有好好看文章，相信你知道是什么原因！这里就不细说了。</p>
+<p>视图的接口权限，就是通过以上方式来控制的。</p>
+<p>写到这里，作者将自己常用的权限使用方法分享给大家啦，当然肯定有些信息介绍的没那么详细，也适当锻炼下大家看看官网或者其他文章，哈哈。</p>
+<p>文完。</p>
 
       
     </div>
@@ -497,7 +561,7 @@
       </li>
       <li class="post-copyright-link">
         <strong>本文链接：</strong>
-        <a href="/2018/06/29/Python系列之《Virtualenv使Python2与3项目并存》.html" title="Python系列之《Virtualenv使Python2与3项目并存》">2018/06/29/Python系列之《Virtualenv使Python2与3项目并存》.html</a>
+        <a href="/2018/07/25/Python系列之《Django-DRF-权限》.html" title="Python系列之《Django-DRF-权限》">2018/07/25/Python系列之《Django-DRF-权限》.html</a>
       </li>
       <li class="post-copyright-license">
         <strong>版权声明： </strong>
@@ -521,7 +585,13 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Virtualenv/" rel="tag"><i class="fa fa-tag"></i> Virtualenv</a>
+            <a href="/tags/Python/" rel="tag"><i class="fa fa-tag"></i> Python</a>
+          
+            <a href="/tags/Django/" rel="tag"><i class="fa fa-tag"></i> Django</a>
+          
+            <a href="/tags/DRF/" rel="tag"><i class="fa fa-tag"></i> DRF</a>
+          
+            <a href="/tags/Permission/" rel="tag"><i class="fa fa-tag"></i> Permission</a>
           
         </div>
       
@@ -534,8 +604,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/22/Zabbix系列之《监控MySQL主从同步》.html" rel="next" title="Zabbix系列之《监控MySQL主从同步》">
-                <i class="fa fa-chevron-left"></i> Zabbix系列之《监控MySQL主从同步》
+              <a href="/2018/07/24/Python系列之《Django-DRF-搜索》.html" rel="next" title="Python系列之《Django-DRF-搜索》">
+                <i class="fa fa-chevron-left"></i> Python系列之《Django-DRF-搜索》
               </a>
             
           </div>
@@ -543,10 +613,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/07/04/Zabbix系列之《Python操作ZabbixAPI了解一下》.html" rel="prev" title="Zabbix系列之《Python操作ZabbixAPI了解一下》">
-                Zabbix系列之《Python操作ZabbixAPI了解一下》 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -743,7 +809,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#python-环境说明"><span class="nav-number">1.</span> <span class="nav-text">python 环境说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#首先，安装virtualenv"><span class="nav-number">2.</span> <span class="nav-text">首先，安装virtualenv</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用virtualenv"><span class="nav-number">3.</span> <span class="nav-text">使用virtualenv</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#virtualenv原理"><span class="nav-number">4.</span> <span class="nav-text">virtualenv原理</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-User接口使用Session登录认证"><span class="nav-number">1.</span> <span class="nav-text">2. User接口使用Session登录认证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Session认证全局配置"><span class="nav-number">2.</span> <span class="nav-text">3. Session认证全局配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、权限"><span class="nav-number"></span> <span class="nav-text">二、权限</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-简单了解权限"><span class="nav-number">1.</span> <span class="nav-text">1. 简单了解权限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-DjangoModelPermissions"><span class="nav-number">2.</span> <span class="nav-text">2. DjangoModelPermissions</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-配置DjangoModelPermissions权限"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 配置DjangoModelPermissions权限</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-权限验证"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 权限验证</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-自定义GET权限"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 自定义GET权限</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4-配置全局使用"><span class="nav-number">2.4.</span> <span class="nav-text">2.4 配置全局使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-5-使用自定义GET权限"><span class="nav-number">2.5.</span> <span class="nav-text">2.5 使用自定义GET权限</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-视图接口控制权限"><span class="nav-number">3.</span> <span class="nav-text">3 视图接口控制权限</span></a></li></ol></div>
             
 
           </div>

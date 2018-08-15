@@ -141,7 +141,7 @@
 <meta property="og:image" content="//blog.nicksors.cc/2018/07/25/Python系列之《Django-DRF-权限》/视图模型类.png">
 <meta property="og:image" content="//blog.nicksors.cc/2018/07/25/Python系列之《Django-DRF-权限》/GET权限认证.png">
 <meta property="og:image" content="//blog.nicksors.cc/2018/07/25/Python系列之《Django-DRF-权限》/GetOne.png">
-<meta property="og:updated_time" content="2018-07-25T03:17:16.000Z">
+<meta property="og:updated_time" content="2018-07-25T03:18:25.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python系列之《Django-DRF-权限》">
 <meta name="twitter:description" content="DRF系列的姊妹篇，了解一下.">
@@ -401,7 +401,7 @@
                 
               
 
-              <time title="创建时间：2018-07-25 10:57:58 / 修改时间：11:17:16" itemprop="dateCreated datePublished" datetime="2018-07-25T10:57:58+08:00">2018-07-25</time>
+              <time title="创建时间：2018-07-25 10:57:58 / 修改时间：11:18:25" itemprop="dateCreated datePublished" datetime="2018-07-25T10:57:58+08:00">2018-07-25</time>
             
 
             
@@ -465,7 +465,8 @@
         <blockquote>
 <p>DRF系列的姊妹篇，了解一下.</p>
 </blockquote>
-<a id="more"></a>&gt;<br><br>## 一、认证<br>### 1. 启用DRF登录接口<br>在drf源码文件<code>rest_framework.urls.py</code>中能看到如下信息：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">urlpatterns = [</span><br><span class="line">    url(r&apos;^login/$&apos;, login, login_kwargs, name=&apos;login&apos;),</span><br><span class="line">    url(r&apos;^logout/$&apos;, logout, name=&apos;logout&apos;),</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h2 id="一、认证"><a href="#一、认证" class="headerlink" title="一、认证"></a>一、认证</h2><h3 id="1-启用DRF登录接口"><a href="#1-启用DRF登录接口" class="headerlink" title="1. 启用DRF登录接口"></a>1. 启用DRF登录接口</h3><p>在drf源码文件<code>rest_framework.urls.py</code>中能看到如下信息：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">urlpatterns = [</span><br><span class="line">    url(r&apos;^login/$&apos;, login, login_kwargs, name=&apos;login&apos;),</span><br><span class="line">    url(r&apos;^logout/$&apos;, logout, name=&apos;logout&apos;),</span><br><span class="line">]</span><br></pre></td></tr></table></figure></p>
 <p>会发现DRF在这里将登录、登出的接口都已经写好了，直接使用即可。</p>
 <p>全局urls.py文件里增加如下配置，来启用登录接口：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">urlpatterns = [</span><br><span class="line">    ······</span><br><span class="line">    url(r&apos;^api-auth&apos;, include(&quot;rest_framework.urls&quot;, namespace=&quot;rest_framework&quot;)),</span><br><span class="line">]</span><br></pre></td></tr></table></figure></p>
 <p>然后，去页面登录：<br><img src="/2018/07/25/Python系列之《Django-DRF-权限》/登录接口.png" title="登录接口"></p>
@@ -614,6 +615,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2018/08/15/消息队列之《01-NSQ理论篇》.html" rel="prev" title="消息队列之《01.NSQ理论篇》">
+                消息队列之《01.NSQ理论篇》 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -686,7 +691,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">19</span>
+                    <span class="site-state-item-count">21</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -711,7 +716,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">6</span>
+                      
+                    
+                    <span class="site-state-item-count">7</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -764,7 +771,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">20</span>
+                      
+                    
+                    <span class="site-state-item-count">21</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -809,7 +818,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-User接口使用Session登录认证"><span class="nav-number">1.</span> <span class="nav-text">2. User接口使用Session登录认证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Session认证全局配置"><span class="nav-number">2.</span> <span class="nav-text">3. Session认证全局配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、权限"><span class="nav-number"></span> <span class="nav-text">二、权限</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-简单了解权限"><span class="nav-number">1.</span> <span class="nav-text">1. 简单了解权限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-DjangoModelPermissions"><span class="nav-number">2.</span> <span class="nav-text">2. DjangoModelPermissions</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-配置DjangoModelPermissions权限"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 配置DjangoModelPermissions权限</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-权限验证"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 权限验证</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-自定义GET权限"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 自定义GET权限</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4-配置全局使用"><span class="nav-number">2.4.</span> <span class="nav-text">2.4 配置全局使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-5-使用自定义GET权限"><span class="nav-number">2.5.</span> <span class="nav-text">2.5 使用自定义GET权限</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-视图接口控制权限"><span class="nav-number">3.</span> <span class="nav-text">3 视图接口控制权限</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、认证"><span class="nav-number">1.</span> <span class="nav-text">一、认证</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-启用DRF登录接口"><span class="nav-number">1.1.</span> <span class="nav-text">1. 启用DRF登录接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-User接口使用Session登录认证"><span class="nav-number">1.2.</span> <span class="nav-text">2. User接口使用Session登录认证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Session认证全局配置"><span class="nav-number">1.3.</span> <span class="nav-text">3. Session认证全局配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、权限"><span class="nav-number">2.</span> <span class="nav-text">二、权限</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-简单了解权限"><span class="nav-number">2.1.</span> <span class="nav-text">1. 简单了解权限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-DjangoModelPermissions"><span class="nav-number">2.2.</span> <span class="nav-text">2. DjangoModelPermissions</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-配置DjangoModelPermissions权限"><span class="nav-number">2.2.1.</span> <span class="nav-text">2.1 配置DjangoModelPermissions权限</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-权限验证"><span class="nav-number">2.2.2.</span> <span class="nav-text">2.2 权限验证</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-自定义GET权限"><span class="nav-number">2.2.3.</span> <span class="nav-text">2.3 自定义GET权限</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4-配置全局使用"><span class="nav-number">2.2.4.</span> <span class="nav-text">2.4 配置全局使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-5-使用自定义GET权限"><span class="nav-number">2.2.5.</span> <span class="nav-text">2.5 使用自定义GET权限</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-视图接口控制权限"><span class="nav-number">2.3.</span> <span class="nav-text">3 视图接口控制权限</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -866,7 +875,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">全站共26.8k字</span>
+  <span class="post-count">全站共30.1k字</span>
 </div>
 
 <!--

@@ -123,35 +123,32 @@
 
 
 
-  <meta name="description" content="前言：本文将带你了解Zabbix在监控日常web业务上会有哪些优异的表现。">
-<meta name="keywords" content="Web">
+  <meta name="description" content="本文思考准备使用Python来做客户端（据了解使用go做客户端的很多），生产message 到NSQ消息队列，然后再消费掉，目的是想研究Python如何使用NSQ，以便我后面在开发项目中使用它。">
+<meta name="keywords" content="NSQ">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Zabbix系列之《WEB场景监控》">
-<meta property="og:url" content="//blog.nicksors.cc/2018/06/14/Zabbix系列之《WEB场景监控》.html">
+<meta property="og:title" content="消息队列之《03.生产与消费》">
+<meta property="og:url" content="//blog.nicksors.cc/2018/08/16/消息队列之《03-生产与消费》.html">
 <meta property="og:site_name" content="开元DevOps知识库">
-<meta property="og:description" content="前言：本文将带你了解Zabbix在监控日常web业务上会有哪些优异的表现。">
+<meta property="og:description" content="本文思考准备使用Python来做客户端（据了解使用go做客户端的很多），生产message 到NSQ消息队列，然后再消费掉，目的是想研究Python如何使用NSQ，以便我后面在开发项目中使用它。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="//blog.nicksors.cc/2018/06/14/Zabbix系列之《WEB场景监控》/创建Webscenarios.png">
-<meta property="og:image" content="//blog.nicksors.cc/2018/06/14/Zabbix系列之《WEB场景监控》/打开首页.png">
-<meta property="og:image" content="//blog.nicksors.cc/2018/06/14/Zabbix系列之《WEB场景监控》/登录.png">
-<meta property="og:image" content="//blog.nicksors.cc/2018/06/14/Zabbix系列之《WEB场景监控》/登录验证.png">
-<meta property="og:image" content="//blog.nicksors.cc/2018/06/14/Zabbix系列之《WEB场景监控》/退出登录.png">
-<meta property="og:image" content="//blog.nicksors.cc/2018/06/14/Zabbix系列之《WEB场景监控》/保存配置.png">
-<meta property="og:image" content="//blog.nicksors.cc/2018/06/14/Zabbix系列之《WEB场景监控》/查看结果.png">
-<meta property="og:image" content="//blog.nicksors.cc/2018/06/14/Zabbix系列之《WEB场景监控》/Zabbix登陆失败触发器.png">
-<meta property="og:image" content="//blog.nicksors.cc/2018/06/14/Zabbix系列之《WEB场景监控》/step运行触发器.png">
-<meta property="og:updated_time" content="2018-06-14T04:03:53.000Z">
+<meta property="og:image" content="//blog.nicksors.cc/2018/08/16/消息队列之《03-生产与消费》/topic总页.png">
+<meta property="og:image" content="//blog.nicksors.cc/2018/08/16/消息队列之《03-生产与消费》/topic详情.png">
+<meta property="og:image" content="//blog.nicksors.cc/2018/08/16/消息队列之《03-生产与消费》/Node总页.png">
+<meta property="og:image" content="//blog.nicksors.cc/2018/08/16/消息队列之《03-生产与消费》/Adderss.png">
+<meta property="og:image" content="//blog.nicksors.cc/2018/08/16/消息队列之《03-生产与消费》/Counter.png">
+<meta property="og:image" content="//blog.nicksors.cc/2018/08/16/消息队列之《03-生产与消费》/Lookup.png">
+<meta property="og:updated_time" content="2018-08-16T10:00:05.938Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Zabbix系列之《WEB场景监控》">
-<meta name="twitter:description" content="前言：本文将带你了解Zabbix在监控日常web业务上会有哪些优异的表现。">
-<meta name="twitter:image" content="//blog.nicksors.cc/2018/06/14/Zabbix系列之《WEB场景监控》/创建Webscenarios.png">
+<meta name="twitter:title" content="消息队列之《03.生产与消费》">
+<meta name="twitter:description" content="本文思考准备使用Python来做客户端（据了解使用go做客户端的很多），生产message 到NSQ消息队列，然后再消费掉，目的是想研究Python如何使用NSQ，以便我后面在开发项目中使用它。">
+<meta name="twitter:image" content="//blog.nicksors.cc/2018/08/16/消息队列之《03-生产与消费》/topic总页.png">
 
 
 
 
 
 
-  <link rel="canonical" href="//blog.nicksors.cc/2018/06/14/Zabbix系列之《WEB场景监控》.html"/>
+  <link rel="canonical" href="//blog.nicksors.cc/2018/08/16/消息队列之《03-生产与消费》.html"/>
 
 
 
@@ -161,7 +158,7 @@
   };
 </script>
 
-  <title>Zabbix系列之《WEB场景监控》 | 开元DevOps知识库</title>
+  <title>消息队列之《03.生产与消费》 | 开元DevOps知识库</title>
   
 
 
@@ -358,7 +355,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="//blog.nicksors.cc/2018/06/14/Zabbix系列之《WEB场景监控》.html">
+    <link itemprop="mainEntityOfPage" href="//blog.nicksors.cc/2018/08/16/消息队列之《03-生产与消费》.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="开元">
@@ -375,7 +372,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Zabbix系列之《WEB场景监控》
+          <h1 class="post-title" itemprop="name headline">消息队列之《03.生产与消费》
               
             
           </h1>
@@ -400,7 +397,7 @@
                 
               
 
-              <time title="创建时间：2018-06-14 10:34:09 / 修改时间：12:03:53" itemprop="dateCreated datePublished" datetime="2018-06-14T10:34:09+08:00">2018-06-14</time>
+              <time title="创建时间：2018-08-16 17:54:18 / 修改时间：18:00:05" itemprop="dateCreated datePublished" datetime="2018-08-16T17:54:18+08:00">2018-08-16</time>
             
 
             
@@ -422,7 +419,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Zabbix/" itemprop="url" rel="index"><span itemprop="name">Zabbix</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/消息队列/" itemprop="url" rel="index"><span itemprop="name">消息队列</span></a></span>
 
                 
                 
@@ -455,32 +452,40 @@
 
       
         <blockquote>
-<p>前言：本文将带你了解Zabbix在监控日常web业务上会有哪些优异的表现。</p>
+<p>本文思考准备使用Python来做客户端（据了解使用go做客户端的很多），生产message 到NSQ消息队列，然后再消费掉，目的是想研究Python如何使用NSQ，以便我后面在开发项目中使用它。</p>
 </blockquote>
 <a id="more"></a>
-<p>回想一下你曾今登录JD Shopping的时候，都经历了哪些步骤呢？</p>
-<p>因此我进行了分析，步骤大致如下：</p>
-<p>打开页面–&gt;登录–&gt;登录验证–&gt;退出。</p>
-<p>在工作中，有些业务是需要监控web平台的登录是否正常，有些平台的登录认证也比较复杂，那如果做简单的监控室无法实现的。<br>因此，我们通过下面的例子来进行模拟，监控的是本身的zabbix网站，因为zabbix本身是有用户认证功能的。</p>
-<h2 id="检测流程"><a href="#检测流程" class="headerlink" title="检测流程"></a>检测流程</h2><ol>
-<li>打开网站：如果http code为200，并且响应的html中包含Zabbix SIA表示打开成功（zabbix页面有这个标示）</li>
-<li>登陆后台：post用户名和密码到index.php，如果响应200，那表示post成功。并且通过正则表达式从响应的html中匹配sid，这个sid也就是一个宏变量，退出可以使用到</li>
-<li>验证登陆：打开首页，检索html中是否包含Profile（只有登陆成功，才会有Profile出现，它在成功页面的右上角，一个按钮）</li>
-<li>退出账号：传递参数sid给index.php即可退出，响应200即表示退出成功。可以使用item key来获取每个step的速度以及响应时间或者说最新的一个错误消息，自己去研究吧，不难。</li>
-</ol>
-<h2 id="创建Web-scenarios"><a href="#创建Web-scenarios" class="headerlink" title="创建Web scenarios"></a>创建Web scenarios</h2><img src="/2018/06/14/Zabbix系列之《WEB场景监控》/创建Webscenarios.png" title="创建Webscenarios">
-<p>在这里填写登录zabbix的用户名密码，设定为变量。</p>
-<h2 id="打开首页"><a href="#打开首页" class="headerlink" title="打开首页"></a>打开首页</h2><img src="/2018/06/14/Zabbix系列之《WEB场景监控》/打开首页.png" title="打开首页">
-<h2 id="登录"><a href="#登录" class="headerlink" title="登录"></a>登录</h2><img src="/2018/06/14/Zabbix系列之《WEB场景监控》/登录.png" title="登录">
-<h2 id="登录验证"><a href="#登录验证" class="headerlink" title="登录验证"></a>登录验证</h2><img src="/2018/06/14/Zabbix系列之《WEB场景监控》/登录验证.png" title="登录验证">
-<h2 id="退出登录"><a href="#退出登录" class="headerlink" title="退出登录"></a>退出登录</h2><img src="/2018/06/14/Zabbix系列之《WEB场景监控》/退出登录.png" title="退出登录">
-<h2 id="保存配置"><a href="#保存配置" class="headerlink" title="保存配置"></a>保存配置</h2><p>全部填写完成之后记得保存<br><img src="/2018/06/14/Zabbix系列之《WEB场景监控》/保存配置.png" title="保存配置"></p>
-<h2 id="查看结果"><a href="#查看结果" class="headerlink" title="查看结果"></a>查看结果</h2><p>monitorning-&gt;web-&gt;筛选出你的主机-&gt;查看“zabbix性能监控”，结果如下图<br>各个阶段的响应时间、速度、返回状态码以及总的响应时间<br><img src="/2018/06/14/Zabbix系列之《WEB场景监控》/查看结果.png" title="查看结果"></p>
-<h2 id="创建触发器"><a href="#创建触发器" class="headerlink" title="创建触发器"></a>创建触发器</h2><p>系统为每个step创建了3个item，分别是DownloadSpeed页面下载速度/ResponseCode响应代码/ResponseTime响应时间，为整个Web Scenario创建了一个web.test.fail的item和一个web.test.error的item，可以分别为其创建trigger。</p>
-<h3 id="创建一个监控Zabbix登陆失败的触发器"><a href="#创建一个监控Zabbix登陆失败的触发器" class="headerlink" title="创建一个监控Zabbix登陆失败的触发器"></a>创建一个监控Zabbix登陆失败的触发器</h3><img src="/2018/06/14/Zabbix系列之《WEB场景监控》/Zabbix登陆失败触发器.png" title="Zabbix登陆失败触发器">
-<h3 id="创建一个监控整个web-scenario所有step运行是否成功的触发器"><a href="#创建一个监控整个web-scenario所有step运行是否成功的触发器" class="headerlink" title="创建一个监控整个web scenario所有step运行是否成功的触发器"></a>创建一个监控整个web scenario所有step运行是否成功的触发器</h3><img src="/2018/06/14/Zabbix系列之《WEB场景监控》/step运行触发器.png" title="step运行触发器">
-<p>返回值为0表示整个web scenario的所有step都执行成功了，第几步的step执行失败就返回数字几，且后续的step都不会继续执行下去。</p>
-<p>本文来源于作者：“祁成” 投稿，由本站整理发布，感谢作者辛勤付出。</p>
+<h3 id="启动nsqd相关服务"><a href="#启动nsqd相关服务" class="headerlink" title="启动nsqd相关服务"></a>启动nsqd相关服务</h3><p>具体配置启动方法请看上一篇文章，启动服务如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ supervisorctl status</span><br><span class="line">nsqadmin                        RUNNING  pid 15252, uptime 1 day, 0:25:41</span><br><span class="line">nsqd01                          RUNNING  pid 14720, uptime 1 day, 0:37:21</span><br><span class="line">nsqd02                          RUNNING  pid 14787, uptime 1 day, 0:36:05</span><br><span class="line">nsqlookupd                      RUNNING  pid 3566, uptime 0:09:01</span><br></pre></td></tr></table></figure></p>
+<h3 id="安装依赖"><a href="#安装依赖" class="headerlink" title="安装依赖"></a>安装依赖</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ pip install -r requirements.txt</span><br><span class="line">pynsq==0.8.2</span><br><span class="line">tornado==4.5.3</span><br></pre></td></tr></table></figure>
+<h3 id="生产者"><a href="#生产者" class="headerlink" title="生产者"></a>生产者</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">$ vim nsq_create.py</span><br><span class="line">import nsq</span><br><span class="line">import tornado.ioloop</span><br><span class="line">import time</span><br><span class="line"></span><br><span class="line">def pub_message():</span><br><span class="line">    writer.pub(&apos;test_topic&apos;, time.strftime(&apos;%H:%M:%S&apos;), finish_pub)</span><br><span class="line"></span><br><span class="line">def finish_pub(conn, data):</span><br><span class="line">    print data</span><br><span class="line"></span><br><span class="line">writer = nsq.Writer([&apos;127.0.0.1:4150&apos;])</span><br><span class="line">tornado.ioloop.PeriodicCallback(pub_message, 1000).start()</span><br><span class="line">nsq.run()</span><br></pre></td></tr></table></figure>
+<h3 id="消费者"><a href="#消费者" class="headerlink" title="消费者"></a>消费者</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$ vim  nsq_consume.py</span><br><span class="line">import nsq</span><br><span class="line"></span><br><span class="line">def handler(message):</span><br><span class="line">    #print message</span><br><span class="line">    print message.body</span><br><span class="line">    return True</span><br><span class="line"></span><br><span class="line"># lookupd不能使用时，也可以直接使用nsqd来进行消费</span><br><span class="line">r = nsq.Reader(message_handler=handler, nsqd_tcp_addresses=[&apos;127.0.0.1:4150&apos;], topic=&apos;test_topic&apos;, channel=&apos;asdfxx&apos;, lookupd_poll_interval=15)</span><br><span class="line">#r = nsq.Reader(message_handler=handler, lookupd_http_addresses=[&apos;http://127.0.0.1:4161&apos;], topic=&apos;test_topic&apos;, channel=&apos;asdfxx&apos;, lookupd_poll_interval=15)</span><br><span class="line"></span><br><span class="line">nsq.run()</span><br></pre></td></tr></table></figure>
+<h3 id="生产和消费数据"><a href="#生产和消费数据" class="headerlink" title="生产和消费数据"></a>生产和消费数据</h3><h4 id="运行生产脚本"><a href="#运行生产脚本" class="headerlink" title="运行生产脚本"></a>运行生产脚本</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ python nsq_create.py</span><br><span class="line">OK</span><br><span class="line">OK</span><br><span class="line">OK</span><br><span class="line">OK</span><br><span class="line">OK</span><br></pre></td></tr></table></figure>
+<h4 id="运行消费脚本"><a href="#运行消费脚本" class="headerlink" title="运行消费脚本"></a>运行消费脚本</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ python nsq_consume.py</span><br><span class="line">17:33:33</span><br><span class="line">17:33:34</span><br><span class="line">17:33:35</span><br><span class="line">17:33:36</span><br><span class="line">17:33:37</span><br></pre></td></tr></table></figure>
+<p>以上，通过python编写的生产和消费功能完成，大多数代码来源于官网，本文仅供学习理解使用。</p>
+<h3 id="NSQAdmin"><a href="#NSQAdmin" class="headerlink" title="NSQAdmin"></a>NSQAdmin</h3><p>带大家认识一下NSQ的web页面</p>
+<p>1、首页，会显示有多少个Topics<br><img src="/2018/08/16/消息队列之《03-生产与消费》/topic总页.png" title="topic总页"></p>
+<p>2、点击一个Topic，会显示详细的信息以及操作：可以清空、删除、暂停一个Topic<br><img src="/2018/08/16/消息队列之《03-生产与消费》/topic详情.png" title="topic详情"></p>
+<ul>
+<li>Topic Message Queue - 显示这个topic的所有NSQd Host节点</li>
+<li>Channel Message Queues - 显示所有消费通道</li>
+</ul>
+<p>3、Node页，显示有多少个NSQd节点，以及版本和端口信息<br><img src="/2018/08/16/消息队列之《03-生产与消费》/Node总页.png" title="Node总页"></p>
+<p>4、点击Adderss地址，显示每个Node节点的Topics详情，有多少数据，以及数据积压情况<br><img src="/2018/08/16/消息队列之《03-生产与消费》/Adderss.png" title="Adderss"></p>
+<ul>
+<li>Depth - 数据积压数量</li>
+<li>Memory+Disk - 占用的内存和磁盘空间</li>
+<li>Messages - 总共处理的message数量</li>
+<li>Client Host - 连接Topic的客户端<ul>
+<li>User-Agent - 客户端的UA</li>
+<li>Finshed - 完成处理多少message</li>
+<li>Connected - 连接时长</li>
+</ul>
+</li>
+</ul>
+<p>5、总共处理了多少message数量<br><img src="/2018/08/16/消息队列之《03-生产与消费》/Counter.png" title="Counter"></p>
+<p>6、NSQAdmin如果连接了多个nslookupd程序，将会在这里显示<br><img src="/2018/08/16/消息队列之《03-生产与消费》/Lookup.png" title="Lookup"></p>
+<p>这个界面还可以手动创建Topic和Channel。</p>
+<p>参考文章：<br><a href="https://pynsq.readthedocs.io/en/latest/index.html" target="_blank" rel="noopener">https://pynsq.readthedocs.io/en/latest/index.html</a></p>
 
       
     </div>
@@ -508,7 +513,7 @@
       </li>
       <li class="post-copyright-link">
         <strong>本文链接：</strong>
-        <a href="/2018/06/14/Zabbix系列之《WEB场景监控》.html" title="Zabbix系列之《WEB场景监控》">2018/06/14/Zabbix系列之《WEB场景监控》.html</a>
+        <a href="/2018/08/16/消息队列之《03-生产与消费》.html" title="消息队列之《03.生产与消费》">2018/08/16/消息队列之《03-生产与消费》.html</a>
       </li>
       <li class="post-copyright-license">
         <strong>版权声明： </strong>
@@ -532,7 +537,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Web/" rel="tag"><i class="fa fa-tag"></i> Web</a>
+            <a href="/tags/NSQ/" rel="tag"><i class="fa fa-tag"></i> NSQ</a>
           
         </div>
       
@@ -545,8 +550,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/12/Docker系列之《善用DockerHub管理自己的镜像》.html" rel="next" title="Docker系列之《善用DockerHub管理自己的镜像》">
-                <i class="fa fa-chevron-left"></i> Docker系列之《善用DockerHub管理自己的镜像》
+              <a href="/2018/08/15/消息队列之《02-NSQ实践篇》.html" rel="next" title="消息队列之《02.NSQ实践篇》">
+                <i class="fa fa-chevron-left"></i> 消息队列之《02.NSQ实践篇》
               </a>
             
           </div>
@@ -554,10 +559,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/06/14/Zabbix系列之《自动化发现主机并添加监控》.html" rel="prev" title="Zabbix系列之《自动化发现主机并添加监控》">
-                Zabbix系列之《自动化发现主机并添加监控》 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -772,7 +773,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#检测流程"><span class="nav-number">1.</span> <span class="nav-text">检测流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建Web-scenarios"><span class="nav-number">2.</span> <span class="nav-text">创建Web scenarios</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#打开首页"><span class="nav-number">3.</span> <span class="nav-text">打开首页</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#登录"><span class="nav-number">4.</span> <span class="nav-text">登录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#登录验证"><span class="nav-number">5.</span> <span class="nav-text">登录验证</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#退出登录"><span class="nav-number">6.</span> <span class="nav-text">退出登录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#保存配置"><span class="nav-number">7.</span> <span class="nav-text">保存配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查看结果"><span class="nav-number">8.</span> <span class="nav-text">查看结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建触发器"><span class="nav-number">9.</span> <span class="nav-text">创建触发器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建一个监控Zabbix登陆失败的触发器"><span class="nav-number">9.1.</span> <span class="nav-text">创建一个监控Zabbix登陆失败的触发器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建一个监控整个web-scenario所有step运行是否成功的触发器"><span class="nav-number">9.2.</span> <span class="nav-text">创建一个监控整个web scenario所有step运行是否成功的触发器</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#启动nsqd相关服务"><span class="nav-number">1.</span> <span class="nav-text">启动nsqd相关服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装依赖"><span class="nav-number">2.</span> <span class="nav-text">安装依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#生产者"><span class="nav-number">3.</span> <span class="nav-text">生产者</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#消费者"><span class="nav-number">4.</span> <span class="nav-text">消费者</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#生产和消费数据"><span class="nav-number">5.</span> <span class="nav-text">生产和消费数据</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#运行生产脚本"><span class="nav-number">5.1.</span> <span class="nav-text">运行生产脚本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#运行消费脚本"><span class="nav-number">5.2.</span> <span class="nav-text">运行消费脚本</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NSQAdmin"><span class="nav-number">6.</span> <span class="nav-text">NSQAdmin</span></a></li></ol></div>
             
 
           </div>

@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="从本文开始，将进入Kubernetes实战阶段，后续大部分文章将以实战为基础，讲解各个知识点本文将实现：  完整的ETCD集群 自颁发SSL证书 Docker的安装 Flanneld网络从安装到到原理深入理解">
+<meta name="keywords" content="Kubernetes,etcd,flanneld,SSL,Docker">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kubernetes系列之《集群部署（上）》.md">
+<meta property="og:url" content="//blog.nicksors.cc/2019/06/11/kubernetes系列之《集群部署（上）》.html">
+<meta property="og:site_name" content="开元DevOps知识库">
+<meta property="og:description" content="从本文开始，将进入Kubernetes实战阶段，后续大部分文章将以实战为基础，讲解各个知识点本文将实现：  完整的ETCD集群 自颁发SSL证书 Docker的安装 Flanneld网络从安装到到原理深入理解">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="//blog.nicksors.cc/2019/06/11/kubernetes系列之《集群部署（上）》/环境规划.jpg">
+<meta property="og:image" content="//blog.nicksors.cc/2019/06/11/kubernetes系列之《集群部署（上）》/自己画的图.jpg">
+<meta property="og:image" content="//blog.nicksors.cc/2019/06/11/kubernetes系列之《集群部署（上）》/k8s多Master架构图.png">
+<meta property="og:image" content="//blog.nicksors.cc/2019/06/11/kubernetes系列之《集群部署（上）》/证书规划.jpg">
+<meta property="og:image" content="//blog.nicksors.cc/2019/06/11/kubernetes系列之《集群部署（上）》/flanneld网络架构图.jpg">
+<meta property="og:image" content="//blog.nicksors.cc/2019/06/11/kubernetes系列之《集群部署（上）》/flanneld官网架构图.jpg">
+<meta property="og:updated_time" content="2019-06-11T06:09:09.067Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="kubernetes系列之《集群部署（上）》.md">
+<meta name="twitter:description" content="从本文开始，将进入Kubernetes实战阶段，后续大部分文章将以实战为基础，讲解各个知识点本文将实现：  完整的ETCD集群 自颁发SSL证书 Docker的安装 Flanneld网络从安装到到原理深入理解">
+<meta name="twitter:image" content="//blog.nicksors.cc/2019/06/11/kubernetes系列之《集群部署（上）》/环境规划.jpg">
+
+
+
+
+
+
+  <link rel="canonical" href="//blog.nicksors.cc/2019/06/11/kubernetes系列之《集群部署（上）》.html"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>kubernetes系列之《集群部署（上）》.md | 开元DevOps知识库</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+<a href="https://github.com/nicksors"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">开元DevOps知识库</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">没有白走的路，每一步都算数.</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="//blog.nicksors.cc/2019/06/11/kubernetes系列之《集群部署（上）》.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="开元">
+      <meta itemprop="description" content="知识管理，时间管理，自我管理">
+      <meta itemprop="image" content="/static/images/stark.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="开元DevOps知识库">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">kubernetes系列之《集群部署（上）》.md
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-06-11 12:18:14 / 修改时间：14:09:09" itemprop="dateCreated datePublished" datetime="2019-06-11T12:18:14+08:00">2019-06-11</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Kubernetes/" itemprop="url" rel="index"><span itemprop="name">Kubernetes</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>从本文开始，将进入Kubernetes实战阶段，后续大部分文章将以实战为基础，讲解各个知识点<br>本文将实现：</p>
+<ol>
+<li>完整的ETCD集群</li>
+<li>自颁发SSL证书</li>
+<li>Docker的安装</li>
+<li>Flanneld网络从安装到到原理深入理解</li>
+</ol>
+</blockquote>
+<a id="more"></a>
+<h2 id="一、官方提供的三种部署方式"><a href="#一、官方提供的三种部署方式" class="headerlink" title="一、官方提供的三种部署方式"></a>一、官方提供的三种部署方式</h2><h3 id="1-1、minikube"><a href="#1-1、minikube" class="headerlink" title="1.1、minikube"></a>1.1、minikube</h3><p>Minikube是一个工具，可以在本地快速运行一个单点的kubernetes，仅用于尝试kubernetes或日常开发的用户使用。</p>
+<p>官方地址：<a href="https://kubernetes.io/docs/setup/minikube/" target="_blank" rel="noopener">https://kubernetes.io/docs/setup/minikube/</a></p>
+<h3 id="1-2、kubeadm"><a href="#1-2、kubeadm" class="headerlink" title="1.2、kubeadm"></a>1.2、kubeadm</h3><p>Kubeadm也是一个工具，提供kubeadm init和kubeadm join，用于快速部署kubernetes集群。</p>
+<p>官网地址：<a href="https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm/" target="_blank" rel="noopener">https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm/</a></p>
+<h3 id="1-3、二进制包"><a href="#1-3、二进制包" class="headerlink" title="1.3、二进制包"></a>1.3、二进制包</h3><p>推荐的生产环境部署方式，从官网下载发行版的二进制源码包，手动部署每个组件，组成kubernetes集群，也有助于理解kubernetes整个集群的构成。</p>
+<p>下载地址：<a href="https://github.com/kubernetes/kubernetes/releases" target="_blank" rel="noopener">https://github.com/kubernetes/kubernetes/releases</a></p>
+<h2 id="二、kubernetes平台环境规划"><a href="#二、kubernetes平台环境规划" class="headerlink" title="二、kubernetes平台环境规划"></a>二、kubernetes平台环境规划</h2><h3 id="2-1、软件和服务器环境规划"><a href="#2-1、软件和服务器环境规划" class="headerlink" title="2.1、软件和服务器环境规划"></a>2.1、软件和服务器环境规划</h3><p>你需要准备一台或多台服务器，这里我准备了三台虚拟机，分别如下：</p>
+<ul>
+<li><p>OS：CentOS Linux release 7.6.1810 (Core)</p>
+</li>
+<li><p>软件版本：</p>
+<ul>
+<li>Kubernetes 1.14</li>
+<li>Etcd 3.3</li>
+<li>Docker version 18.09.5</li>
+<li>Fannel 0.10</li>
+</ul>
+</li>
+</ul>
+<img src="/2019/06/11/kubernetes系列之《集群部署（上）》/环境规划.jpg">
+<ul>
+<li>Load Balancer我复用了两个master（因为机器不够），生产环境应该是两台负载均衡服务器；</li>
+</ul>
+<h3 id="2-2、平台架构图"><a href="#2-2、平台架构图" class="headerlink" title="2.2、平台架构图"></a>2.2、平台架构图</h3><h4 id="2-2-1、单Master节点"><a href="#2-2-1、单Master节点" class="headerlink" title="2.2.1、单Master节点"></a>2.2.1、单Master节点</h4><p>适用于做实验环境，能节省机器开销，不建议上生产。<code>本次实验先部署单Master节点的架构图，如果需要做多Master，后面再横向扩展也很容易</code></p>
+<img src="/2019/06/11/kubernetes系列之《集群部署（上）》/自己画的图.jpg">
+<h4 id="2-2-2、多Master节点"><a href="#2-2-2、多Master节点" class="headerlink" title="2.2.2、多Master节点"></a>2.2.2、多Master节点</h4><p>整个集群一般需要8台以上服务器，适用于生产环境，每个功能有对应的服务器支撑，保障线上k8s集群的健壮性，也是为业务保驾护航。</p>
+<img src="/2019/06/11/kubernetes系列之《集群部署（上）》/k8s多Master架构图.png">
+<ul>
+<li>生产环境的Etcd集群应当是一组高可用服务器，为k8s提供稳定的服务；</li>
+<li>Load Balancer为k8s-master的api-server提供负载均衡服务；</li>
+<li>Master节点一般是两个以上；</li>
+<li>Node节点根据业务需求,可横向扩展至N个;</li>
+</ul>
+<h3 id="2-3、禁用SElinux并关闭防火墙"><a href="#2-3、禁用SElinux并关闭防火墙" class="headerlink" title="2.3、禁用SElinux并关闭防火墙"></a>2.3、禁用SElinux并关闭防火墙</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ vim /etc/selinux/config</span><br><span class="line">SELINUX=disabled</span><br><span class="line"></span><br><span class="line"># 临时禁用selinux</span><br><span class="line">setenforce 0</span><br><span class="line"></span><br><span class="line">$ systemctl stop firewalld</span><br><span class="line">$ systemctl disable firewalld</span><br></pre></td></tr></table></figure>
+<h3 id="2-4、关闭SWAP分区"><a href="#2-4、关闭SWAP分区" class="headerlink" title="2.4、关闭SWAP分区"></a>2.4、关闭SWAP分区</h3><p>k8s集群不允许使用swap分区，否则会出问题，详细信息自行了解。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ swapoff -a</span><br><span class="line">$ swapon -s # 没有分区信息即可。</span><br></pre></td></tr></table></figure>
+<h3 id="2-5、配置host解析"><a href="#2-5、配置host解析" class="headerlink" title="2.5、配置host解析"></a>2.5、配置host解析</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vim  /etc/hosts</span><br><span class="line">172.16.194.127 k8s-master-127</span><br><span class="line">172.16.194.128 k8s-master-128</span><br><span class="line">172.16.194.129 k8s-node-129</span><br><span class="line">172.16.194.130 k8s-node-130</span><br></pre></td></tr></table></figure>
+<p>自己顺便把主机名也根据规划配置好哈</p>
+<h3 id="2-6、配置时间同步"><a href="#2-6、配置时间同步" class="headerlink" title="2.6、配置时间同步"></a>2.6、配置时间同步</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ crontab -e</span><br><span class="line"># 时间同步</span><br><span class="line">*/5 * * * * /usr/sbin/ntpdate ntp1.aliyun.com &gt;/dev/null 2&gt;&amp;1</span><br></pre></td></tr></table></figure>
+<h3 id="2-7、配置主机密钥通讯信任"><a href="#2-7、配置主机密钥通讯信任" class="headerlink" title="2.7、配置主机密钥通讯信任"></a>2.7、配置主机密钥通讯信任</h3><p>做这个密钥认证是为了后面分发k8s集群私钥时方便。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-128 ~]# ssh-keygen</span><br><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file in which to save the key (/root/.ssh/id_rsa):</span><br><span class="line">Created directory &apos;/root/.ssh&apos;.</span><br><span class="line">Enter passphrase (empty for no passphrase):</span><br><span class="line">Enter same passphrase again:</span><br><span class="line">Your identification has been saved in /root/.ssh/id_rsa.</span><br><span class="line">Your public key has been saved in /root/.ssh/id_rsa.pub.</span><br><span class="line">The key fingerprint is:</span><br><span class="line">SHA256:CxqCw48dTEwAUEIjBzEax5v9xz+2XLQVKSjJ5OVaj78 root@k8s-master-128</span><br><span class="line">The key&apos;s randomart image is:</span><br><span class="line">+---[RSA 2048]----+</span><br><span class="line">|&amp;O=. . . |</span><br><span class="line">|o*= + + . . |</span><br><span class="line">|. * = + . o |</span><br><span class="line">|..= . + o . . |</span><br><span class="line">|o..o....S . o . |</span><br><span class="line">| .+..o..o. o o |</span><br><span class="line">| . o. ... + |</span><br><span class="line">| .+. . |</span><br><span class="line">| .ooE |</span><br><span class="line">+----[SHA256]-----+</span><br><span class="line">[root@k8s-master-128 ~]# ls -lh /root/.ssh/</span><br><span class="line">总用量 8.0K</span><br><span class="line">-rw------- 1 root root 1.7K 4月 30 14:28 id_rsa</span><br><span class="line">-rw-r--r-- 1 root root 401 4月 30 14:28 id_rsa.pub</span><br><span class="line">[root@k8s-master-128 ~]# ssh-copy-id k8s-node-129</span><br><span class="line">[root@k8s-master-128 ~]# ssh-copy-id k8s-node-130</span><br><span class="line">[root@k8s-master-128 ~]# ssh &apos;k8s-node-130&apos; # 测试登录下</span><br></pre></td></tr></table></figure></p>
+<p>上面做的是k8s-master单向信任认证，如果需要做多向信任认证的话，把私钥cp到其他两台节点上即可。</p>
+<h2 id="三、自签SSL证书"><a href="#三、自签SSL证书" class="headerlink" title="三、自签SSL证书"></a>三、自签SSL证书</h2><p>参考：</p>
+<ul>
+<li><a href="https://www.kubernetes.org.cn/1861.html" target="_blank" rel="noopener">Kubernetes安装之证书验证</a></li>
+<li><a href="https://github.com/opsnull/follow-me-install-kubernetes-cluster/blob/master/02.%E5%88%9B%E5%BB%BACA%E8%AF%81%E4%B9%A6%E5%92%8C%E7%A7%98%E9%92%A5.md" target="_blank" rel="noopener">创建CA证书和秘钥</a></li>
+</ul>
+<img src="/2019/06/11/kubernetes系列之《集群部署（上）》/证书规划.jpg">
+<h3 id="3-1、安装证书生成工具cfssl"><a href="#3-1、安装证书生成工具cfssl" class="headerlink" title="3.1、安装证书生成工具cfssl"></a>3.1、安装证书生成工具cfssl</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-128 ~]# mkdir ssl</span><br><span class="line">[root@k8s-master-128 ~]# cd ssl/</span><br><span class="line">wget https://pkg.cfssl.org/R1.2/cfssl_linux-amd64</span><br><span class="line">wget https://pkg.cfssl.org/R1.2/cfssljson_linux-amd64</span><br><span class="line">wget https://pkg.cfssl.org/R1.2/cfssl-certinfo_linux-amd64</span><br><span class="line">chmod +x cfssl_linux-amd64 cfssljson_linux-amd64 cfssl-certinfo_linux-amd64</span><br><span class="line">mv cfssl_linux-amd64 /usr/local/bin/cfssl</span><br><span class="line">mv cfssljson_linux-amd64 /usr/local/bin/cfssljson</span><br><span class="line">mv cfssl-certinfo_linux-amd64 /usr/bin/cfssl-certinfo</span><br></pre></td></tr></table></figure>
+<h3 id="3-2、生成Etcd证书"><a href="#3-2、生成Etcd证书" class="headerlink" title="3.2、生成Etcd证书"></a>3.2、生成Etcd证书</h3><p>Etcd集群需要使用两个证书，ca和server证书，生成方法如下：（在Master节点生成即可）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-128 ~]# mkdir /root/ssl/etcd-cret</span><br><span class="line">[root@k8s-master-128 ~]# cd /root/ssl/etcd-cret/</span><br><span class="line">[root@k8s-master-128 etcd-cret]# cat etcd-cret.sh</span><br><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line"># 创建Etcd CA证书</span><br><span class="line">cat &gt; ca-config.json &lt;&lt;EOF</span><br><span class="line">&#123;</span><br><span class="line">  &quot;signing&quot;: &#123;</span><br><span class="line">    &quot;default&quot;: &#123;</span><br><span class="line">      &quot;expiry&quot;: &quot;87600h&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;profiles&quot;: &#123;</span><br><span class="line">      &quot;www&quot;: &#123;</span><br><span class="line">        &quot;expiry&quot;: &quot;87600h&quot;,</span><br><span class="line">        &quot;usages&quot;: [</span><br><span class="line">            &quot;signing&quot;,</span><br><span class="line">            &quot;key encipherment&quot;,</span><br><span class="line">            &quot;server auth&quot;,</span><br><span class="line">            &quot;client auth&quot;</span><br><span class="line">        ]</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">cat &gt; ca-csr.json &lt;&lt;EOF</span><br><span class="line">&#123;</span><br><span class="line">    &quot;CN&quot;: &quot;Etcd CA&quot;,</span><br><span class="line">    &quot;key&quot;: &#123;</span><br><span class="line">        &quot;algo&quot;: &quot;rsa&quot;,</span><br><span class="line">        &quot;size&quot;: 2048</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;names&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;C&quot;: &quot;CN&quot;,</span><br><span class="line">            &quot;L&quot;: &quot;Beijing&quot;,</span><br><span class="line">            &quot;ST&quot;: &quot;Beijing&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">cfssl gencert -initca ca-csr.json | cfssljson -bare ca -</span><br><span class="line"></span><br><span class="line">#-----------------------</span><br><span class="line"># 创建Etcd Server证书</span><br><span class="line">cat &gt; server-csr.json &lt;&lt;EOF</span><br><span class="line">&#123;</span><br><span class="line">    &quot;CN&quot;: &quot;Etcd&quot;,</span><br><span class="line">    &quot;hosts&quot;: [</span><br><span class="line">      &quot;172.16.194.128&quot;,</span><br><span class="line">      &quot;172.16.194.129&quot;,</span><br><span class="line">      &quot;172.16.194.130&quot;</span><br><span class="line">    ],</span><br><span class="line">    &quot;key&quot;: &#123;</span><br><span class="line">        &quot;algo&quot;: &quot;rsa&quot;,</span><br><span class="line">        &quot;size&quot;: 2048</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;names&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;C&quot;: &quot;CN&quot;,</span><br><span class="line">            &quot;L&quot;: &quot;BeiJing&quot;,</span><br><span class="line">            &quot;ST&quot;: &quot;BeiJing&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=www server-csr.json | cfssljson -bare server</span><br><span class="line"></span><br><span class="line">[root@k8s-master-128 etcd-cret]# chmod +x etcd-cret.sh</span><br><span class="line">[root@k8s-master-128 etcd-cret]# sh etcd-cret.sh   # 警告忽略即可</span><br></pre></td></tr></table></figure></p>
+<p>将证书放到它该存在的位置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-128 etcd-cret]# mkdir -p /opt/etcd/&#123;cfg,bin,ssl&#125;</span><br><span class="line">[root@k8s-master-128 etcd-cret]# cp /root/ssl/etcd-cret/&#123;ca*,server*&#125; /opt/etcd/ssl/</span><br><span class="line">[root@k8s-master-128 etcd-cret]# ls -lh /opt/etcd/ssl/</span><br><span class="line">总用量 24K</span><br><span class="line">-rw-r--r-- 1 root root 956 4月 30 17:33 ca.csr</span><br><span class="line">-rw------- 1 root root 1.7K 4月 30 17:33 ca-key.pem</span><br><span class="line">-rw-r--r-- 1 root root 1.3K 4月 30 17:33 ca.pem</span><br><span class="line">-rw-r--r-- 1 root root 1013 4月 30 17:33 server.csr</span><br><span class="line">-rw------- 1 root root 1.7K 4月 30 17:33 server-key.pem</span><br><span class="line">-rw-r--r-- 1 root root 1.4K 4月 30 17:33 server.pem</span><br></pre></td></tr></table></figure>
+<h3 id="3-3、生成K8s证书"><a href="#3-3、生成K8s证书" class="headerlink" title="3.3、生成K8s证书"></a>3.3、生成K8s证书</h3><p>这里先k8s需要用到的证书也一并生成出来，方便后面使用。(当前的操作如果不懂没关系，先跟着做，后面慢慢就明白)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-128 ~]# mkdir /root/ssl/k8s-cret</span><br><span class="line">[root@k8s-master-128 ~]# cd /root/ssl/k8s-cret/</span><br><span class="line">[root@k8s-master-128 k8s-cret]# vim certificate.sh</span><br><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line"># 创建Kubernetes CA证书</span><br><span class="line">cat &gt; ca-config.json &lt;&lt;EOF</span><br><span class="line">&#123;</span><br><span class="line">  &quot;signing&quot;: &#123;</span><br><span class="line">    &quot;default&quot;: &#123;</span><br><span class="line">      &quot;expiry&quot;: &quot;87600h&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;profiles&quot;: &#123;</span><br><span class="line">      &quot;kubernetes&quot;: &#123;</span><br><span class="line">        &quot;expiry&quot;: &quot;87600h&quot;,</span><br><span class="line">        &quot;usages&quot;: [</span><br><span class="line">            &quot;signing&quot;,</span><br><span class="line">            &quot;key encipherment&quot;,</span><br><span class="line">            &quot;server auth&quot;,</span><br><span class="line">            &quot;client auth&quot;</span><br><span class="line">        ]</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">cat &gt; ca-csr.json &lt;&lt;EOF</span><br><span class="line">&#123;</span><br><span class="line">    &quot;CN&quot;: &quot;kubernetes&quot;,</span><br><span class="line">    &quot;key&quot;: &#123;</span><br><span class="line">        &quot;algo&quot;: &quot;rsa&quot;,</span><br><span class="line">        &quot;size&quot;: 2048</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;names&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;C&quot;: &quot;CN&quot;,</span><br><span class="line">            &quot;L&quot;: &quot;Beijing&quot;,</span><br><span class="line">            &quot;ST&quot;: &quot;Beijing&quot;,</span><br><span class="line">            &quot;O&quot;: &quot;k8s&quot;,</span><br><span class="line">            &quot;OU&quot;: &quot;System&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">cfssl gencert -initca ca-csr.json | cfssljson -bare ca -</span><br><span class="line"></span><br><span class="line">#-----------------------</span><br><span class="line"># 创建Kubernetes Server证书</span><br><span class="line">cat &gt; server-csr.json &lt;&lt;EOF</span><br><span class="line">&#123;</span><br><span class="line">    &quot;CN&quot;: &quot;kubernetes&quot;,</span><br><span class="line">    &quot;hosts&quot;: [</span><br><span class="line">      &quot;127.0.0.1&quot;,</span><br><span class="line">      &quot;10.10.10.1&quot;,</span><br><span class="line">      &quot;172.16.194.111&quot;,</span><br><span class="line">      &quot;172.16.194.127&quot;,</span><br><span class="line">      &quot;172.16.194.128&quot;,</span><br><span class="line">      &quot;172.16.194.129&quot;,</span><br><span class="line">      &quot;172.16.194.130&quot;,</span><br><span class="line">      &quot;kubernetes&quot;,</span><br><span class="line">      &quot;kubernetes.default&quot;,</span><br><span class="line">      &quot;kubernetes.default.svc&quot;,</span><br><span class="line">      &quot;kubernetes.default.svc.cluster&quot;,</span><br><span class="line">      &quot;kubernetes.default.svc.cluster.local&quot;</span><br><span class="line">    ],</span><br><span class="line">    &quot;key&quot;: &#123;</span><br><span class="line">        &quot;algo&quot;: &quot;rsa&quot;,</span><br><span class="line">        &quot;size&quot;: 2048</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;names&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;C&quot;: &quot;CN&quot;,</span><br><span class="line">            &quot;L&quot;: &quot;BeiJing&quot;,</span><br><span class="line">            &quot;ST&quot;: &quot;BeiJing&quot;,</span><br><span class="line">            &quot;O&quot;: &quot;k8s&quot;,</span><br><span class="line">            &quot;OU&quot;: &quot;System&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=kubernetes server-csr.json | cfssljson -bare server</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#-----------------------</span><br><span class="line"># 创建admin证书</span><br><span class="line">cat &gt; admin-csr.json &lt;&lt;EOF</span><br><span class="line">&#123;</span><br><span class="line">  &quot;CN&quot;: &quot;admin&quot;,</span><br><span class="line">  &quot;hosts&quot;: [],</span><br><span class="line">  &quot;key&quot;: &#123;</span><br><span class="line">    &quot;algo&quot;: &quot;rsa&quot;,</span><br><span class="line">    &quot;size&quot;: 2048</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;names&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;C&quot;: &quot;CN&quot;,</span><br><span class="line">      &quot;L&quot;: &quot;BeiJing&quot;,</span><br><span class="line">      &quot;ST&quot;: &quot;BeiJing&quot;,</span><br><span class="line">      &quot;O&quot;: &quot;system:masters&quot;,</span><br><span class="line">      &quot;OU&quot;: &quot;System&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=kubernetes admin-csr.json | cfssljson -bare admin</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#-----------------------</span><br><span class="line"># 创建Kube Proxy证书</span><br><span class="line">cat &gt; kube-proxy-csr.json &lt;&lt;EOF</span><br><span class="line">&#123;</span><br><span class="line">  &quot;CN&quot;: &quot;system:kube-proxy&quot;,</span><br><span class="line">  &quot;hosts&quot;: [],</span><br><span class="line">  &quot;key&quot;: &#123;</span><br><span class="line">    &quot;algo&quot;: &quot;rsa&quot;,</span><br><span class="line">    &quot;size&quot;: 2048</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;names&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;C&quot;: &quot;CN&quot;,</span><br><span class="line">      &quot;L&quot;: &quot;BeiJing&quot;,</span><br><span class="line">      &quot;ST&quot;: &quot;BeiJing&quot;,</span><br><span class="line">      &quot;O&quot;: &quot;k8s&quot;,</span><br><span class="line">      &quot;OU&quot;: &quot;System&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=kubernetes kube-proxy-csr.json | cfssljson -bare kube-proxy</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[root@k8s-master-128 k8s-cret]# chmod +x certificate.sh</span><br><span class="line">[root@k8s-master-128 k8s-cret]# sh certificate.sh   # 警告忽略即可</span><br></pre></td></tr></table></figure></p>
+<p>注意：在server-csr.json文件里的hosts字段，你需要将上面的IP更改为你自己规划的服务IP，主要替换172.16.194.x这个网段即可，用于允许集群之间证书许可认证。</p>
+<p>将证书放到它该存在的位置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-128 k8s-cret]# mkdir -p /opt/kubernetes/&#123;cfg,bin,ssl,logs&#125;</span><br><span class="line">[root@k8s-master-128 k8s-cret]# cp -a &#123;ca*,admin*,server*,kube-proxy*&#125; /opt/kubernetes/ssl/</span><br><span class="line">[root@k8s-master-128 k8s-cret]# rm -f /opt/kubernetes/ssl/*.json</span><br><span class="line">[root@k8s-master-128 k8s-cret]# ls -lh /opt/kubernetes/ssl/</span><br><span class="line">总用量 56K</span><br><span class="line">-rw-r--r-- 1 root root 1009 5月 6 18:22 admin.csr</span><br><span class="line">-rw------- 1 root root 1.7K 5月 6 18:22 admin-key.pem</span><br><span class="line">-rw-r--r-- 1 root root 1.4K 5月 6 18:22 admin.pem</span><br><span class="line">-rw-r--r-- 1 root root 1001 5月 6 18:22 ca.csr</span><br><span class="line">-rw------- 1 root root 1.7K 5月 6 18:22 ca-key.pem</span><br><span class="line">-rw-r--r-- 1 root root 1.4K 5月 6 18:22 ca.pem</span><br><span class="line">-rw-r--r-- 1 root root 1009 5月 6 18:22 kube-proxy.csr</span><br><span class="line">-rw------- 1 root root 1.7K 5月 6 18:22 kube-proxy-key.pem</span><br><span class="line">-rw------- 1 root root 6.2K 5月 6 18:37 kube-proxy.kubeconfig</span><br><span class="line">-rw-r--r-- 1 root root 1.4K 5月 6 18:22 kube-proxy.pem</span><br><span class="line">-rw-r--r-- 1 root root 1.3K 5月 6 19:25 server.csr</span><br><span class="line">-rw------- 1 root root 1.7K 5月 6 19:25 server-key.pem</span><br><span class="line">-rw-r--r-- 1 root root 1.6K 5月 6 19:25 server.pem</span><br></pre></td></tr></table></figure>
+<h2 id="四、部署高可用Etcd集群"><a href="#四、部署高可用Etcd集群" class="headerlink" title="四、部署高可用Etcd集群"></a>四、部署高可用Etcd集群</h2><h3 id="4-1、下载二进制包"><a href="#4-1、下载二进制包" class="headerlink" title="4.1、下载二进制包"></a>4.1、下载二进制包</h3><p>etcd官网下载地址：<a href="https://github.com/coreos/etcd/releases" target="_blank" rel="noopener">https://github.com/coreos/etcd/releases</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-128 ~]# mkdir soft</span><br><span class="line">[root@k8s-master-128 ~]# cd soft/</span><br><span class="line">[root@k8s-master-128 soft]# </span><br><span class="line">[root@k8s-master-128 soft]# wget -c https://github.com/etcd-io/etcd/releases/download/v3.3.12/etcd-v3.3.12-linux-amd64.tar.gz</span><br><span class="line">[root@k8s-master-128 soft]# tar zxf etcd-v3.3.12-linux-amd64.tar.gz</span><br><span class="line">[root@k8s-master-128 soft]# cp -a etcd-v3.3.12-linux-amd64/&#123;etcd,etcdctl&#125; /opt/etcd/bin/</span><br><span class="line">[root@k8s-master-128 soft]# /opt/etcd/bin/etcd --version</span><br><span class="line">etcd Version: 3.3.12</span><br><span class="line">Git SHA: d57e8b8</span><br><span class="line">Go Version: go1.10.8</span><br><span class="line">Go OS/Arch: linux/amd64</span><br></pre></td></tr></table></figure></p>
+<h3 id="4-2、部署Etcd的配置文件"><a href="#4-2、部署Etcd的配置文件" class="headerlink" title="4.2、部署Etcd的配置文件"></a>4.2、部署Etcd的配置文件</h3><p>部署etcd，并配置systemd方式启动etcd进程</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-128 ~]# cat etcd.sh</span><br><span class="line">#!/bin/bash</span><br><span class="line"># example: ./etcd.sh etcd01 172.16.194.128 etcd01=https//172.16.194.128:2380,etcd02=https://172.16.194.129:2380,etcd03=https://172.16.194.130:2380</span><br><span class="line">ETCD_NAME=$&#123;1:-&quot;etcd01&quot;&#125; #etcd当前节点的名称</span><br><span class="line">ETCD_IP=$&#123;2:-&quot;127.0.0.1&quot;&#125; # etcd当前节点的ip</span><br><span class="line">ETCD_CLUSTER=$&#123;3:-&quot;etcd01=http://127.0.0.1:2379&quot;&#125; # 填写etcd集群的所有节点</span><br><span class="line">WORK_DIR=/opt/etcd</span><br><span class="line">cat &lt;&lt;EOF &gt;$&#123;WORK_DIR&#125;/cfg/etcd</span><br><span class="line">#[Member]</span><br><span class="line">ETCD_NAME=&quot;$&#123;ETCD_NAME&#125;&quot;</span><br><span class="line">ETCD_DATA_DIR=&quot;/var/lib/etcd/default.etcd&quot;</span><br><span class="line">ETCD_LISTEN_PEER_URLS=&quot;https://$&#123;ETCD_IP&#125;:2380&quot;</span><br><span class="line">ETCD_LISTEN_CLIENT_URLS=&quot;https://$&#123;ETCD_IP&#125;:2379&quot;</span><br><span class="line">#[Clustering]</span><br><span class="line">ETCD_INITIAL_ADVERTISE_PEER_URLS=&quot;https://$&#123;ETCD_IP&#125;:2380&quot;</span><br><span class="line">ETCD_ADVERTISE_CLIENT_URLS=&quot;https://$&#123;ETCD_IP&#125;:2379&quot;</span><br><span class="line">ETCD_INITIAL_CLUSTER=&quot;$&#123;ETCD_CLUSTER&#125;&quot;</span><br><span class="line">ETCD_INITIAL_CLUSTER_TOKEN=&quot;etcd-cluster&quot;</span><br><span class="line">ETCD_INITIAL_CLUSTER_STATE=&quot;new&quot;</span><br><span class="line">EOF</span><br><span class="line">cat &lt;&lt;EOF &gt;/usr/lib/systemd/system/etcd.service</span><br><span class="line">[Unit]</span><br><span class="line">Description=Etcd Server</span><br><span class="line">After=network.target</span><br><span class="line">After=network-online.target</span><br><span class="line">Wants=network-online.target</span><br><span class="line">[Service]</span><br><span class="line">Type=notify</span><br><span class="line">EnvironmentFile=-$&#123;WORK_DIR&#125;/cfg/etcd</span><br><span class="line">ExecStart=$&#123;WORK_DIR&#125;/bin/etcd \\</span><br><span class="line">--name=\$&#123;ETCD_NAME&#125; \\</span><br><span class="line">--data-dir=\$&#123;ETCD_DATA_DIR&#125; \\</span><br><span class="line">--listen-peer-urls=\$&#123;ETCD_LISTEN_PEER_URLS&#125; \\</span><br><span class="line">--listen-client-urls=\$&#123;ETCD_LISTEN_CLIENT_URLS&#125;,http://127.0.0.1:2379 \\</span><br><span class="line">--advertise-client-urls=\$&#123;ETCD_ADVERTISE_CLIENT_URLS&#125; \\</span><br><span class="line">--initial-advertise-peer-urls=\$&#123;ETCD_INITIAL_ADVERTISE_PEER_URLS&#125; \\</span><br><span class="line">--initial-cluster=\$&#123;ETCD_INITIAL_CLUSTER&#125; \\</span><br><span class="line">--initial-cluster-token=\$&#123;ETCD_INITIAL_CLUSTER_TOKEN&#125; \\</span><br><span class="line">--initial-cluster-state=new \\</span><br><span class="line">--cert-file=$&#123;WORK_DIR&#125;/ssl/server.pem \\</span><br><span class="line">--key-file=$&#123;WORK_DIR&#125;/ssl/server-key.pem \\</span><br><span class="line">--peer-cert-file=$&#123;WORK_DIR&#125;/ssl/server.pem \\</span><br><span class="line">--peer-key-file=$&#123;WORK_DIR&#125;/ssl/server-key.pem \\</span><br><span class="line">--trusted-ca-file=$&#123;WORK_DIR&#125;/ssl/ca.pem \\</span><br><span class="line">--peer-trusted-ca-file=$&#123;WORK_DIR&#125;/ssl/ca.pem</span><br><span class="line">Restart=on-failure</span><br><span class="line">LimitNOFILE=65536</span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<p>关于systemd的知识，自己补充哈。</p>
+<h4 id="4-3-2、检查配置文件"><a href="#4-3-2、检查配置文件" class="headerlink" title="4.3.2、检查配置文件"></a>4.3.2、检查配置文件</h4><p>启动过程中，有错误去看/var/log/message日志，或者看以下两个文件是否配置正确<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-128 ~]# chmod +x etcd.sh</span><br><span class="line">[root@k8s-master-128 ~]# ./etcd.sh etcd01 172.16.194.128 etcd01=https://172.16.194.128:2380,etcd02=https://172.16.194.129:2380,etcd03=https://172.16.194.130:2380  #因为etcd集群通过证书通讯，所以这里需要写成https通讯协议。</span><br></pre></td></tr></table></figure></p>
+<h4 id="4-3-2、检查配置文件-1"><a href="#4-3-2、检查配置文件-1" class="headerlink" title="4.3.2、检查配置文件"></a>4.3.2、检查配置文件</h4><p>启动过程中，有错误去看/var/log/message日志，或者看以下两个文件是否配置正确<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"># Etcd 主配置文件</span><br><span class="line">[root@k8s-master-128 ~]# cat /opt/etcd/cfg/etcd</span><br><span class="line">#[Member]</span><br><span class="line">ETCD_NAME=&quot;etcd01&quot;</span><br><span class="line">ETCD_DATA_DIR=&quot;/var/lib/etcd/default.etcd&quot;</span><br><span class="line">ETCD_LISTEN_PEER_URLS=&quot;https://172.16.194.128:2380&quot;</span><br><span class="line">ETCD_LISTEN_CLIENT_URLS=&quot;https://172.16.194.128:2379&quot;</span><br><span class="line">#[Clustering]</span><br><span class="line">ETCD_INITIAL_ADVERTISE_PEER_URLS=&quot;https://172.16.194.128:2380&quot;</span><br><span class="line">ETCD_ADVERTISE_CLIENT_URLS=&quot;https://172.16.194.128:2379&quot;</span><br><span class="line">ETCD_INITIAL_CLUSTER=&quot;etcd01=https://172.16.194.128:2380,etcd02=https://172.16.194.129:2380,etcd03=https://172.16.194.130:2380&quot;</span><br><span class="line">ETCD_INITIAL_CLUSTER_TOKEN=&quot;etcd-cluster&quot;</span><br><span class="line">ETCD_INITIAL_CLUSTER_STATE=&quot;new&quot;</span><br><span class="line"># Etcd启动配置文件</span><br><span class="line">[root@k8s-master-128 ~]# cat /usr/lib/systemd/system/etcd.service</span><br><span class="line">[Unit]</span><br><span class="line">Description=Etcd Server</span><br><span class="line">After=network.target</span><br><span class="line">After=network-online.target</span><br><span class="line">Wants=network-online.target</span><br><span class="line">[Service]</span><br><span class="line">Type=notify</span><br><span class="line">EnvironmentFile=-/opt/etcd/cfg/etcd</span><br><span class="line">ExecStart=/opt/etcd/bin/etcd \</span><br><span class="line">--name=$&#123;ETCD_NAME&#125; \</span><br><span class="line">--data-dir=$&#123;ETCD_DATA_DIR&#125; \</span><br><span class="line">--listen-peer-urls=$&#123;ETCD_LISTEN_PEER_URLS&#125; \</span><br><span class="line">--listen-client-urls=$&#123;ETCD_LISTEN_CLIENT_URLS&#125;,http://127.0.0.1:2379 \</span><br><span class="line">--advertise-client-urls=$&#123;ETCD_ADVERTISE_CLIENT_URLS&#125; \</span><br><span class="line">--initial-advertise-peer-urls=$&#123;ETCD_INITIAL_ADVERTISE_PEER_URLS&#125; \</span><br><span class="line">--initial-cluster=$&#123;ETCD_INITIAL_CLUSTER&#125; \</span><br><span class="line">--initial-cluster-token=$&#123;ETCD_INITIAL_CLUSTER_TOKEN&#125; \</span><br><span class="line">--initial-cluster-state=new \</span><br><span class="line">--cert-file=/opt/etcd/ssl/server.pem \</span><br><span class="line">--key-file=/opt/etcd/ssl/server-key.pem \</span><br><span class="line">--peer-cert-file=/opt/etcd/ssl/server.pem \</span><br><span class="line">--peer-key-file=/opt/etcd/ssl/server-key.pem \</span><br><span class="line">--trusted-ca-file=/opt/etcd/ssl/ca.pem \</span><br><span class="line">--peer-trusted-ca-file=/opt/etcd/ssl/ca.pem</span><br><span class="line">Restart=on-failure</span><br><span class="line">LimitNOFILE=65536</span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure></p>
+<p>以上两个文件都是通过etcd.sh生成的。</p>
+<h4 id="4-3-3、启动主进程"><a href="#4-3-3、启动主进程" class="headerlink" title="4.3.3、启动主进程"></a>4.3.3、启动主进程</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-128 ~]# systemctl daemon-reload</span><br><span class="line">[root@k8s-master-128 ~]# systemctl enable etcd</span><br><span class="line">[root@k8s-master-128 ~]# systemctl start etcd  # 会启动失败，而且等待启动时间长，忽略即可，其他节点起来后这个节点就会正常了。</span><br><span class="line">Job for etcd.service failed because a timeout was exceeded. See &quot;systemctl status etcd.service&quot; and &quot;journalctl -xe&quot; for details.</span><br><span class="line">[root@k8s-master-128 ~]# ps -ef|grep etcd # 查看etcd进程，是启动状态即可</span><br></pre></td></tr></table></figure>
+<h3 id="4-4-部署其他Etcd节点"><a href="#4-4-部署其他Etcd节点" class="headerlink" title="4.4 部署其他Etcd节点"></a>4.4 部署其他Etcd节点</h3><p>第一个节点启动的状态就是这样，接下来需要配置第二个和第三个节点，步骤如上，需要的key自己cp到机器上即可。</p>
+<p>记录下配置其他两个节点的命令和过程<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-128 ~]# ssh k8s-node-129 mkdir -p /opt/etcd/&#123;cfg,bin,ssl&#125;</span><br><span class="line">[root@k8s-master-128 ~]# ssh k8s-node-130 mkdir -p /opt/etcd/&#123;cfg,bin,ssl&#125;</span><br><span class="line">[root@k8s-master-128 ~]# scp -r /opt/etcd/* k8s-node-129:/opt/etcd/</span><br><span class="line">[root@k8s-master-128 ~]# scp -r /opt/etcd/* k8s-node-130:/opt/etcd/</span><br><span class="line">[root@k8s-master-128 ~]# scp -r /root/etcd.sh k8s-node-129:/root/</span><br><span class="line">[root@k8s-master-128 ~]# scp -r /root/etcd.sh k8s-node-130:/root/</span><br><span class="line"></span><br><span class="line"># 启动etcd节点</span><br><span class="line">[root@k8s-node-129 ~]# ./etcd.sh etcd02 172.16.194.129 etcd01=https://172.16.194.128:2380,etcd02=https://172.16.194.129:2380,etcd03=https://172.16.194.130:2380</span><br><span class="line">[root@k8s-node-129 ~]# systemctl daemon-reload</span><br><span class="line">[root@k8s-node-129 ~]# systemctl enable etcd</span><br><span class="line">[root@k8s-node-129 ~]# systemctl start etcd</span><br><span class="line"></span><br><span class="line">[root@k8s-node-130 ~]# ./etcd.sh etcd03 172.16.194.130 etcd01=https://172.16.194.128:2380,etcd02=https://172.16.194.129:2380,etcd03=https://172.16.194.130:2380</span><br><span class="line">[root@k8s-node-130 ~]# systemctl daemon-reload</span><br><span class="line">[root@k8s-node-130 ~]# systemctl enable etcd</span><br><span class="line">[root@k8s-node-130 ~]# systemctl start etcd</span><br></pre></td></tr></table></figure></p>
+<p>当三个节点部署完成后，随即查看一个节点，启动正常啦！</p>
+<h3 id="4-5、查看集群健康状态"><a href="#4-5、查看集群健康状态" class="headerlink" title="4.5、查看集群健康状态"></a>4.5、查看集群健康状态</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-128 ~]# cd /opt/etcd/ssl/</span><br><span class="line">[root@k8s-master-128 ssl]# /opt/etcd/bin/etcdctl --ca-file=ca.pem --cert-file=server.pem --key-file=server-key.pem --endpoints=&quot;https://172.16.194.128:2379,https://172.16.194.129:2379,https://172.16.194.130:2379&quot; cluster-health</span><br><span class="line">member 12a876ebdf52404b is healthy: got healthy result from https://172.16.194.130:2379</span><br><span class="line">member 570d74cd507eba51 is healthy: got healthy result from https://172.16.194.129:2379</span><br><span class="line">member f3e89385516e234d is healthy: got healthy result from https://172.16.194.128:2379</span><br><span class="line">cluster is healthy</span><br></pre></td></tr></table></figure>
+<p>当然，你可以停掉一个节点再查看集群状态，看看会有什么变化。</p>
+<p><strong>Tips：</strong></p>
+<ul>
+<li>2379用于客户端通信</li>
+<li>2380用于节点通信</li>
+</ul>
+<h2 id="五、Node节点安装Docker"><a href="#五、Node节点安装Docker" class="headerlink" title="五、Node节点安装Docker"></a>五、Node节点安装Docker</h2><p>其他版本安装请移步官网：<a href="https://docs.docker.com/install" target="_blank" rel="noopener">https://docs.docker.com/install</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">yum remove docker \</span><br><span class="line">    docker-client \</span><br><span class="line">    docker-client-latest \</span><br><span class="line">    docker-common \</span><br><span class="line">    docker-latest \</span><br><span class="line">    docker-latest-logrotate \</span><br><span class="line">    docker-logrotate \</span><br><span class="line">    docker-selinux \</span><br><span class="line">    docker-engine-selinux \</span><br><span class="line">    docker-engine</span><br><span class="line">yum install -y yum-utils \</span><br><span class="line">  device-mapper-persistent-data \</span><br><span class="line">  lvm2</span><br><span class="line"># 官网的repo源在中国用不了，咱们还是乖乖使用马爸爸提供的源好了</span><br><span class="line">yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo</span><br><span class="line">yum makecache fast</span><br><span class="line">yum install docker-ce -y</span><br><span class="line">mkdir /etc/docker/</span><br><span class="line">cat &lt;&lt; EOF &gt; /etc/docker/daemon.json</span><br><span class="line">&#123;</span><br><span class="line">    &quot;registry-mirrors&quot;: [&quot;https://registry.docker-cn.com&quot;]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line">systemctl enable docker &amp;&amp; systemctl start docker</span><br></pre></td></tr></table></figure></p>
+<h2 id="六、部署Flannel网络"><a href="#六、部署Flannel网络" class="headerlink" title="六、部署Flannel网络"></a>六、部署Flannel网络</h2><p><strong>Overlay Network：</strong> 覆盖网络，在基础网络上叠加的一种虚拟网络技术模式，该网络中的主机通过虚拟链路连接起来。</p>
+<p><strong>VXLAN：</strong>将源数据包封装到UDP中，并使用基础网络的IP/MAC作为外层报文头进行封装，然后在以太网上传输，到达目的地后有隧道端点解封装并将数据发送给目标地址。</p>
+<p><strong>Flannel：</strong>是Overlay网络的一种，也是将源数据包封装在另一种网络包里进行路由转发和通信，目前已经支持UDP、VXLAN、Host-GW、AWS VPC和GCE路由等数据转发方式。</p>
+<p><strong>多主机容器网络通信其他主流方案：</strong>隧道方案（Weave、OpenSwitch），路由方案（Calico）等。</p>
+<h3 id="6-1、Flannel网络架构图"><a href="#6-1、Flannel网络架构图" class="headerlink" title="6.1、Flannel网络架构图"></a>6.1、Flannel网络架构图</h3><img src="/2019/06/11/kubernetes系列之《集群部署（上）》/flanneld网络架构图.jpg">
+<p>比较详细的可以参考下面这张：</p>
+<img src="/2019/06/11/kubernetes系列之《集群部署（上）》/flanneld官网架构图.jpg">
+<h3 id="6-2、注册Flannel信息到Etcd集群"><a href="#6-2、注册Flannel信息到Etcd集群" class="headerlink" title="6.2、注册Flannel信息到Etcd集群"></a>6.2、注册Flannel信息到Etcd集群</h3><p><code>注意：Flannel网络是部署在k8s的Node节点上</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 写入分配的子网段到etcd，供flanneld使用</span><br><span class="line">[root@k8s-node-129 ~]# cd /opt/etcd/ssl/</span><br><span class="line">[root@k8s-node-129 ssl]# /opt/etcd/bin/etcdctl --ca-file=ca.pem --cert-file=server.pem --key-file=server-key.pem --endpoints=&quot;https://172.16.194.128:2379,https://172.16.194.129:2379,https://172.16.194.130:2379&quot; set /coreos.com/network/config &apos;&#123; &quot;Network&quot;: &quot;172.17.0.0/16&quot;, &quot;Backend&quot;: &#123;&quot;Type&quot;: &quot;vxlan&quot;&#125;&#125;&apos;</span><br><span class="line">&#123; &quot;Network&quot;: &quot;172.17.0.0/16&quot;, &quot;Backend&quot;: &#123;&quot;Type&quot;: &quot;vxlan&quot;&#125;&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># GET 查看设置</span><br><span class="line">[root@k8s-node-129 ssl]# /opt/etcd/bin/etcdctl --ca-file=ca.pem --cert-file=server.pem --key-file=server-key.pem --endpoints=&quot;https://172.16.194.128:2379,https://172.16.194.129:2379,https://172.16.194.130:2379&quot; get /coreos.com/network/config</span><br><span class="line">&#123; &quot;Network&quot;: &quot;172.17.0.0/16&quot;, &quot;Backend&quot;: &#123;&quot;Type&quot;: &quot;vxlan&quot;&#125;&#125; # 能get到我们写入etcd集群的信息，即表明写入成功</span><br></pre></td></tr></table></figure>
+<h3 id="6-3、下载二进制包"><a href="#6-3、下载二进制包" class="headerlink" title="6.3、下载二进制包"></a>6.3、下载二进制包</h3><p>下载地址：<a href="https://github.com/coreos/flannel/releases" target="_blank" rel="noopener">https://github.com/coreos/flannel/releases</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-node-129 ~]#  wget https://github.com/coreos/flannel/releases/download/v0.11.0/flannel-v0.11.0-linux-amd64.tar.gz</span><br><span class="line">[root@k8s-node-129 ~]#  tar zxf flannel-v0.11.0-linux-amd64.tar.gz</span><br><span class="line">[root@k8s-node-129 ~]#  mkdir -p /opt/kubernetes/&#123;bin,cfg,ssl,logs&#125;   # 创建k8s相关的工作目录 </span><br><span class="line">[root@k8s-node-129 ~]#  cp flanneld mk-docker-opts.sh /opt/kubernetes/bin/  # 将flanneld相关文件放到k8s工作目录</span><br></pre></td></tr></table></figure>
+<h3 id="6-4、部署Flannel的配置文件"><a href="#6-4、部署Flannel的配置文件" class="headerlink" title="6.4、部署Flannel的配置文件"></a>6.4、部署Flannel的配置文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-node-129 ~]# cat flanneld.sh</span><br><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line">ETCD_ENDPOINTS=$&#123;1:-&quot;http://127.0.0.1:2379&quot;&#125; #接收ETCD的参数 </span><br><span class="line"></span><br><span class="line">cat &lt;&lt;EOF &gt;/opt/kubernetes/cfg/flanneld   # 生成Flanneld配置文件</span><br><span class="line">FLANNEL_OPTIONS=&quot;--etcd-endpoints=$&#123;ETCD_ENDPOINTS&#125; \</span><br><span class="line">-etcd-cafile=/opt/etcd/ssl/ca.pem \</span><br><span class="line">-etcd-certfile=/opt/etcd/ssl/server.pem \</span><br><span class="line">-etcd-keyfile=/opt/etcd/ssl/server-key.pem&quot;</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">cat &lt;&lt;EOF &gt;/usr/lib/systemd/system/flanneld.service # 生成Flanneld启动文件，使Systemd管理Flannel</span><br><span class="line">[Unit]</span><br><span class="line">Description=Flanneld overlay address etcd agent</span><br><span class="line">After=network-online.target network.target</span><br><span class="line">Before=docker.service</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=notify</span><br><span class="line">EnvironmentFile=/opt/kubernetes/cfg/flanneld</span><br><span class="line">ExecStart=/opt/kubernetes/bin/flanneld --ip-masq \$FLANNEL_OPTIONS</span><br><span class="line">ExecStartPost=/opt/kubernetes/bin/mk-docker-opts.sh -k DOCKER_NETWORK_OPTIONS -d /run/flannel/subnet.env</span><br><span class="line">Restart=on-failure</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">cat &lt;&lt;EOF &gt;/usr/lib/systemd/system/docker.service # 配置Docker启动指定子网段</span><br><span class="line">[Unit]</span><br><span class="line">Description=Docker Application Container Engine</span><br><span class="line">Documentation=https://docs.docker.com</span><br><span class="line">After=network-online.target firewalld.service</span><br><span class="line">Wants=network-online.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=notify</span><br><span class="line">EnvironmentFile=/run/flannel/subnet.env  # 添加了这行（使Docker在启动时指定子网段，这个子网段是Flanneld分配给它的）</span><br><span class="line">ExecStart=/usr/bin/dockerd  \$DOCKER_NETWORK_OPTIONS # 添加了DOCKER_NETWORK_OPTIONS 选项</span><br><span class="line">ExecReload=/bin/kill -s HUP \$MAINPID</span><br><span class="line">LimitNOFILE=infinity</span><br><span class="line">LimitNPROC=infinity</span><br><span class="line">LimitCORE=infinity</span><br><span class="line">TimeoutStartSec=0</span><br><span class="line">Delegate=yes</span><br><span class="line">KillMode=process</span><br><span class="line">Restart=on-failure</span><br><span class="line">StartLimitBurst=3</span><br><span class="line">StartLimitInterval=60s</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<h3 id="6-5、启动Flanneld节点"><a href="#6-5、启动Flanneld节点" class="headerlink" title="6.5、启动Flanneld节点"></a>6.5、启动Flanneld节点</h3><h4 id="6-5-1、生成配置文件"><a href="#6-5-1、生成配置文件" class="headerlink" title="6.5.1、生成配置文件"></a>6.5.1、生成配置文件</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-node-129 ~]# chmod +x flanneld.sh</span><br><span class="line">[root@k8s-node-129 ~]# ./flanneld.sh https://172.16.194.128:2379,https://172.16.194.129:2379,https://172.16.194.130:2379</span><br></pre></td></tr></table></figure>
+<h4 id="6-5-2、检查配置文件"><a href="#6-5-2、检查配置文件" class="headerlink" title="6.5.2、检查配置文件"></a>6.5.2、检查配置文件</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"># flanneld配置文件</span><br><span class="line">[root@k8s-node-129 ~]# cat /opt/kubernetes/cfg/flanneld</span><br><span class="line">FLANNEL_OPTIONS=&quot;--etcd-endpoints=https://172.16.194.128:2379,https://172.16.194.129:2379,https://172.16.194.130:2379 -etcd-cafile=/opt/etcd/ssl/ca.pem -etcd-certfile=/opt/etcd/ssl/server.pem -etcd-keyfile=/opt/etcd/ssl/server-key.pem&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># Flanneld启动文件</span><br><span class="line">[root@k8s-node-129 ~]# cat /usr/lib/systemd/system/flanneld.service</span><br><span class="line">[Unit]</span><br><span class="line">Description=Flanneld overlay address etcd agent</span><br><span class="line">After=network-online.target network.target</span><br><span class="line">Before=docker.service</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=notify</span><br><span class="line">EnvironmentFile=/opt/kubernetes/cfg/flanneld</span><br><span class="line">ExecStart=/opt/kubernetes/bin/flanneld --ip-masq $FLANNEL_OPTIONS</span><br><span class="line">ExecStartPost=/opt/kubernetes/bin/mk-docker-opts.sh -k DOCKER_NETWORK_OPTIONS -d /run/flannel/subnet.env</span><br><span class="line">Restart=on-failure</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># Docker启动文件</span><br><span class="line">[root@k8s-node-129 ~]# cat /usr/lib/systemd/system/docker.service</span><br><span class="line">[Unit]</span><br><span class="line">Description=Docker Application Container Engine</span><br><span class="line">Documentation=https://docs.docker.com</span><br><span class="line">After=network-online.target firewalld.service</span><br><span class="line">Wants=network-online.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=notify</span><br><span class="line">EnvironmentFile=/run/flannel/subnet.env #指定了Flanneld网络配置文件</span><br><span class="line">ExecStart=/usr/bin/dockerd $DOCKER_NETWORK_OPTIONS</span><br><span class="line">ExecReload=/bin/kill -s HUP $MAINPID</span><br><span class="line">LimitNOFILE=infinity</span><br><span class="line">LimitNPROC=infinity</span><br><span class="line">LimitCORE=infinity</span><br><span class="line">TimeoutStartSec=0</span><br><span class="line">Delegate=yes</span><br><span class="line">KillMode=process</span><br><span class="line">Restart=on-failure</span><br><span class="line">StartLimitBurst=3</span><br><span class="line">StartLimitInterval=60s</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
+<h4 id="6-5-3、启动Flanneld进程"><a href="#6-5-3、启动Flanneld进程" class="headerlink" title="6.5.3、启动Flanneld进程"></a>6.5.3、启动Flanneld进程</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 启动flanneld和Docker</span><br><span class="line">systemctl daemon-reload</span><br><span class="line">systemctl enable flanneld</span><br><span class="line">systemctl start flanneld</span><br><span class="line">systemctl restart docker</span><br></pre></td></tr></table></figure>
+<h3 id="6-6、查看Flannel部署结果"><a href="#6-6、查看Flannel部署结果" class="headerlink" title="6.6、查看Flannel部署结果"></a>6.6、查看Flannel部署结果</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"># Flanneld的网络配置文件（Docker会根据这个网络配置文件信息生成子网段）</span><br><span class="line">[root@k8s-node-129 ~]# cat /run/flannel/subnet.env</span><br><span class="line">DOCKER_OPT_BIP=&quot;--bip=172.17.73.1/24&quot;</span><br><span class="line">DOCKER_OPT_IPMASQ=&quot;--ip-masq=false&quot;</span><br><span class="line">DOCKER_OPT_MTU=&quot;--mtu=1450&quot;</span><br><span class="line">DOCKER_NETWORK_OPTIONS=&quot; --bip=172.17.73.1/24 --ip-masq=false --mtu=1450&quot;</span><br><span class="line"></span><br><span class="line">[root@k8s-node-129 ~]# ip a</span><br><span class="line">···略···</span><br><span class="line"></span><br><span class="line">3: docker0: &lt;NO-CARRIER,BROADCAST,MULTICAST,UP&gt; mtu 1500 qdisc noqueue state DOWN group default</span><br><span class="line">    link/ether 02:42:1a:42:15:83 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 172.17.73.1/24 brd 172.17.73.255 scope global docker0</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">4: flannel.1: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1450 qdisc noqueue state UNKNOWN group default</span><br><span class="line">    link/ether 3a:d5:fa:a7:57:c6 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 172.17.73.0/32 scope global flannel.1</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">    inet6 fe80::38d5:faff:fea7:57c6/64 scope link</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br></pre></td></tr></table></figure>
+<p>能看到docker0网卡的IP地址段已经变更为我们配置的地址段。<br>该节点新启动了flannel.1网卡。</p>
+<h3 id="6-7、其他Node节点部署Flannal网络"><a href="#6-7、其他Node节点部署Flannal网络" class="headerlink" title="6.7、其他Node节点部署Flannal网络"></a>6.7、其他Node节点部署Flannal网络</h3><p>根据前期规划，k8s有两个Node节点，上面部署了129这个节点，剩下的130节点按照<code>上面的部署步骤来就行</code>，多个节点同理。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"># 查看一台Node的部署状态，如下部署正常。</span><br><span class="line">[root@k8s-node-130 ~]# cat /run/flannel/subnet.env</span><br><span class="line">DOCKER_OPT_BIP=&quot;--bip=172.17.16.1/24&quot;</span><br><span class="line">DOCKER_OPT_IPMASQ=&quot;--ip-masq=false&quot;</span><br><span class="line">DOCKER_OPT_MTU=&quot;--mtu=1450&quot;</span><br><span class="line">DOCKER_NETWORK_OPTIONS=&quot; --bip=172.17.16.1/24 --ip-masq=false --mtu=1450&quot;</span><br><span class="line">[root@k8s-node-130 ~]# ip a</span><br><span class="line">···略···</span><br><span class="line"></span><br><span class="line">3: docker0: &lt;NO-CARRIER,BROADCAST,MULTICAST,UP&gt; mtu 1500 qdisc noqueue state DOWN group default</span><br><span class="line">    link/ether 02:42:f4:21:f9:94 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 172.17.16.1/24 brd 172.17.16.255 scope global docker0</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">4: flannel.1: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1450 qdisc noqueue state UNKNOWN group default</span><br><span class="line">    link/ether e2:cf:ca:a9:0f:98 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 172.17.16.0/32 scope global flannel.1</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">    inet6 fe80::e0cf:caff:fea9:f98/64 scope link</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br></pre></td></tr></table></figure>
+<h3 id="6-8、查看Etcd集群记录的通讯信息"><a href="#6-8、查看Etcd集群记录的通讯信息" class="headerlink" title="6.8、查看Etcd集群记录的通讯信息"></a>6.8、查看Etcd集群记录的通讯信息</h3><p>每个节点在部署Flanneld网络时，相关信息都记录在Etcd集群当中，我们来一下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># ls /coreos.com/network/ 查看etcd存储的网络配置信息</span><br><span class="line">[root@k8s-node-129 ssl]# /opt/etcd/bin/etcdctl --ca-file=ca.pem --cert-file=server.pem --key-file=server-key.pem --endpoints=&quot;https://172.16.194.128:2379,https://172.16.194.129:2379,https://172.16.194.130:2379&quot; ls /coreos.com/network/</span><br><span class="line"></span><br><span class="line"># ls /coreos.com/network/subnets 查看Flanneld分配的子网信息</span><br><span class="line">[root@k8s-node-129 ssl]# /opt/etcd/bin/etcdctl --ca-file=ca.pem --cert-file=server.pem --key-file=server-key.pem --endpoints=&quot;https://172.16.194.128:2379,https://172.16.194.129:2379,https://172.16.194.130:2379&quot; ls /coreos.com/network/subnets</span><br><span class="line">/coreos.com/network/subnets/172.17.73.0-24</span><br><span class="line">/coreos.com/network/subnets/172.17.16.0-24</span><br><span class="line"></span><br><span class="line"># get /coreos.com/network/subnets/172.17.73.0-24 查看该子网的详细信息</span><br><span class="line">[root@k8s-node-129 ssl]# /opt/etcd/bin/etcdctl --ca-file=ca.pem --cert-file=server.pem --key-file=server-key.pem --endpoints=&quot;https://172.16.194.128:2379,https://172.16.194.129:2379,https://172.16.194.130:2379&quot; get /coreos.com/network/subnets/172.17.73.0-24</span><br><span class="line">&#123;&quot;PublicIP&quot;:&quot;172.16.194.129&quot;,&quot;BackendType&quot;:&quot;vxlan&quot;,&quot;BackendData&quot;:&#123;&quot;VtepMAC&quot;:&quot;3a:d5:fa:a7:57:c6&quot;&#125;&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>解读：</strong></p>
+<ol>
+<li>子网信息里记录了公共IP172.16.194.129，也就是说172.17.73.0这个网段的通讯，会通过公网IP转发出去与其他节点的网段进行通讯。</li>
+<li>所以，只要是加入了Flanneld网络的主机节点，都可以通过etcd记录的信息，与其他子网进行通讯。</li>
+</ol>
+<h3 id="6-9、测试Flanneld网络通讯"><a href="#6-9、测试Flanneld网络通讯" class="headerlink" title="6.9、测试Flanneld网络通讯"></a>6.9、测试Flanneld网络通讯</h3><p>上面我们部署了两个节点的网络，这两个节点的Flannal网段信息分别为：</p>
+<ul>
+<li><p>k8s-node-129</p>
+<ul>
+<li>flannel.1: 172.17.73.0/32</li>
+<li>docker0: 172.17.73.1/24</li>
+</ul>
+</li>
+<li><p>k8s-node-130</p>
+<ul>
+<li>flannel.1: 172.17.16.0/32</li>
+<li>docker0: 172.17.16.1/24</li>
+</ul>
+</li>
+</ul>
+<p>通过ping检测他们之间的连通性，发现他们是不同的子网，为什么能连通呢？<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-node-129 ~]# ping -c 2 172.17.16.1</span><br><span class="line">PING 172.17.16.1 (172.17.16.1) 56(84) bytes of data.</span><br><span class="line">64 bytes from 172.17.16.1: icmp_seq=1 ttl=64 time=0.503 ms</span><br><span class="line">64 bytes from 172.17.16.1: icmp_seq=2 ttl=64 time=0.537 ms</span><br><span class="line"></span><br><span class="line">[root@k8s-node-130 ~]# ping -c 2 172.17.73.1</span><br><span class="line">PING 172.17.73.1 (172.17.73.1) 56(84) bytes of data.</span><br><span class="line">64 bytes from 172.17.73.1: icmp_seq=1 ttl=64 time=0.382 ms</span><br><span class="line">64 bytes from 172.17.73.1: icmp_seq=2 ttl=64 time=0.621 ms</span><br></pre></td></tr></table></figure></p>
+<p>带着这个思考，我们来看一下节点上的路由情况<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-node-129 ~]# route -n</span><br><span class="line">Kernel IP routing table</span><br><span class="line">Destination Gateway Genmask Flags Metric Ref Use Iface</span><br><span class="line">0.0.0.0 172.16.194.2 0.0.0.0 UG 100 0 0 eth0</span><br><span class="line">172.16.194.0 0.0.0.0 255.255.255.0 U 100 0 0 eth0</span><br><span class="line">172.17.16.0 172.17.16.0 255.255.255.0 UG 0 0 0 flannel.1</span><br><span class="line">172.17.73.0 0.0.0.0 255.255.255.0 U 0 0 0 docker0</span><br></pre></td></tr></table></figure></p>
+<p><strong>解读：</strong></p>
+<ol>
+<li>docker0网卡是172.17.73.0网段，也就是节点自身的网段；</li>
+<li>规则：172.17.16.0网段走flannel.1网卡出口，而flannel.1能与其他flannel节点网段直接通讯；</li>
+<li>规则：172.16.194.0是宿主机的网段，出口是物理网卡eth0；</li>
+</ol>
+<p><strong>根据上面解读的路由规则，我尝试通过一个案例来理解网络请求走向：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># (k8s-node-129)172.17.73.0网段向(k8s-node-130)172.17.16.0网段发起一个ping请求</span><br><span class="line">[root@k8s-node-129 ~]# ping -c 2 172.17.16.1</span><br></pre></td></tr></table></figure></p>
+<p>其网络请求过程如下：</p>
+<ol>
+<li>k8s-node-129节点匹配到本机路由规则：去往172.17.16.0 网段，走 flannel.1出口 ；</li>
+<li>通过 /opt/kubernetes/bin/etcdctl get到172.17.16.0-24的公网IP是172.16.194.130，报文交由172.16.194.0网段处理；</li>
+<li>k8s-node-129节点再次匹配到本机路由规则：去往172.16.194.0网段，走eth0（物理网卡）出口;</li>
+<li>公网172.16.194.129通过eth0网卡将报文发送给172.16.194.130（etcd里注册了172.17.16.0网段的公网IP是172.16.194.130）;</li>
+<li>目标地址172.16.194.130接收到请求报文后转发flannel.1网卡， flannel.1网卡再转发到docker0网卡，等待报文被响应后，再原路返回。完成整个通讯。</li>
+</ol>
+<p>Flanneld网络部署完毕。</p>
+<p>Kubernetes集群部署的上篇完结，请关注文章《集群部署（下）》</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+<div>    
+ 
+ 
+    <ul class="post-copyright">
+      <li class="post-copyright-author">
+          <strong>本文作者：</strong>开元
+      </li>
+      <li class="post-copyright-link">
+        <strong>本文链接：</strong>
+        <a href="/2019/06/11/kubernetes系列之《集群部署（上）》.html" title="kubernetes系列之《集群部署（上）》.md">2019/06/11/kubernetes系列之《集群部署（上）》.html</a>
+      </li>
+      <li class="post-copyright-license">
+        <strong>版权声明： </strong>
+        <!--Copyright©2018 NICKSORS.CC 版权所有 未经许可 请勿转载 -->
+	本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0 CN</a> 许可协议。转载请注明出处!
+      </li>
+    </ul>
+  
+</div>
+
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Kubernetes/" rel="tag"><i class="fa fa-tag"></i> Kubernetes</a>
+          
+            <a href="/tags/etcd/" rel="tag"><i class="fa fa-tag"></i> etcd</a>
+          
+            <a href="/tags/flanneld/" rel="tag"><i class="fa fa-tag"></i> flanneld</a>
+          
+            <a href="/tags/SSL/" rel="tag"><i class="fa fa-tag"></i> SSL</a>
+          
+            <a href="/tags/Docker/" rel="tag"><i class="fa fa-tag"></i> Docker</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/06/11/kubernetes系列之《基础入门介绍》.html" rel="next" title="kubernetes系列之《基础入门介绍》.md">
+                <i class="fa fa-chevron-left"></i> kubernetes系列之《基础入门介绍》.md
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/06/11/kubernetes系列之《集群部署（下）》.html" rel="prev" title="kubernetes系列之《集群部署（下）》.md">
+                kubernetes系列之《集群部署（下）》.md <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/static/images/stark.jpg"
+                alt="开元" />
+            
+              <p class="site-author-name" itemprop="name">开元</p>
+              <p class="site-description motion-element" itemprop="description">知识管理，时间管理，自我管理</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">28</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/nicksors" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.hi-linux.com/" title="运维之美" target="_blank">运维之美</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、官方提供的三种部署方式"><span class="nav-number">1.</span> <span class="nav-text">一、官方提供的三种部署方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1、minikube"><span class="nav-number">1.1.</span> <span class="nav-text">1.1、minikube</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2、kubeadm"><span class="nav-number">1.2.</span> <span class="nav-text">1.2、kubeadm</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3、二进制包"><span class="nav-number">1.3.</span> <span class="nav-text">1.3、二进制包</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、kubernetes平台环境规划"><span class="nav-number">2.</span> <span class="nav-text">二、kubernetes平台环境规划</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1、软件和服务器环境规划"><span class="nav-number">2.1.</span> <span class="nav-text">2.1、软件和服务器环境规划</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2、平台架构图"><span class="nav-number">2.2.</span> <span class="nav-text">2.2、平台架构图</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-1、单Master节点"><span class="nav-number">2.2.1.</span> <span class="nav-text">2.2.1、单Master节点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-2、多Master节点"><span class="nav-number">2.2.2.</span> <span class="nav-text">2.2.2、多Master节点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3、禁用SElinux并关闭防火墙"><span class="nav-number">2.3.</span> <span class="nav-text">2.3、禁用SElinux并关闭防火墙</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4、关闭SWAP分区"><span class="nav-number">2.4.</span> <span class="nav-text">2.4、关闭SWAP分区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5、配置host解析"><span class="nav-number">2.5.</span> <span class="nav-text">2.5、配置host解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-6、配置时间同步"><span class="nav-number">2.6.</span> <span class="nav-text">2.6、配置时间同步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-7、配置主机密钥通讯信任"><span class="nav-number">2.7.</span> <span class="nav-text">2.7、配置主机密钥通讯信任</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、自签SSL证书"><span class="nav-number">3.</span> <span class="nav-text">三、自签SSL证书</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1、安装证书生成工具cfssl"><span class="nav-number">3.1.</span> <span class="nav-text">3.1、安装证书生成工具cfssl</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2、生成Etcd证书"><span class="nav-number">3.2.</span> <span class="nav-text">3.2、生成Etcd证书</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3、生成K8s证书"><span class="nav-number">3.3.</span> <span class="nav-text">3.3、生成K8s证书</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、部署高可用Etcd集群"><span class="nav-number">4.</span> <span class="nav-text">四、部署高可用Etcd集群</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1、下载二进制包"><span class="nav-number">4.1.</span> <span class="nav-text">4.1、下载二进制包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2、部署Etcd的配置文件"><span class="nav-number">4.2.</span> <span class="nav-text">4.2、部署Etcd的配置文件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-2、检查配置文件"><span class="nav-number">4.2.1.</span> <span class="nav-text">4.3.2、检查配置文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-2、检查配置文件-1"><span class="nav-number">4.2.2.</span> <span class="nav-text">4.3.2、检查配置文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-3、启动主进程"><span class="nav-number">4.2.3.</span> <span class="nav-text">4.3.3、启动主进程</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-部署其他Etcd节点"><span class="nav-number">4.3.</span> <span class="nav-text">4.4 部署其他Etcd节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-5、查看集群健康状态"><span class="nav-number">4.4.</span> <span class="nav-text">4.5、查看集群健康状态</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、Node节点安装Docker"><span class="nav-number">5.</span> <span class="nav-text">五、Node节点安装Docker</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六、部署Flannel网络"><span class="nav-number">6.</span> <span class="nav-text">六、部署Flannel网络</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1、Flannel网络架构图"><span class="nav-number">6.1.</span> <span class="nav-text">6.1、Flannel网络架构图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2、注册Flannel信息到Etcd集群"><span class="nav-number">6.2.</span> <span class="nav-text">6.2、注册Flannel信息到Etcd集群</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3、下载二进制包"><span class="nav-number">6.3.</span> <span class="nav-text">6.3、下载二进制包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-4、部署Flannel的配置文件"><span class="nav-number">6.4.</span> <span class="nav-text">6.4、部署Flannel的配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-5、启动Flanneld节点"><span class="nav-number">6.5.</span> <span class="nav-text">6.5、启动Flanneld节点</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#6-5-1、生成配置文件"><span class="nav-number">6.5.1.</span> <span class="nav-text">6.5.1、生成配置文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-5-2、检查配置文件"><span class="nav-number">6.5.2.</span> <span class="nav-text">6.5.2、检查配置文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-5-3、启动Flanneld进程"><span class="nav-number">6.5.3.</span> <span class="nav-text">6.5.3、启动Flanneld进程</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-6、查看Flannel部署结果"><span class="nav-number">6.6.</span> <span class="nav-text">6.6、查看Flannel部署结果</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-7、其他Node节点部署Flannal网络"><span class="nav-number">6.7.</span> <span class="nav-text">6.7、其他Node节点部署Flannal网络</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-8、查看Etcd集群记录的通讯信息"><span class="nav-number">6.8.</span> <span class="nav-text">6.8、查看Etcd集群记录的通讯信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-9、测试Flanneld网络通讯"><span class="nav-number">6.9.</span> <span class="nav-text">6.9、测试Flanneld网络通讯</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">开元</span>
+
+
+  
+
+  
+</div>
+
+
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  访问用户:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<div class="powered-by">
+<i class="fa fa-eye"></i><span id="busuanzi_container_site_pv">
+   访问量:<span id="busuanzi_value_site_pv"></span>
+</span>
+</div>
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">全站共52.6k字</span>
+</div>
+
+<!--
+<span class="post-meta-divider">|</span>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Mist</div>
+
+
+
+-->
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<!--<script type="text/javascript" src="/js/src/love.js"></script>-->

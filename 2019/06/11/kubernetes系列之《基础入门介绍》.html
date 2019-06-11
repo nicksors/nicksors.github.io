@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="一、Kubernetes简介 Kubernetes是Google在2014年6月开源的一个容器集群管理系统，该系统使用Google研发的Golang语言开发。Kubernetes也被叫做k8s，因为k和s之前有8个字母。 k8s原本是Google内部一个叫Borg的容器集群管理系统衍生出来的，Borg已经在Google大规模生产运行十年之久。 k8s主要用于自动化部署、扩展和管理容器应用，它提供了">
+<meta name="keywords" content="kubernetes">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kubernetes系列之《基础入门介绍》.md">
+<meta property="og:url" content="//blog.nicksors.cc/2019/06/11/kubernetes系列之《基础入门介绍》.html">
+<meta property="og:site_name" content="开元DevOps知识库">
+<meta property="og:description" content="一、Kubernetes简介 Kubernetes是Google在2014年6月开源的一个容器集群管理系统，该系统使用Google研发的Golang语言开发。Kubernetes也被叫做k8s，因为k和s之前有8个字母。 k8s原本是Google内部一个叫Borg的容器集群管理系统衍生出来的，Borg已经在Google大规模生产运行十年之久。 k8s主要用于自动化部署、扩展和管理容器应用，它提供了">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="//blog.nicksors.cc/2019/06/11/kubernetes系列之《基础入门介绍》/官网架构图.jpg">
+<meta property="og:image" content="//blog.nicksors.cc/2019/06/11/kubernetes系列之《基础入门介绍》/自己画的图.jpg">
+<meta property="og:updated_time" content="2019-06-11T02:55:57.643Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="kubernetes系列之《基础入门介绍》.md">
+<meta name="twitter:description" content="一、Kubernetes简介 Kubernetes是Google在2014年6月开源的一个容器集群管理系统，该系统使用Google研发的Golang语言开发。Kubernetes也被叫做k8s，因为k和s之前有8个字母。 k8s原本是Google内部一个叫Borg的容器集群管理系统衍生出来的，Borg已经在Google大规模生产运行十年之久。 k8s主要用于自动化部署、扩展和管理容器应用，它提供了">
+<meta name="twitter:image" content="//blog.nicksors.cc/2019/06/11/kubernetes系列之《基础入门介绍》/官网架构图.jpg">
+
+
+
+
+
+
+  <link rel="canonical" href="//blog.nicksors.cc/2019/06/11/kubernetes系列之《基础入门介绍》.html"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>kubernetes系列之《基础入门介绍》.md | 开元DevOps知识库</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+<a href="https://github.com/nicksors"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">开元DevOps知识库</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">没有白走的路，每一步都算数.</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="//blog.nicksors.cc/2019/06/11/kubernetes系列之《基础入门介绍》.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="开元">
+      <meta itemprop="description" content="知识管理，时间管理，自我管理">
+      <meta itemprop="image" content="/static/images/stark.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="开元DevOps知识库">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">kubernetes系列之《基础入门介绍》.md
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-06-11 10:17:18 / 修改时间：10:55:57" itemprop="dateCreated datePublished" datetime="2019-06-11T10:17:18+08:00">2019-06-11</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/kubernetes/" itemprop="url" rel="index"><span itemprop="name">kubernetes</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="一、Kubernetes简介"><a href="#一、Kubernetes简介" class="headerlink" title="一、Kubernetes简介"></a>一、Kubernetes简介</h2><ul>
+<li>Kubernetes是Google在2014年6月开源的一个容器集群管理系统，该系统使用Google研发的Golang语言开发。Kubernetes也被叫做k8s，因为k和s之前有8个字母。</li>
+<li>k8s原本是Google内部一个叫Borg的容器集群管理系统衍生出来的，Borg已经在Google大规模生产运行十年之久。</li>
+<li>k8s<code>主要用于自动化部署、扩展和管理容器应用</code>，它提供了资源调度、部署管理、服务发现、扩容缩容、监控等一整套功能。</li>
+<li>Kubernetes的目标是让部署容器化应用简单高效。官网地址：<a href="https://www.kubernetes.io" target="_blank" rel="noopener">https://www.kubernetes.io</a></li>
+</ul>
+<a id="more"></a>
+<h2 id="二、Kubernetes主要功能"><a href="#二、Kubernetes主要功能" class="headerlink" title="二、Kubernetes主要功能"></a>二、Kubernetes主要功能</h2><p><strong>1、数据卷</strong></p>
+<p>在Pod中，容器之前共享数据，可以使用数据卷。这个功能与docker里volume功能相等。</p>
+<p><strong>2、应用程序健康检查</strong></p>
+<p>检查容器内的服务、进程是否异常；可以设置监控检测策略来保证应用的健壮性。</p>
+<p><strong>3、复制应用程序实例</strong></p>
+<p>控制维护Pod副本数，保证一个Pod或一组同类的Pod数始终可用。</p>
+<p><strong>4、弹性缩容</strong></p>
+<p>根据设定的指标（CPU利用率）自动缩放Pod副本数。</p>
+<p><strong>5、服务发现</strong></p>
+<p>使用环境变量或DOS服务插件保证容器中程序发现Pod入口访问地址。</p>
+<p><strong>6、负载均衡</strong></p>
+<p>一组Pod副本分配一个私有的集群IP地址，负载均衡转发请求到后端容器。在集群内部，其他Pod可通过这个ClusterIP访问应用。</p>
+<p><strong>7、滚动更新</strong></p>
+<p>更新服务不中断，异常更新一个Pod，而不是同时删除整个服务。</p>
+<p><strong>8、服务编排</strong></p>
+<p>通过文件描述部署服务，使得应用程序部署变得更高效。</p>
+<p><strong>9、资源监控</strong></p>
+<p>Node节点组件继承CAdvisor资源收集工具，可通过Heapster汇总整个集群节点资源数据，然后存储到InfluxDB时序数据库中，再由Grafana展示。</p>
+<p><strong>10、提供认证和授权</strong></p>
+<p>支持角色访问控制（RBAC）认证授权等策略。</p>
+<h2 id="三、基本概念"><a href="#三、基本概念" class="headerlink" title="三、基本概念"></a>三、基本概念</h2><blockquote>
+<p>在k8s中，它的概念非常的多！而且一定要去了解这些概念，知道它的作用是必须的，你需要知道这些概念，才能更好的应用它。</p>
+</blockquote>
+<p><strong>1、Pod</strong></p>
+<p>Pod是k8s最小部署单元，一个Pod有一个或多个容器组成，Pod中容器共享存储和网络，在同一个Docker主机上运行。</p>
+<p>官网解读：<a href="https://www.kubernetes.org.cn/kubernetes-pod" target="_blank" rel="noopener">https://www.kubernetes.org.cn/kubernetes-pod</a></p>
+<p><strong>2、Service</strong></p>
+<p>Service一个应用服务的抽象，定义了Pod逻辑集合和访问这个Pod集合的策略。</p>
+<p>官网解读：<a href="https://www.kubernetes.org.cn/kubernetes-services" target="_blank" rel="noopener">https://www.kubernetes.org.cn/kubernetes-services</a></p>
+<p><strong>3、Volume</strong></p>
+<p>数据卷，共享Pod中容器使用的数据。</p>
+<p>官网解读：<a href="https://www.kubernetes.org.cn/kubernetes-volumes" target="_blank" rel="noopener">https://www.kubernetes.org.cn/kubernetes-volumes</a></p>
+<p><strong>4、Namespace</strong></p>
+<p>命名空间将对象逻辑上分配到不同Namespace，可以是不同的项目、用户等分区管理，并设定控制策略，从而实现多租户。</p>
+<p>官网解读：<a href="https://www.kubernetes.org.cn/%E5%90%8D%E8%AF%8D%E8%A7%A3%E9%87%8A%EF%BC%9Anamespace" target="_blank" rel="noopener">https://www.kubernetes.org.cn/%E5%90%8D%E8%AF%8D%E8%A7%A3%E9%87%8A%EF%BC%9Anamespace</a></p>
+<p><strong>5、Lable</strong></p>
+<p>标签用于区分对象（比如Pod、Service），键/值对存在；每个对象可以有多个标签，通过标签关联对象。</p>
+<p>官网解读：<a href="https://www.kubernetes.org.cn/kubernetes-labels" target="_blank" rel="noopener">https://www.kubernetes.org.cn/kubernetes-labels</a></p>
+<h2 id="四、更高层次的抽象（Controllers）"><a href="#四、更高层次的抽象（Controllers）" class="headerlink" title="四、更高层次的抽象（Controllers）"></a>四、更高层次的抽象（Controllers）</h2><p><strong>1、ReplicaSet（RS）</strong></p>
+<p>ReplicaSet是下一代复本控制器。</p>
+<p>官网解读：<a href="https://www.kubernetes.org.cn/replicasets" target="_blank" rel="noopener">https://www.kubernetes.org.cn/replicasets</a></p>
+<p><strong>2、Deployment（无状态应用部署）</strong></p>
+<p>Deployment是一个更高层次的API对象，它管理ReplicaSets和Pod，并提供声明式更新等功能。</p>
+<p>官方建议使用Department管理ReplicaSets,而不是直接使用ReplicaSets，这就意味着可能永远不需要直接操作ReplicaSet对象。</p>
+<p>咱们在实际应用当中，基本上都是去创建一个Deployment，然后由Deployment去创建RS和Pod等。</p>
+<p>官网解读：<a href="https://www.kubernetes.org.cn/deployment" target="_blank" rel="noopener">https://www.kubernetes.org.cn/deployment</a></p>
+<p><strong>3、StatefulSet（有状态应用部署）</strong></p>
+<p>StatefulSet适合持久性的应用程序，有唯一的网络标识符（IP），持久存储，有序的部署、扩展、删除和滚动更新。</p>
+<p>官网解读：<a href="https://www.kubernetes.org.cn/statefulset" target="_blank" rel="noopener">https://www.kubernetes.org.cn/statefulset</a></p>
+<p><strong>4、DaemonSet</strong></p>
+<p>DaemonSet确保所有（或一些）节点运行同一个Pod。当节点加入Kubernetes集群中，Pod会被调度到该节点上运行，当节点从集群中移除时，DaemonSet的Pod会被删除。删除DaemonSet会清理它所有创建的Pod。</p>
+<p>官网解读：<a href="https://www.kubernetes.org.cn/daemonset" target="_blank" rel="noopener">https://www.kubernetes.org.cn/daemonset</a></p>
+<p><strong>5、Job</strong></p>
+<p>一次性任务，运行完成后Pod销毁，不在重新启动新容器。还可以任务定时运行。</p>
+<p>官网解读：<a href="https://www.kubernetes.org.cn/job" target="_blank" rel="noopener">https://www.kubernetes.org.cn/job</a></p>
+<p><strong>6、CronJob</strong></p>
+<p>定时任务</p>
+<p>官网解读： <a href="https://www.kubernetes.org.cn/cronjob" target="_blank" rel="noopener">https://www.kubernetes.org.cn/cronjob</a></p>
+<h2 id="五、Kubernetes系统架构拓扑图"><a href="#五、Kubernetes系统架构拓扑图" class="headerlink" title="五、Kubernetes系统架构拓扑图"></a>五、Kubernetes系统架构拓扑图</h2><p>官网架构图：<br><img src="/2019/06/11/kubernetes系列之《基础入门介绍》/官网架构图.jpg" title="官网架构图"></p>
+<p>自己画的图：<br><img src="/2019/06/11/kubernetes系列之《基础入门介绍》/自己画的图.jpg" title="自己画的图"></p>
+<h2 id="六、组件功能介绍"><a href="#六、组件功能介绍" class="headerlink" title="六、组件功能介绍"></a>六、组件功能介绍</h2><h3 id="6-1、Master组件"><a href="#6-1、Master组件" class="headerlink" title="6.1、Master组件"></a>6.1、Master组件</h3><ul>
+<li><p><strong>kube-apiserver</strong><br>Kubernetes API，集群的统一入口，各组件协调者。以HTTP API提供接口服务，所有对象的增删改查和监听操作都交给API Server处理后再提交给Etcd存储。</p>
+</li>
+<li><p><strong>kube-controller-manager</strong><br>处理集群中常规后台任务，一个资源对应一个控制器，而ControllerManager就是负责管理这些控制器的。</p>
+</li>
+<li><p><strong>kube-scheduler</strong><br>根据调度算法为新创建的Pod选择一个Node节点，可以任意部署，可以部署在同一个节点上，也可以部署在不同的节点上。</p>
+</li>
+</ul>
+<h3 id="6-2、Node组件"><a href="#6-2、Node组件" class="headerlink" title="6.2、Node组件"></a>6.2、Node组件</h3><ul>
+<li><p><strong>kubelet</strong><br>kubelet是Master在Node节点上的Agent，管理本机运行容器的生命周期，比如创建容器、Pod挂载数据卷、下载secret、获取容器和节点状态等工作。kubelet将每个Pod转换成一组容器。</p>
+</li>
+<li><p><strong>kube-proxy</strong><br>在Node节点上实现Pod网络代理，维护网络规则和四层负载均衡工作。</p>
+</li>
+<li><p><strong>docker或rocket/rkt</strong><br>容器引擎，k8s可选的容器运行底层支持技术，一般我们都使用docker。</p>
+</li>
+</ul>
+<h3 id="6-3、第三方服务"><a href="#6-3、第三方服务" class="headerlink" title="6.3、第三方服务"></a>6.3、第三方服务</h3><ul>
+<li><strong>etcd</strong><br>分布式键值存储系统。用于保持集群状态数据，比如Pod、Service等对象信息。</li>
+</ul>
+<p>参考文章：</p>
+<ul>
+<li><a href="https://www.kubernetes.org.cn/4047.html" target="_blank" rel="noopener">kubernetes-整体概述和架构</a></li>
+<li><a href="https://blog.csdn.net/bbwangj/article/details/82557705" target="_blank" rel="noopener">Kubernetes组件之kube-controller-manager</a></li>
+<li><a href="https://www.cnblogs.com/xzkzzz/p/9503918.html" target="_blank" rel="noopener">Kubernetes基础概念及架构概述</a></li>
+<li><a href="https://blog.csdn.net/bbwangj/article/details/81904421" target="_blank" rel="noopener">Kubernetes 之APIServer组件简介</a></li>
+<li><a href="https://www.jianshu.com/p/68b6a2968660" target="_blank" rel="noopener">聊聊kube-apiserver</a></li>
+</ul>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+<div>    
+ 
+ 
+    <ul class="post-copyright">
+      <li class="post-copyright-author">
+          <strong>本文作者：</strong>开元
+      </li>
+      <li class="post-copyright-link">
+        <strong>本文链接：</strong>
+        <a href="/2019/06/11/kubernetes系列之《基础入门介绍》.html" title="kubernetes系列之《基础入门介绍》.md">2019/06/11/kubernetes系列之《基础入门介绍》.html</a>
+      </li>
+      <li class="post-copyright-license">
+        <strong>版权声明： </strong>
+        <!--Copyright©2018 NICKSORS.CC 版权所有 未经许可 请勿转载 -->
+	本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0 CN</a> 许可协议。转载请注明出处!
+      </li>
+    </ul>
+  
+</div>
+
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/kubernetes/" rel="tag"><i class="fa fa-tag"></i> kubernetes</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/20/Python系列之《Django-DRF-撰写前端功能》.html" rel="next" title="Python系列之《Django-DRF-撰写前端功能》">
+                <i class="fa fa-chevron-left"></i> Python系列之《Django-DRF-撰写前端功能》
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/06/11/kubernetes系列之《集群部署（上）》.html" rel="prev" title="kubernetes系列之《集群部署（上）》.md">
+                kubernetes系列之《集群部署（上）》.md <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/static/images/stark.jpg"
+                alt="开元" />
+            
+              <p class="site-author-name" itemprop="name">开元</p>
+              <p class="site-description motion-element" itemprop="description">知识管理，时间管理，自我管理</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">28</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/nicksors" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.hi-linux.com/" title="运维之美" target="_blank">运维之美</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、Kubernetes简介"><span class="nav-number">1.</span> <span class="nav-text">一、Kubernetes简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、Kubernetes主要功能"><span class="nav-number">2.</span> <span class="nav-text">二、Kubernetes主要功能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、基本概念"><span class="nav-number">3.</span> <span class="nav-text">三、基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、更高层次的抽象（Controllers）"><span class="nav-number">4.</span> <span class="nav-text">四、更高层次的抽象（Controllers）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、Kubernetes系统架构拓扑图"><span class="nav-number">5.</span> <span class="nav-text">五、Kubernetes系统架构拓扑图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六、组件功能介绍"><span class="nav-number">6.</span> <span class="nav-text">六、组件功能介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1、Master组件"><span class="nav-number">6.1.</span> <span class="nav-text">6.1、Master组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2、Node组件"><span class="nav-number">6.2.</span> <span class="nav-text">6.2、Node组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3、第三方服务"><span class="nav-number">6.3.</span> <span class="nav-text">6.3、第三方服务</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">开元</span>
+
+
+  
+
+  
+</div>
+
+
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  访问用户:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<div class="powered-by">
+<i class="fa fa-eye"></i><span id="busuanzi_container_site_pv">
+   访问量:<span id="busuanzi_value_site_pv"></span>
+</span>
+</div>
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">全站共52.6k字</span>
+</div>
+
+<!--
+<span class="post-meta-divider">|</span>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Mist</div>
+
+
+
+-->
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<!--<script type="text/javascript" src="/js/src/love.js"></script>-->

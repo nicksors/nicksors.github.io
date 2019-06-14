@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="这篇文章是我常用的kubectl使用方法总结，与前面的kubernetes部署环境不同，但使用方法大同小异，注意下即可。">
+<meta name="keywords" content="Kubernetes,Kubectl">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kubernetes系列之《Kubectl管理工具常用方法》">
+<meta property="og:url" content="//blog.nicksors.cc/2019/06/14/kubernetes系列之《Kubectl管理工具常用方法》.html">
+<meta property="og:site_name" content="开元DevOps知识库">
+<meta property="og:description" content="这篇文章是我常用的kubectl使用方法总结，与前面的kubernetes部署环境不同，但使用方法大同小异，注意下即可。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-06-14T02:38:47.810Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="kubernetes系列之《Kubectl管理工具常用方法》">
+<meta name="twitter:description" content="这篇文章是我常用的kubectl使用方法总结，与前面的kubernetes部署环境不同，但使用方法大同小异，注意下即可。">
+
+
+
+
+
+
+  <link rel="canonical" href="//blog.nicksors.cc/2019/06/14/kubernetes系列之《Kubectl管理工具常用方法》.html"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>kubernetes系列之《Kubectl管理工具常用方法》 | 开元DevOps知识库</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+<a href="https://github.com/nicksors"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">开元DevOps知识库</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">没有白走的路，每一步都算数.</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="//blog.nicksors.cc/2019/06/14/kubernetes系列之《Kubectl管理工具常用方法》.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="开元">
+      <meta itemprop="description" content="知识管理，时间管理，自我管理">
+      <meta itemprop="image" content="/static/images/stark.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="开元DevOps知识库">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">kubernetes系列之《Kubectl管理工具常用方法》
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-06-14 10:18:24 / 修改时间：10:38:47" itemprop="dateCreated datePublished" datetime="2019-06-14T10:18:24+08:00">2019-06-14</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Kubernetes/" itemprop="url" rel="index"><span itemprop="name">Kubernetes</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>这篇文章是我常用的kubectl使用方法总结，与前面的kubernetes部署环境不同，但使用方法大同小异，注意下即可。</p>
+</blockquote>
+<a id="more"></a>
+<h2 id="一、kubectl高可用"><a href="#一、kubectl高可用" class="headerlink" title="一、kubectl高可用"></a>一、kubectl高可用</h2><h3 id="1-1、kubectl访问细节"><a href="#1-1、kubectl访问细节" class="headerlink" title="1.1、kubectl访问细节"></a>1.1、kubectl访问细节</h3><p>kubectl默认是使用apiserve监听的IP和端口进行对集群的访问操作<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-90 ~]# netstat -lntup|grep apiserve</span><br><span class="line">tcp        0      0 10.0.10.90:6443        0.0.0.0:*              LISTEN      24489/kube-apiserve </span><br><span class="line">tcp        0      0 127.0.0.1:8080          0.0.0.0:*              LISTEN      24489/kube-apiserve</span><br></pre></td></tr></table></figure></p>
+<p>kubectl 访问<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-90 ~]# kubectl -s 127.0.0.1:8080 get pods</span><br><span class="line">NAME                  READY    STATUS    RESTARTS  AGE</span><br><span class="line">nginx-8586cf59-c2j24  1/1      Running  0          32m</span><br><span class="line">nginx-8586cf59-hxcq9  1/1      Running  0          32m</span><br><span class="line">nginx-8586cf59-vm6x6  1/1      Running  0          32m</span><br><span class="line">[root@k8s-master-90 ~]# kubectl -s 10.0.10.90:6443 get pods # api的6443端口需要证书认证才能进行访问</span><br><span class="line">Unable to connect to the server: net/http: HTTP/1.x transport connection broken: malformed HTTP response &quot;\x15\x03\x01\x00\x02\x02&quot;</span><br></pre></td></tr></table></figure></p>
+<p>127.0.0.1:8080之所以能访问，是因为该监听地址未经过证书认证，相反10.0.10.90:6443则需要经过证书许可认证才可以连接到集群进行操作。</p>
+<p>我们的目的是想要在任何linux机器上，使用kubectl工具能访问和管理集群，该如何实现呢？</p>
+<h3 id="1-2、部署kubectl"><a href="#1-2、部署kubectl" class="headerlink" title="1.2、部署kubectl"></a>1.2、部署kubectl</h3><p>kubectl本身就是编译好的二进制文件，这里我们将它部署在node-91机器上<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-90 ~]# scp /opt/kubernetes/bin/kubectl 10.0.10.91:/opt/kubernetes/bin/</span><br><span class="line">[root@k8s-node-91 ~]# echo &quot;export PATH=$PATH:/opt/kubernetes/bin&quot; &gt;&gt;/etc/profile</span><br><span class="line">[root@k8s-node-91 ~]# source /etc/profile</span><br><span class="line">[root@k8s-node-91 ~]# which kubectl</span><br><span class="line">/opt/kubernetes/bin/kubectl</span><br></pre></td></tr></table></figure></p>
+<h3 id="1-3、运行kubectl"><a href="#1-3、运行kubectl" class="headerlink" title="1.3、运行kubectl"></a>1.3、运行kubectl</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-node-91 ~]# kubectl get pods</span><br><span class="line">The connection to the server localhost:8080 was refused - did you specify the right host or port?</span><br></pre></td></tr></table></figure>
+<p>连接失败，找不到服务器，那比如这台kubectl管理节点是在你公司？你如何实现管理线上的k8s集群呢？</p>
+<h4 id="1-3-1、拷贝需要的证书文件"><a href="#1-3-1、拷贝需要的证书文件" class="headerlink" title="1.3.1、拷贝需要的证书文件"></a>1.3.1、拷贝需要的证书文件</h4><p>到Master节点看一下，在二进制部署Kubernetes集群时，我们已经创建好了证书<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-90 ~]# ls -lh ssl/</span><br><span class="line">-rw------- 1 root root 1.7K 4月  17 18:43 admin-key.pem</span><br><span class="line">-rw-r--r-- 1 root root 1.4K 4月  17 18:43 admin.pem</span><br><span class="line">-rw------- 1 root root 1.7K 4月  17 18:43 ca-key.pem</span><br><span class="line">-rw-r--r-- 1 root root 1.4K 4月  17 18:43 ca.pem</span><br></pre></td></tr></table></figure></p>
+<p>admin.pem和admin-key.pem就是为了今后方便管理k8s集群的</p>
+<p>需要ca证书和admin证书，将证书拷贝过去<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-90 ~]# scp ssl/admin*pem 10.0.10.91:/opt/kubernetes/ssl/</span><br><span class="line">admin-key.pem                                                                                          100% 1675    1.6KB/s  00:00    </span><br><span class="line">admin.pem                                                                                              100% 1399    1.4KB/s  00:00 </span><br><span class="line">[root@k8s-master-90 ~]# scp ssl/ca*pem 10.0.10.91:/opt/kubernetes/ssl/</span><br><span class="line">ca-key.pem                                                                                              100% 1679    1.6KB/s  00:00    </span><br><span class="line">ca.pem                                                                                                  100% 1359    1.3KB/s  00:00</span><br></pre></td></tr></table></figure></p>
+<h4 id="1-3-2、生成-kube-config文件"><a href="#1-3-2、生成-kube-config文件" class="headerlink" title="1.3.2、生成.kube/config文件"></a>1.3.2、生成.kube/config文件</h4><p>kubectl 默认会访问~/.kube目录里的配置文件，通过配置文件里指定的api地址来访问和管理集群。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"># 设置集群项中名为kubernetes的apiserver地址与根证书</span><br><span class="line">kubectl config set-cluster kubernetes --server=https://10.0.10.90:6443 --certificate-authority=/opt/kubernetes/ssl/ca.pem </span><br><span class="line"># 设置用户项中cluster-admin用户证书认证字段</span><br><span class="line">kubectl config set-credentials cluster-admin --certificate-authority=ca.pem --client-key=admin-key.pem --client-certificate=admin.pem</span><br><span class="line"># 设置环境项中名为default的默认集群和用户</span><br><span class="line">kubectl config set-context default --cluster=kubernetes --user=cluster-admin</span><br><span class="line"># 设置默认环境项为default</span><br><span class="line">kubectl config use-context default</span><br><span class="line"></span><br><span class="line"># 操作过程</span><br><span class="line">[root@k8s-node-91 ~]# kubectl config set-cluster kubernetes --server=https://10.0.10.90:6443 --certificate-authority=/opt/kubernetes/ssl/ca.pem </span><br><span class="line">Cluster &quot;kubernetes&quot; set.</span><br><span class="line">[root@k8s-node-91 ~]# kubectl config set-credentials cluster-admin --certificate-authority=/opt/kubernetes/ssl/ca.pem --client-key=/opt/kubernetes/ssl/admin-key.pem --client-certificate=/opt/kubernetes/ssl/admin.pem</span><br><span class="line">User &quot;cluster-admin&quot; set.</span><br><span class="line">[root@k8s-node-91 ~]# kubectl config set-context default --cluster=kubernetes --user=cluster-admin</span><br><span class="line">Context &quot;default&quot; created.</span><br><span class="line">[root@k8s-node-91 ~]# kubectl config use-context default</span><br><span class="line">Switched to context &quot;default&quot;.</span><br></pre></td></tr></table></figure></p>
+<p>查看生成的配置文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-node-91 ~]# cat .kube/config</span><br><span class="line">apiVersion: v1</span><br><span class="line">clusters:</span><br><span class="line">- cluster:</span><br><span class="line">    certificate-authority: /opt/kubernetes/ssl/ca.pem</span><br><span class="line">    server: https://10.0.10.90:6443</span><br><span class="line">  name: kubernetes</span><br><span class="line">contexts:</span><br><span class="line">- context:</span><br><span class="line">    cluster: kubernetes</span><br><span class="line">    user: cluster-admin</span><br><span class="line">  name: default</span><br><span class="line">current-context: default</span><br><span class="line">kind: Config</span><br><span class="line">preferences: &#123;&#125;</span><br><span class="line">users:</span><br><span class="line">- name: cluster-admin</span><br><span class="line">  user:</span><br><span class="line">    as-user-extra: &#123;&#125;</span><br><span class="line">    client-certificate: /opt/kubernetes/ssl/admin.pem</span><br><span class="line">    client-key: /opt/kubernetes/ssl/admin-key.pem</span><br></pre></td></tr></table></figure></p>
+<p>我们知道kubectl 客户端是通过证书，去访问apiserver对外监听6443端口来实现管理集群的；上面生成了访问api的配置文件，接着就是使用它</p>
+<h3 id="1-4、访问k8s集群"><a href="#1-4、访问k8s集群" class="headerlink" title="1.4、访问k8s集群"></a>1.4、访问k8s集群</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-node-91 ~]# kubectl get cs</span><br><span class="line">NAME                STATUS    MESSAGE              ERROR</span><br><span class="line">scheduler            Healthy  ok                  </span><br><span class="line">controller-manager  Healthy  ok                  </span><br><span class="line">etcd-0              Healthy  &#123;&quot;health&quot;: &quot;true&quot;&#125;  </span><br><span class="line">etcd-2              Healthy  &#123;&quot;health&quot;: &quot;true&quot;&#125;  </span><br><span class="line">etcd-1              Healthy  &#123;&quot;health&quot;: &quot;true&quot;&#125;  </span><br><span class="line">[root@k8s-node-91 ~]# kubectl get svc</span><br><span class="line">NAME        TYPE        CLUSTER-IP    EXTERNAL-IP  PORT(S)        AGE</span><br><span class="line">kubernetes  ClusterIP  10.10.10.1    &lt;none&gt;        443/TCP        1d</span><br><span class="line">nginx        NodePort    10.10.10.61  &lt;none&gt;        88:37224/TCP  3h</span><br><span class="line">[root@k8s-node-91 ~]# kubectl get pods</span><br><span class="line">NAME                  READY    STATUS    RESTARTS  AGE</span><br><span class="line">nginx-8586cf59-c2j24  1/1      Running  0          3h</span><br><span class="line">nginx-8586cf59-hxcq9  1/1      Running  0          3h</span><br><span class="line">nginx-8586cf59-vm6x6  1/1      Running  0          3h</span><br><span class="line">[root@k8s-node-91 ~]# kubectl get ns</span><br><span class="line">NAME          STATUS    AGE</span><br><span class="line">default      Active    1d</span><br><span class="line">kube-public  Active    1d</span><br><span class="line">kube-system  Active    1d</span><br><span class="line">[root@k8s-node-91 ~]# kubectl get nodes</span><br><span class="line">NAME        STATUS    ROLES    AGE      VERSION</span><br><span class="line">10.0.10.91  Ready    &lt;none&gt;    1d        v1.9.5</span><br><span class="line">10.0.10.92  Ready    &lt;none&gt;    1d        v1.9.5</span><br></pre></td></tr></table></figure>
+<p>是的，经过如上步骤，你可以配置多个kubectl客户端来管理线上的k8s集群，做到kubectl高可用。</p>
+<p>当然，为了方便部署，你也可以将以上操作进行打包，实现在下一个节点上的快速部署。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-node-91 ~]# tar zcf kubectl-admin.tar.gz .kube/config /opt/kubernetes/ssl/&#123;admin-key.pem,admin.pem,ca.pem&#125; /opt/kubernetes/bin/kubectl </span><br><span class="line">tar: 从成员名中删除开头的“/”</span><br><span class="line">[root@k8s-node-91 ~]# tar tf kubectl-admin.tar.gz  # 直接部署这个文件即可</span><br><span class="line">.kube/config</span><br><span class="line">opt/kubernetes/ssl/admin-key.pem</span><br><span class="line">opt/kubernetes/ssl/admin.pem</span><br><span class="line">opt/kubernetes/ssl/ca.pem</span><br><span class="line">opt/kubernetes/bin/kubectl</span><br></pre></td></tr></table></figure></p>
+<h2 id="二、kubectl命令"><a href="#二、kubectl命令" class="headerlink" title="二、kubectl命令"></a>二、kubectl命令</h2><h3 id="2-1、kubectl命令分类表"><a href="#2-1、kubectl命令分类表" class="headerlink" title="2.1、kubectl命令分类表"></a>2.1、kubectl命令分类表</h3><p>命令  描述</p>
+<ul>
+<li>create  通过文件或标准输入创建资源（常用）</li>
+<li>expose  将一个资源公开为一个新的Service</li>
+<li>run 在集群中运行一个特定的镜像</li>
+<li>set 为objects设置一个指定的特征</li>
+<li>get 显示一个或多个资源（常用）</li>
+<li>explain 查看资源的文档</li>
+<li>edit    在服务器上编辑一个资源</li>
+<li>delete  通过文件名、标准输入、资源名称或标签选择器来删除资源（常用）</li>
+</ul>
+<h4 id="2-1-2、部署命令"><a href="#2-1-2、部署命令" class="headerlink" title="2.1.2、部署命令"></a>2.1.2、部署命令</h4><p>命令  描述</p>
+<ul>
+<li>rollout 管理资源的发布</li>
+<li>rolling-update  对指定的复制控制器（rs）滚动升级</li>
+<li>scale   扩容或缩容Pod数量，Department、ReplicaSet、RC或Job</li>
+<li>autoscale   创建一个能自动调整Department、ReplicaSet、RC的副本数量</li>
+</ul>
+<h4 id="2-1-3、集群管理命令（不常用）"><a href="#2-1-3、集群管理命令（不常用）" class="headerlink" title="2.1.3、集群管理命令（不常用）"></a>2.1.3、集群管理命令（不常用）</h4><p>命令  描述</p>
+<ul>
+<li>certificate 修改证书资源</li>
+<li>cluster-info    显示集群信息</li>
+<li>top 显示资源(CPU/Memory/Storage)使用情况，需要运行Heather</li>
+<li>cordon  标记节点不可调度</li>
+<li>uncordon 标记节点可调度</li>
+<li>drain   维护期间排除节点</li>
+<li>taint   更新一个或多个节点上的污点</li>
+</ul>
+<h4 id="2-1-4、故障诊断和调试命令（常用）"><a href="#2-1-4、故障诊断和调试命令（常用）" class="headerlink" title="2.1.4、故障诊断和调试命令（常用）"></a>2.1.4、故障诊断和调试命令（常用）</h4><p>命令  描述</p>
+<ul>
+<li>describe    显示指定资源或资源组的详细信息（常用）</li>
+<li>logs    输出容器在Pod中的日志（跟docker logs功能相同）</li>
+<li>attach  附加到一个运行的容器（跟docker attach功能相同）</li>
+<li>exec    在一个容器里执行命令（跟docker attach功能相同）</li>
+<li>port-forward    转发一个或多个本地端口到一个Pod上</li>
+<li>proxy   运行一个proxy到kubernetes API server</li>
+<li>cp  拷贝文件或目录到容器中</li>
+<li>auth    检查授权</li>
+</ul>
+<h4 id="2-1-5、高级命令"><a href="#2-1-5、高级命令" class="headerlink" title="2.1.5、高级命令"></a>2.1.5、高级命令</h4><p>命令  描述</p>
+<ul>
+<li>apply   通过文件名或标准输入对资源进行配置</li>
+<li>patch   使用补丁修改、更新资源的字段</li>
+<li>replace 通过filename或标准输入替换一个资源</li>
+<li>convert 在不同的API server上转换配置文件</li>
+</ul>
+<h4 id="2-1-6、设置命令"><a href="#2-1-6、设置命令" class="headerlink" title="2.1.6、设置命令"></a>2.1.6、设置命令</h4><p>命令  描述</p>
+<ul>
+<li>label   更新资源上标签</li>
+<li>annotate    更新一个资源的注解</li>
+<li>completion  用于实现kubectl工具自动补全</li>
+</ul>
+<h4 id="2-1-7、其他命令"><a href="#2-1-7、其他命令" class="headerlink" title="2.1.7、其他命令"></a>2.1.7、其他命令</h4><p>命令  描述</p>
+<ul>
+<li>api-versions    打印支持的API版本</li>
+<li>config  修改kubeconfig文件(用于访问API，比如配置认证信息)</li>
+<li>help    所有命令帮助（最应该学会的命令参数）</li>
+<li>plugin  运行一个命令行插件</li>
+<li>version 打印client和server版本信息</li>
+</ul>
+<h3 id="2-2、kubectl命令实践"><a href="#2-2、kubectl命令实践" class="headerlink" title="2.2、kubectl命令实践"></a>2.2、kubectl命令实践</h3><h4 id="2-2-1、创建"><a href="#2-2-1、创建" class="headerlink" title="2.2.1、创建"></a>2.2.1、创建</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl run nginx --replicas=3 --labels=&quot;app=example&quot; --image=nginx:1.10 --port=80</span><br><span class="line">$ kubectl create xxxx-deployment.yaml</span><br></pre></td></tr></table></figure>
+<h4 id="2-2-2、查看"><a href="#2-2-2、查看" class="headerlink" title="2.2.2、查看"></a>2.2.2、查看</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl get deploy</span><br><span class="line">$ kubectl get pods --show-labels</span><br><span class="line">$ kubectl get pods -l app=exampl</span><br><span class="line">$ kubectl get pods -o wide</span><br></pre></td></tr></table></figure>
+<h4 id="2-2-3、发布"><a href="#2-2-3、发布" class="headerlink" title="2.2.3、发布"></a>2.2.3、发布</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl expose deployment nginx --port=88 --type=NodePort --target-port=80 --name=nginx-service</span><br><span class="line">$ kubectl describe service nginx-service</span><br></pre></td></tr></table></figure>
+<h4 id="2-2-4、故障排查"><a href="#2-2-4、故障排查" class="headerlink" title="2.2.4、故障排查"></a>2.2.4、故障排查</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl describe TYPE NAME_PREFIX</span><br><span class="line">$ kubectl logs nginx-xxx</span><br><span class="line">$ kubectl exec -it nginx-xxx bash</span><br></pre></td></tr></table></figure>
+<h4 id="2-2-5、更新"><a href="#2-2-5、更新" class="headerlink" title="2.2.5、更新"></a>2.2.5、更新</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">$ kubectl set image deployment/nginx nginx=nginx:1.11</span><br><span class="line">$ kubectl set image deployment/nginx nginx=nginx:1.12  --record # 滚动升级，记录操作命令（生产必须使用）</span><br><span class="line">or</span><br><span class="line">$ kubectl edit deployment/nginx</span><br></pre></td></tr></table></figure>
+<h4 id="2-2-6、回滚"><a href="#2-2-6、回滚" class="headerlink" title="2.2.6、回滚"></a>2.2.6、回滚</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl rollout history deploy/nginx # 查看更新历史记录</span><br><span class="line">$ kubectl rollout status deploy/nginx # 查看更新状态</span><br><span class="line"></span><br><span class="line">$ kubectl rollout undo deployment/nginx-deployment # 回滚到前一个版本</span><br><span class="line">$ kubectl rollout undo deployment/nginx-deployment --to-revision NUM  # 指定回滚到哪个版本</span><br></pre></td></tr></table></figure>
+<h4 id="2-2-7、删除"><a href="#2-2-7、删除" class="headerlink" title="2.2.7、删除"></a>2.2.7、删除</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl delete deploy/nginx</span><br><span class="line">$ kubectl delete svc/nginx-service</span><br></pre></td></tr></table></figure>
+<h3 id="3、Pod扩容"><a href="#3、Pod扩容" class="headerlink" title="3、Pod扩容"></a>3、Pod扩容</h3><p>Usage:<br>  kubectl scale [–resource-version=version] [–current-replicas=count] –replicas=COUNT (-f FILENAME | TYPE NAME)</p>
+<p>1、将名为foo的副本缩容到3<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl scale --replicas=3 rs/foo</span><br></pre></td></tr></table></figure></p>
+<p>2、从yaml文件中进行缩容<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl scale --replicas=3 -f foo.yaml</span><br></pre></td></tr></table></figure></p>
+<p>3、如果deployment名为mysql的当前副本集是2，那么扩容到3<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl scale --current-replicas=2 --replicas=3 deployment/mysql</span><br></pre></td></tr></table></figure></p>
+<p>参考文章：</p>
+<ul>
+<li><a href="https://www.kubernetes.org.cn/4060.html" target="_blank" rel="noopener">Kubernetes-kubectl命令行工具</a></li>
+</ul>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+<div>    
+ 
+ 
+    <ul class="post-copyright">
+      <li class="post-copyright-author">
+          <strong>本文作者：</strong>开元
+      </li>
+      <li class="post-copyright-link">
+        <strong>本文链接：</strong>
+        <a href="/2019/06/14/kubernetes系列之《Kubectl管理工具常用方法》.html" title="kubernetes系列之《Kubectl管理工具常用方法》">2019/06/14/kubernetes系列之《Kubectl管理工具常用方法》.html</a>
+      </li>
+      <li class="post-copyright-license">
+        <strong>版权声明： </strong>
+        <!--Copyright©2018 NICKSORS.CC 版权所有 未经许可 请勿转载 -->
+	本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0 CN</a> 许可协议。转载请注明出处!
+      </li>
+    </ul>
+  
+</div>
+
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Kubernetes/" rel="tag"><i class="fa fa-tag"></i> Kubernetes</a>
+          
+            <a href="/tags/Kubectl/" rel="tag"><i class="fa fa-tag"></i> Kubectl</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/06/14/kubernetes系列之《使用Kubeadm快速部署集群》.html" rel="next" title="kubernetes系列之《使用Kubeadm快速部署集群》">
+                <i class="fa fa-chevron-left"></i> kubernetes系列之《使用Kubeadm快速部署集群》
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/static/images/stark.jpg"
+                alt="开元" />
+            
+              <p class="site-author-name" itemprop="name">开元</p>
+              <p class="site-description motion-element" itemprop="description">知识管理，时间管理，自我管理</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">29</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">8</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">29</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/nicksors" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.hi-linux.com/" title="运维之美" target="_blank">运维之美</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、kubectl高可用"><span class="nav-number">1.</span> <span class="nav-text">一、kubectl高可用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1、kubectl访问细节"><span class="nav-number">1.1.</span> <span class="nav-text">1.1、kubectl访问细节</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2、部署kubectl"><span class="nav-number">1.2.</span> <span class="nav-text">1.2、部署kubectl</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3、运行kubectl"><span class="nav-number">1.3.</span> <span class="nav-text">1.3、运行kubectl</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-1、拷贝需要的证书文件"><span class="nav-number">1.3.1.</span> <span class="nav-text">1.3.1、拷贝需要的证书文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-2、生成-kube-config文件"><span class="nav-number">1.3.2.</span> <span class="nav-text">1.3.2、生成.kube/config文件</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4、访问k8s集群"><span class="nav-number">1.4.</span> <span class="nav-text">1.4、访问k8s集群</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、kubectl命令"><span class="nav-number">2.</span> <span class="nav-text">二、kubectl命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1、kubectl命令分类表"><span class="nav-number">2.1.</span> <span class="nav-text">2.1、kubectl命令分类表</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-2、部署命令"><span class="nav-number">2.1.1.</span> <span class="nav-text">2.1.2、部署命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-3、集群管理命令（不常用）"><span class="nav-number">2.1.2.</span> <span class="nav-text">2.1.3、集群管理命令（不常用）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-4、故障诊断和调试命令（常用）"><span class="nav-number">2.1.3.</span> <span class="nav-text">2.1.4、故障诊断和调试命令（常用）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-5、高级命令"><span class="nav-number">2.1.4.</span> <span class="nav-text">2.1.5、高级命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-6、设置命令"><span class="nav-number">2.1.5.</span> <span class="nav-text">2.1.6、设置命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-7、其他命令"><span class="nav-number">2.1.6.</span> <span class="nav-text">2.1.7、其他命令</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2、kubectl命令实践"><span class="nav-number">2.2.</span> <span class="nav-text">2.2、kubectl命令实践</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-1、创建"><span class="nav-number">2.2.1.</span> <span class="nav-text">2.2.1、创建</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-2、查看"><span class="nav-number">2.2.2.</span> <span class="nav-text">2.2.2、查看</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-3、发布"><span class="nav-number">2.2.3.</span> <span class="nav-text">2.2.3、发布</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-4、故障排查"><span class="nav-number">2.2.4.</span> <span class="nav-text">2.2.4、故障排查</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-5、更新"><span class="nav-number">2.2.5.</span> <span class="nav-text">2.2.5、更新</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-6、回滚"><span class="nav-number">2.2.6.</span> <span class="nav-text">2.2.6、回滚</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-7、删除"><span class="nav-number">2.2.7.</span> <span class="nav-text">2.2.7、删除</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、Pod扩容"><span class="nav-number">2.3.</span> <span class="nav-text">3、Pod扩容</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">开元</span>
+
+
+  
+
+  
+</div>
+
+
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  访问用户:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<div class="powered-by">
+<i class="fa fa-eye"></i><span id="busuanzi_container_site_pv">
+   访问量:<span id="busuanzi_value_site_pv"></span>
+</span>
+</div>
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">全站共58.3k字</span>
+</div>
+
+<!--
+<span class="post-meta-divider">|</span>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Mist</div>
+
+
+
+-->
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<!--<script type="text/javascript" src="/js/src/love.js"></script>-->

@@ -132,7 +132,7 @@
 <meta property="og:description" content="1、创建一个Pod的流程（面试易考）">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="//blog.nicksors.cc/2019/06/18/kubernetes系列之《Pod》/createPod.jpg">
-<meta property="og:updated_time" content="2019-06-18T03:54:43.001Z">
+<meta property="og:updated_time" content="2019-06-21T05:56:15.798Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="kubernetes系列之《Pod》">
 <meta name="twitter:description" content="1、创建一个Pod的流程（面试易考）">
@@ -392,12 +392,24 @@
                 
               
 
-              <time title="创建时间：2019-06-18 11:48:47 / 修改时间：11:54:43" itemprop="dateCreated datePublished" datetime="2019-06-18T11:48:47+08:00">2019-06-18</time>
+              <time title="创建时间：2019-06-18 11:48:47" itemprop="dateCreated datePublished" datetime="2019-06-18T11:48:47+08:00">2019-06-18</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-06-21 13:56:15" itemprop="dateModified" datetime="2019-06-21T13:56:15+08:00">2019-06-21</time>
               
             
           </span>
@@ -450,7 +462,7 @@
 <a id="more"></a>
 <p>用户通过kubectl命令创建一个Pod的流程：</p>
 <ol>
-<li>客户端提交创建请求，可以通过API Server的Rest福利 API，也可以使用kubelet工具，支持json和yaml格式；</li>
+<li>客户端提交创建请求，可以通过API Server的Restful API，也可以使用kubectl工具，支持json和yaml格式；</li>
 <li>Api Server处理用户请求，存储Pod信息数据到etcd集群中；</li>
 <li>Scheduler调度器通过API Server查看未绑定的Pod，尝试为Pod进行分配主机，通过调度算法选择主机后，绑定到这台机器上并且把调度信息写入etcd集群；</li>
 <li>kubelet根据调度结果执行Pod创建操作，成功后将信息通过Api Server更新到etcd集群中；</li>
@@ -590,6 +602,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2019/06/21/kubernetes系列之《Service》.html" rel="prev" title="kubernetes系列之《Service》">
+                kubernetes系列之《Service》 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -662,7 +678,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">31</span>
+                    <span class="site-state-item-count">32</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -766,7 +782,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">31</span>
+                      
+                    
+                    <span class="site-state-item-count">32</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -882,7 +900,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">全站共60.1k字</span>
+  <span class="post-count">全站共61.8k字</span>
 </div>
 
 <!--

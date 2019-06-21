@@ -123,24 +123,29 @@
 
 
 
-  <meta name="description" content="知识管理，时间管理，自我管理">
-<meta name="keywords" content="Geek,Developer,Python,Django,Flask,Html,Css,Js,Jq,Bootstrap,Vue,Ops,ELKF,OpenStack,K8s,Docker,Ceph,FastDFS,GlusterFS,Gentoo">
-<meta property="og:type" content="website">
-<meta property="og:title" content="开元DevOps知识库">
-<meta property="og:url" content="//blog.nicksors.cc/tags/flanneld/index.html">
+  <meta name="description" content="简单了解Service：  防止Pod失去联系（服务发现） 定义一组Pod的访问策略（负载均衡） 支持ClusterIP，NodePort以及LoadBalancer三种类型 Service的底层实现主要有iptables和ipvs两种网络模式   Services在kubenetes中，是帮助Pod提供网络服务的。比如你要访问Pod里的应用，需要通过端口来访问，而Service可以通过端口代理">
+<meta name="keywords" content="Service">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kubernetes系列之《Service》">
+<meta property="og:url" content="//blog.nicksors.cc/2019/06/21/kubernetes系列之《Service》.html">
 <meta property="og:site_name" content="开元DevOps知识库">
-<meta property="og:description" content="知识管理，时间管理，自我管理">
+<meta property="og:description" content="简单了解Service：  防止Pod失去联系（服务发现） 定义一组Pod的访问策略（负载均衡） 支持ClusterIP，NodePort以及LoadBalancer三种类型 Service的底层实现主要有iptables和ipvs两种网络模式   Services在kubenetes中，是帮助Pod提供网络服务的。比如你要访问Pod里的应用，需要通过端口来访问，而Service可以通过端口代理">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://d33wubrfki0l68.cloudfront.net/e351b830334b8622a700a8da6568cb081c464a9b/13020/images/docs/services-userspace-overview.svg">
+<meta property="og:image" content="https://d33wubrfki0l68.cloudfront.net/27b2978647a8d7bdc2a96b213f0c0d3242ef9ce0/e8c9b/images/docs/services-iptables-overview.svg">
+<meta property="og:image" content="https://d33wubrfki0l68.cloudfront.net/2d3d2b521cf7f9ff83238218dac1c019c270b1ed/9ac5c/images/docs/services-ipvs-overview.svg">
+<meta property="og:updated_time" content="2019-06-21T07:07:41.827Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="开元DevOps知识库">
-<meta name="twitter:description" content="知识管理，时间管理，自我管理">
+<meta name="twitter:title" content="kubernetes系列之《Service》">
+<meta name="twitter:description" content="简单了解Service：  防止Pod失去联系（服务发现） 定义一组Pod的访问策略（负载均衡） 支持ClusterIP，NodePort以及LoadBalancer三种类型 Service的底层实现主要有iptables和ipvs两种网络模式   Services在kubenetes中，是帮助Pod提供网络服务的。比如你要访问Pod里的应用，需要通过端口来访问，而Service可以通过端口代理">
+<meta name="twitter:image" content="https://d33wubrfki0l68.cloudfront.net/e351b830334b8622a700a8da6568cb081c464a9b/13020/images/docs/services-userspace-overview.svg">
 
 
 
 
 
 
-  <link rel="canonical" href="//blog.nicksors.cc/tags/flanneld/"/>
+  <link rel="canonical" href="//blog.nicksors.cc/2019/06/21/kubernetes系列之《Service》.html"/>
 
 
 
@@ -150,7 +155,7 @@
   };
 </script>
 
-  <title>标签: flanneld | 开元DevOps知识库</title>
+  <title>kubernetes系列之《Service》 | 开元DevOps知识库</title>
   
 
 
@@ -197,7 +202,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 <a href="https://github.com/nicksors"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
 
@@ -247,7 +252,7 @@
         
         
           
-          <li class="menu-item menu-item-tags menu-item-active">
+          <li class="menu-item menu-item-tags">
     <a href="/tags/" rel="section">
       <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
   </li>
@@ -283,25 +288,6 @@
 
   
     
-
-    
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-    
-
-  
-
 
   
 
@@ -350,82 +336,279 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>flanneld<small>标签</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
+
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="//blog.nicksors.cc/2019/06/21/kubernetes系列之《Service》.html">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="开元">
+      <meta itemprop="description" content="知识管理，时间管理，自我管理">
+      <meta itemprop="image" content="/static/images/stark.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="开元DevOps知识库">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2019/06/11/kubernetes系列之《集群部署（下）》.html" itemprop="url">
-              
-                <span itemprop="name">kubernetes系列之《集群部署（下）》.md</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">kubernetes系列之《Service》
+              
+            
+          </h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-06-11T14:18:22+08:00"
-              content="2019-06-11" >
-          06-11
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
 
-    </header>
-  </article>
+            
+            
+            
 
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-06-21 13:56:08 / 修改时间：15:07:41" itemprop="dateCreated datePublished" datetime="2019-06-21T13:56:08+08:00">2019-06-21</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Kubernetes/" itemprop="url" rel="index"><span itemprop="name">Kubernetes</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-        
+      
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2019/06/11/kubernetes系列之《集群部署（上）》.html" itemprop="url">
-              
-                <span itemprop="name">kubernetes系列之《集群部署（上）》.md</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-06-11T12:18:14+08:00"
-              content="2019-06-11" >
-          06-11
-        </time>
-      </div>
-
-    </header>
-  </article>
-
+      
+        <blockquote>
+<p>简单了解Service：</p>
+<ul>
+<li>防止Pod失去联系（服务发现）</li>
+<li>定义一组Pod的访问策略（负载均衡）</li>
+<li>支持ClusterIP，NodePort以及LoadBalancer三种类型</li>
+<li><code>Service的底层实现主要有iptables和ipvs两种网络模式</code></li>
+</ul>
+</blockquote>
+<p>Services在kubenetes中，是帮助Pod提供网络服务的。比如你要访问Pod里的应用，需要通过端口来访问，而Service可以通过端口代理转发，让你通过Node节点上的端口能够访问到你的Pod应用。</p>
+<a id="more"></a>
+<h2 id="一、Pod与Service的关系"><a href="#一、Pod与Service的关系" class="headerlink" title="一、Pod与Service的关系"></a>一、Pod与Service的关系</h2><ul>
+<li>通过lable-selector相关联</li>
+<li>通过Service实现Pod的负载均衡（TCP/UDP 4层）</li>
+</ul>
+<p>Yaml配置文件例子：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-128 dome]# cat deploy-nginx.yaml</span><br><span class="line">apiVersion: apps/v1</span><br><span class="line">kind: Deployment</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx-deployment</span><br><span class="line">  labels:   # 这里是定义Deployment的标签</span><br><span class="line">    app: nginx</span><br><span class="line">spec:</span><br><span class="line">  replicas: 3</span><br><span class="line">  selector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      app: nginx # 选择关联Deployment标签</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      labels:  # 给Pod定义一个标签，方便其他服务关联这个Pod</span><br><span class="line">        app: nginx</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">      - name: nginx</span><br><span class="line">        image: nginx:1.7.9</span><br><span class="line">        ports:</span><br><span class="line">        - containerPort: 80</span><br><span class="line">---</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx-service</span><br><span class="line">spec:</span><br><span class="line">  selector:   # Service 的selector 指定标签 app:nginx 来进行对Pod进行关联 ；(这里的app:nginx就是上面Deployment配置里labels定义的标签 )</span><br><span class="line">    app: nginx</span><br><span class="line">  ports:</span><br><span class="line">  - protocol: TCP</span><br><span class="line">    port: 80</span><br><span class="line">    targetPort: 80</span><br><span class="line">  type: NodePort</span><br></pre></td></tr></table></figure></p>
+<p>可以通过以下方式查看Service与Pod的关联：</p>
+<p>首先查看创建的Service，通过-o wide输出详细信息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-128 dome]# kubectl get svc -o wide</span><br><span class="line">NAME TYPE CLUSTER-IP EXTERNAL-IP PORT(S) AGE SELECTOR</span><br><span class="line">kubernetes ClusterIP 10.1.0.1 &lt;none&gt; 443/TCP 5d5h &lt;none&gt;</span><br><span class="line">nginx-service NodePort 10.1.230.224 &lt;none&gt; 80:30234/TCP 24h app=nginx</span><br></pre></td></tr></table></figure></p>
+<p>通过 kubectl describe pod 查看pod的详情，里面就有标签信息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-128 dome]# kubectl describe pod nginx-deployment-6dd86d77d-kxkmt</span><br><span class="line">Name: nginx-deployment-6dd86d77d-kxkmt</span><br><span class="line">Namespace: default</span><br><span class="line">Priority: 0</span><br><span class="line">PriorityClassName: &lt;none&gt;</span><br><span class="line">Node: k8s-node-130/172.16.194.130</span><br><span class="line">Start Time: Mon, 20 May 2019 16:30:32 +0800</span><br><span class="line">Labels: app=nginx  # 这里就是pod定义的标签</span><br><span class="line">                    pod-template-hash=6dd86d77d</span><br><span class="line">Annotations: &lt;none&gt;</span><br><span class="line">Status: Running</span><br><span class="line">IP: 10.244.2.14</span><br><span class="line">Controlled By: ReplicaSet/nginx-deployment-6dd86d77d</span><br><span class="line">···略···</span><br></pre></td></tr></table></figure></p>
+<p>也可以通过-o wide查看Deployment的标签信息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-128 dome]# kubectl get deploy -o wide</span><br><span class="line">NAME READY UP-TO-DATE AVAILABLE AGE CONTAINERS IMAGES SELECTOR</span><br><span class="line">nginx-deployment 3/3 3 3 24h nginx nginx:1.7.9 app=nginx</span><br></pre></td></tr></table></figure></p>
+<h2 id="二、Service的三种类型"><a href="#二、Service的三种类型" class="headerlink" title="二、Service的三种类型"></a>二、Service的三种类型</h2><p>发布的服务类型有三种：ClusterIP、NodePort和LoadBalancer<br>官网地址：<a href="https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types" target="_blank" rel="noopener">https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types</a></p>
+<h3 id="2-1、ClusterIP"><a href="#2-1、ClusterIP" class="headerlink" title="2.1、ClusterIP"></a>2.1、ClusterIP</h3><p> 分配一个内部集群IP地址，只能在集群内部访问（同Namespaces内的Pod），不对外提供访问服务！默认ServiceTpye。</p>
+<p>来看一个示例说明：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-128 dome]# cat service-nginx.yaml</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx-service</span><br><span class="line">spec:</span><br><span class="line">  selector:</span><br><span class="line">    app: nginx</span><br><span class="line">  ports:</span><br><span class="line">  - protocol: TCP</span><br><span class="line">    port: 80</span><br><span class="line">    targetPort: 80</span><br><span class="line"></span><br><span class="line">[root@k8s-master-128 dome]# kubectl get svc</span><br><span class="line">NAME TYPE CLUSTER-IP EXTERNAL-IP PORT(S) AGE</span><br><span class="line">kubernetes ClusterIP 10.1.0.1 &lt;none&gt; 443/TCP 5d5h</span><br><span class="line">nginx-service ClusterIP 10.1.0.32  &lt;none&gt;  80/TCP 24h</span><br></pre></td></tr></table></figure></p>
+<p>我们能看到CLUSTER-IP下显示着 Service所提供集群内部使用的IP地址，这个地址只能在k8s集群内部访问哦！<br>再看PORT(S)字段：80/TCP</p>
+<ul>
+<li>80是暴露给集群的端口，通过集群ip加端口可以访问：curl <a href="http://10.1.0.32:80" target="_blank" rel="noopener">http://10.1.0.32:80</a></li>
+</ul>
+<p>Node节点上能查看到创建的iptables规则：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-node-129 ~]# iptables-save |grep 10.1.0.32</span><br><span class="line">-A KUBE-SERVICES ! -s 10.244.0.0/16 -d 10.1.0.32/32 -p tcp -m comment --comment &quot;default/nginx-service: cluster IP&quot; -m tcp --dport 80 -j KUBE-MARK-MASQ</span><br><span class="line">-A KUBE-SERVICES -d 10.1.0.32/32 -p tcp -m comment --comment &quot;default/nginx-service: cluster IP&quot; -m tcp --dport 80 -j KUBE-SVC-GKN7Y2BSGW4NJTYL</span><br></pre></td></tr></table></figure></p>
+<p>能看到我们创建了Service后，在所有Node节点上都会自动创建转发规则，来实现Pod的网络访问。</p>
+<h3 id="2-2、NodePort"><a href="#2-2、NodePort" class="headerlink" title="2.2、NodePort"></a>2.2、NodePort</h3><p> 分配一个内网集群IP地址，并在内个节点上启用一个端口来暴露服务，可以在集群外部访问。<br> 访问地址：<nodeip>:<nodeport></nodeport></nodeip></p>
+<p>接上面ClusterIP的官网Yaml示例，继续研究NodePort：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  name: my-service</span><br><span class="line">spec:</span><br><span class="line">  selector:</span><br><span class="line">    app: MyApp</span><br><span class="line">  ports:</span><br><span class="line">  - protocol: TCP</span><br><span class="line">    port: 80 # 需要暴露的集群端口</span><br><span class="line">    targetPort: 9376  # 容器的端口</span><br><span class="line">  type: NodePort</span><br></pre></td></tr></table></figure></p>
+<p>上面说过Service默认的类型是ClusterIP，如果需更改成NodePort类型，则需要将type字段指定类型即可；</p>
+<p>说说type: NodePort<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-128 dome]# kubectl get svc -o wide</span><br><span class="line">NAME TYPE CLUSTER-IP EXTERNAL-IP PORT(S) AGE SELECTOR</span><br><span class="line">kubernetes ClusterIP 10.1.0.1 &lt;none&gt; 443/TCP 5d6h &lt;none&gt;</span><br><span class="line">nginx-service NodePort 10.1.230.224 &lt;none&gt; 80:30234/TCP 25h app=nginx</span><br><span class="line"># 创建出来的NodePort服务，也会有一个cluster ip；</span><br></pre></td></tr></table></figure></p>
+<p>根据上面的信息，nginx-service这个服务的NodePort所对应的则是30234，而这个端口是在Node节点上由kube-proxy来启动并监听的，因此我们可以通过NodeIP+端口的方式直接进行访问，就是因为kube-proxy进行了代理。<br>继续扩展说明，kube-proxy是如何代理访问到容器的呢？因为kube-proxy在启动的时候通过<code>--proxy-mode=ipvs</code>可以指定底层内核代理模式，默认是iptables进行代理转发，kube-proxy通过这两种模式来代理直接对外提供服务。</p>
+<h3 id="2-3、LoadBalancer"><a href="#2-3、LoadBalancer" class="headerlink" title="2.3、LoadBalancer"></a>2.3、LoadBalancer</h3><p>分配一个内部集群IP地址，并在每个节点上启用一个端口来暴露服务。<br>除此之外，Kubernetes会请求底层云平台上的负载均衡器，将每个Node（[NodeIP]:[NodePort]）作为后端添加进去。</p>
+<p>LoadBalancer只适用于云平台，AWS默认就支持，阿里云社区开发也支持。</p>
+<h2 id="三、Service代理模式"><a href="#三、Service代理模式" class="headerlink" title="三、Service代理模式"></a>三、Service代理模式</h2><p>service有三组代理模式：userspace、iptables和ipvs</p>
+<h3 id="3-1、Userspace模式"><a href="#3-1、Userspace模式" class="headerlink" title="3.1、Userspace模式"></a>3.1、Userspace模式</h3><ol>
+<li>客户端访问ServiceIP，ServiceIP将请求交给了kube-proxy，然后分发到Pod进行通讯。</li>
+<li>多了kube-proxy转发，效率较低！kube-proxy工作在用户态，故是Userspace模式。<br><img src="https://d33wubrfki0l68.cloudfront.net/e351b830334b8622a700a8da6568cb081c464a9b/13020/images/docs/services-userspace-overview.svg" alt=""></li>
+</ol>
+<h3 id="3-2、Iptables模式"><a href="#3-2、Iptables模式" class="headerlink" title="3.2、Iptables模式"></a>3.2、Iptables模式</h3><ol>
+<li>客户端访问ServiceIP，通过iptables转发给Pod。1.9x版本默认代理模式。</li>
+<li>iptables基于linux内核（Netfilet）实现的，运行在内核态，内核直接处理请求，因此效率较高。<br><img src="https://d33wubrfki0l68.cloudfront.net/27b2978647a8d7bdc2a96b213f0c0d3242ef9ce0/e8c9b/images/docs/services-iptables-overview.svg" alt=""></li>
+</ol>
+<h3 id="3-3、Ipvs模式"><a href="#3-3、Ipvs模式" class="headerlink" title="3.3、Ipvs模式"></a>3.3、Ipvs模式</h3><ol>
+<li>ipvs在k8s1.10以上版本中，将会是默认代理模式。</li>
+<li>客户端访问ServierIP，通过虚拟服务器将请求转发给RS(也就是Pod)，该模式采用LVS技术，早在linux发行版本中就已将lvs嵌入进去，lvs运行在内核态，处理效率相比上面两个是最优的。<br><img src="https://d33wubrfki0l68.cloudfront.net/2d3d2b521cf7f9ff83238218dac1c019c270b1ed/9ac5c/images/docs/services-ipvs-overview.svg" alt=""></li>
+</ol>
+<h3 id="3-4、Iptables模式-vs-Ipvs模式"><a href="#3-4、Iptables模式-vs-Ipvs模式" class="headerlink" title="3.4、Iptables模式 vs Ipvs模式"></a>3.4、Iptables模式 vs Ipvs模式</h3><p>目前用到最多的就是这两个模式，上面也提到了ipvs会是将来版本中默认的代理模式，这里进行简单的对比：</p>
+<ul>
+<li>iptables：<ul>
+<li>灵活性，功能强大</li>
+<li>规则遍历匹配和更新,呈线性延迟</li>
+<li>可扩展性</li>
+</ul>
+</li>
+<li>ipvs：<ul>
+<li>工作在内核，有更高的性能</li>
+<li>调度算法丰富：rr, wrr, lc, wlc, ip hash；LVS的调度算法皆可用</li>
+</ul>
+</li>
+</ul>
+<p>参考文章：</p>
+<ul>
+<li><a href="https://www.kubernetes.org.cn/4040.html" target="_blank" rel="noopener">Kubernetes-核心资源之Service</a></li>
+<li><a href="https://www.cnblogs.com/xzkzzz/p/9559362.html" target="_blank" rel="noopener">Kubernetes之服务发现及负载Services</a></li>
+</ul>
 
       
     </div>
 
+    
+
+    
+    
+    
+
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+<div>    
+ 
+ 
+    <ul class="post-copyright">
+      <li class="post-copyright-author">
+          <strong>本文作者：</strong>开元
+      </li>
+      <li class="post-copyright-link">
+        <strong>本文链接：</strong>
+        <a href="/2019/06/21/kubernetes系列之《Service》.html" title="kubernetes系列之《Service》">2019/06/21/kubernetes系列之《Service》.html</a>
+      </li>
+      <li class="post-copyright-license">
+        <strong>版权声明： </strong>
+        <!--Copyright©2018 NICKSORS.CC 版权所有 未经许可 请勿转载 -->
+	本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0 CN</a> 许可协议。转载请注明出处!
+      </li>
+    </ul>
+  
+</div>
+
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Service/" rel="tag"><i class="fa fa-tag"></i> Service</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/06/18/kubernetes系列之《Pod》.html" rel="next" title="kubernetes系列之《Pod》">
+                <i class="fa fa-chevron-left"></i> kubernetes系列之《Pod》
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -450,8 +633,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -626,6 +818,22 @@
       </section>
 
       
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、Pod与Service的关系"><span class="nav-number">1.</span> <span class="nav-text">一、Pod与Service的关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、Service的三种类型"><span class="nav-number">2.</span> <span class="nav-text">二、Service的三种类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1、ClusterIP"><span class="nav-number">2.1.</span> <span class="nav-text">2.1、ClusterIP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2、NodePort"><span class="nav-number">2.2.</span> <span class="nav-text">2.2、NodePort</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3、LoadBalancer"><span class="nav-number">2.3.</span> <span class="nav-text">2.3、LoadBalancer</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、Service代理模式"><span class="nav-number">3.</span> <span class="nav-text">三、Service代理模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1、Userspace模式"><span class="nav-number">3.1.</span> <span class="nav-text">3.1、Userspace模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2、Iptables模式"><span class="nav-number">3.2.</span> <span class="nav-text">3.2、Iptables模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3、Ipvs模式"><span class="nav-number">3.3.</span> <span class="nav-text">3.3、Ipvs模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4、Iptables模式-vs-Ipvs模式"><span class="nav-number">3.4.</span> <span class="nav-text">3.4、Iptables模式 vs Ipvs模式</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
 
       
 
@@ -784,6 +992,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
 
   
 

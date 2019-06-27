@@ -123,29 +123,25 @@
 
 
 
-  <meta name="description" content="最近一直在做开源项目，该项目需要使用消息中间件来转储下日志、消息、监控数据、服务器上报等数据，因此调研了下业界开源的消息队列，大致有：Kafka、Redis、Zeromq、Rebbitmq、NSQ等等；">
-<meta name="keywords" content="NSQ">
+  <meta name="description" content="1、了解k8s的Volume官网：https://kubernetes.io/docs/concepts/storage/volumes/  kubernetes中的Volume提供了在容器中挂载外部存储的能力，Pod需要设置卷来源（spec.volume）和挂载点（spec.containers.volumeMounts）良哥信息后才可以使用相应的Volume  volume根据使用可以分为以下">
+<meta name="keywords" content="Service">
 <meta property="og:type" content="article">
-<meta property="og:title" content="消息队列之《01.NSQ理论篇》">
-<meta property="og:url" content="//blog.nicksors.cc/2018/08/15/消息队列之《01-NSQ理论篇》.html">
+<meta property="og:title" content="kubernetes系列之《Volume》">
+<meta property="og:url" content="//blog.nicksors.cc/2019/06/27/kubernetes系列之《Volume》.html">
 <meta property="og:site_name" content="开元DevOps知识库">
-<meta property="og:description" content="最近一直在做开源项目，该项目需要使用消息中间件来转储下日志、消息、监控数据、服务器上报等数据，因此调研了下业界开源的消息队列，大致有：Kafka、Redis、Zeromq、Rebbitmq、NSQ等等；">
+<meta property="og:description" content="1、了解k8s的Volume官网：https://kubernetes.io/docs/concepts/storage/volumes/  kubernetes中的Volume提供了在容器中挂载外部存储的能力，Pod需要设置卷来源（spec.volume）和挂载点（spec.containers.volumeMounts）良哥信息后才可以使用相应的Volume  volume根据使用可以分为以下">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="//blog.nicksors.cc/2018/08/15/消息队列之《01-NSQ理论篇》/消息队列对比图.png">
-<meta property="og:image" content="//blog.nicksors.cc/2018/08/15/消息队列之《01-NSQ理论篇》/channel.gif">
-<meta property="og:image" content="//blog.nicksors.cc/2018/08/15/消息队列之《01-NSQ理论篇》/clipboard.png">
-<meta property="og:updated_time" content="2018-08-15T10:28:36.235Z">
+<meta property="og:updated_time" content="2019-06-27T08:25:38.935Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="消息队列之《01.NSQ理论篇》">
-<meta name="twitter:description" content="最近一直在做开源项目，该项目需要使用消息中间件来转储下日志、消息、监控数据、服务器上报等数据，因此调研了下业界开源的消息队列，大致有：Kafka、Redis、Zeromq、Rebbitmq、NSQ等等；">
-<meta name="twitter:image" content="//blog.nicksors.cc/2018/08/15/消息队列之《01-NSQ理论篇》/消息队列对比图.png">
+<meta name="twitter:title" content="kubernetes系列之《Volume》">
+<meta name="twitter:description" content="1、了解k8s的Volume官网：https://kubernetes.io/docs/concepts/storage/volumes/  kubernetes中的Volume提供了在容器中挂载外部存储的能力，Pod需要设置卷来源（spec.volume）和挂载点（spec.containers.volumeMounts）良哥信息后才可以使用相应的Volume  volume根据使用可以分为以下">
 
 
 
 
 
 
-  <link rel="canonical" href="//blog.nicksors.cc/2018/08/15/消息队列之《01-NSQ理论篇》.html"/>
+  <link rel="canonical" href="//blog.nicksors.cc/2019/06/27/kubernetes系列之《Volume》.html"/>
 
 
 
@@ -155,7 +151,7 @@
   };
 </script>
 
-  <title>消息队列之《01.NSQ理论篇》 | 开元DevOps知识库</title>
+  <title>kubernetes系列之《Volume》 | 开元DevOps知识库</title>
   
 
 
@@ -352,7 +348,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="//blog.nicksors.cc/2018/08/15/消息队列之《01-NSQ理论篇》.html">
+    <link itemprop="mainEntityOfPage" href="//blog.nicksors.cc/2019/06/27/kubernetes系列之《Volume》.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="开元">
@@ -369,7 +365,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">消息队列之《01.NSQ理论篇》
+          <h1 class="post-title" itemprop="name headline">kubernetes系列之《Volume》
               
             
           </h1>
@@ -394,7 +390,7 @@
                 
               
 
-              <time title="创建时间：2018-08-15 18:15:42 / 修改时间：18:28:36" itemprop="dateCreated datePublished" datetime="2018-08-15T18:15:42+08:00">2018-08-15</time>
+              <time title="创建时间：2019-06-27 15:56:59 / 修改时间：16:25:38" itemprop="dateCreated datePublished" datetime="2019-06-27T15:56:59+08:00">2019-06-27</time>
             
 
             
@@ -416,7 +412,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/消息队列/" itemprop="url" rel="index"><span itemprop="name">消息队列</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/kubernetes/" itemprop="url" rel="index"><span itemprop="name">kubernetes</span></a></span>
 
                 
                 
@@ -448,62 +444,67 @@
       
 
       
-        <blockquote>
-<p>最近一直在做开源项目，该项目需要使用消息中间件来转储下日志、消息、监控数据、服务器上报等数据，<br>因此调研了下业界开源的消息队列，大致有：Kafka、Redis、Zeromq、Rebbitmq、NSQ等等；</p>
+        <h2 id="1、了解k8s的Volume"><a href="#1、了解k8s的Volume" class="headerlink" title="1、了解k8s的Volume"></a>1、了解k8s的Volume</h2><p>官网：<a href="https://kubernetes.io/docs/concepts/storage/volumes/" target="_blank" rel="noopener">https://kubernetes.io/docs/concepts/storage/volumes/</a></p>
+<blockquote>
+<p>kubernetes中的Volume提供了在容器中挂载外部存储的能力，Pod需要设置卷来源（spec.volume）和挂载点（spec.containers.volumeMounts）良哥信息后才可以使用相应的Volume</p>
 </blockquote>
-<a id="more"></a>
-<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>考虑到开发周期的快速迭代，没办法把以上所有队列都通透研究一遍，初步跟开源团队讨论了下，且我司也有大规模使用NSQ的场景，于是我们就决定先将NSQ吃透，NSQ在分布式和实时上确实有一定的优势，也许其他队列简单能满足我们的需求，但“杀鸡用牛刀”也是我们想去尝试的，毕竟我们的开源项目都是尊崇所用到的技术都是业界最牛逼的开源解决方案。</p>
-<h3 id="NSQ与其他队列对比图"><a href="#NSQ与其他队列对比图" class="headerlink" title="NSQ与其他队列对比图"></a>NSQ与其他队列对比图</h3><img src="/2018/08/15/消息队列之《01-NSQ理论篇》/消息队列对比图.png" title="消息队列对比图">
-<p>(图片来之golang2017开发者大会)</p>
-<h3 id="NSQ介绍"><a href="#NSQ介绍" class="headerlink" title="NSQ介绍"></a>NSQ介绍</h3><ol>
-<li>NSQ是一个基于Go语言的分布式实时平台，代码托管在<a href="https://github.com/nsqio/nsq" target="_blank" rel="noopener">GitHub</a>。</li>
-<li>NSQ可用于大规模系统中的实时消息服务，并且每天能够处理数亿级别的消息。</li>
-<li>NSQ具有分布式、去中心化的拓扑结构，该结构具有无单点故障、故障容错、高可用性以及能够保障消息的可靠传输的特征。</li>
-<li>NSQ非常容易配置和部署，且具有最大的灵活性，支持众多消息协议。</li>
+<p>volume根据使用可以分为以下三类：</p>
+<ol>
+<li>Volume本地和网络数据卷</li>
+<li>Persistent Volume 持久数据卷</li>
+<li>Persistent Volume 动态供给 数据卷</li>
 </ol>
-<h3 id="NSQ服务端介绍"><a href="#NSQ服务端介绍" class="headerlink" title="NSQ服务端介绍"></a>NSQ服务端介绍</h3><p>在使用NSQ服务之前，还是有必要了解下NSQ的几个核心组件，整个NSQ服务包含三个主要部分</p>
-<h4 id="nsqlookupd"><a href="#nsqlookupd" class="headerlink" title="nsqlookupd"></a>nsqlookupd</h4><p>先看看官网的介绍：</p>
-<p>nsqdlookup是守护进程负责管理拓扑信息，客户端通过查询nsqlookupd来发现指定话题(topic)的生产者，并且nsqd节点广播话题(topic)和通道(channel)信息</p>
-<p>简单的理解：nsqlookupd就是中心管理服务，它使用tc(默认度那可4160)管理nsqd服务，使用http(默认端口4161)管理nsqadmin服务，同事为客户端提供查询服务。</p>
-<p>总的来说，nsqlookupd具有以下功能或特性：</p>
+<p>本地数据卷：emptrDir、hostPath<br>网络数据卷：NFS</p>
+<h2 id="2、emptyDir（空目录）"><a href="#2、emptyDir（空目录）" class="headerlink" title="2、emptyDir（空目录）"></a>2、emptyDir（空目录）</h2><p>kubectl explain pod.spec.volumes.emptyDir 指定emptyDir存储卷</p>
 <ul>
-<li><strong>唯一性</strong> - 在一个NSQ服务中只有一个nsqlookupd服务。<code>当然也可以在集群中部署多个nsqlookupd，但它们之间是没有关联的</code>。</li>
-<li><strong>去中心化</strong> - 及时nsqlookupd崩溃，也不会影响正在运行的nsqd服务</li>
-<li>充当nsqd和nsqadmin信息交互的中间件</li>
-<li>提供一个http查询服务，给客户端定时更新nsqd的地址目录</li>
+<li>medium 指定媒介类型 disk Memory 两种</li>
+<li>sizeLimit 现在资源使用情况</li>
 </ul>
-<h4 id="nsqadmin"><a href="#nsqadmin" class="headerlink" title="nsqadmin"></a>nsqadmin</h4><p>官网原话：是一套WEB UI，用来户汇聚集群的实时统计，并执行不同的管理任务</p>
-<p>总的来说，nsqadmin具有以下功能或特性：</p>
+<p>kubectl explain pod.spec.containers.volumeMounts 指定挂载哪些存储卷</p>
 <ul>
-<li>提供一个topic和channel统一管理的操作界面以及各种实时监控数据的展示，界面设计很简介、操作也很简单</li>
-<li>展示所有message的数量，这个是装X神器</li>
-<li>能够在后台创建topic和channel，不常用</li>
-<li>nsqadmin的所有功能都必须依赖于nsqlookupd，nsqadmin只是向nsqlookupd传递用户操作并展示来至nsqlookupd的数据</li>
+<li>mountPath 挂载那个路径</li>
+<li>name 指定挂载的volumes名称</li>
+<li>readOnly 是否只读挂载</li>
+<li>subPath 是否挂载子路径</li>
 </ul>
-<p>nsqadmin默认的访问地址是:<a href="http://127.0.0.1:4171/" target="_blank" rel="noopener">http://127.0.0.1:4171/</a></p>
-<h4 id="nsqd"><a href="#nsqd" class="headerlink" title="nsqd"></a>nsqd</h4><p>官方原话：nsqd是一个守护进程，负责接收、排队、投递消息给客户端</p>
-<p>真正干活的就是这个服务，它主要负责message的收发，队列的维护；<br>nsqd会默认监听一个tcp端口(4150)和一个http端口(4151)以及一个可选的https端口</p>
-<p>总的来说，nsqd具有以下功能或特性：</p>
+<p>创建一个空卷，挂载到Pod中的容器。Pod删除该卷也不会被删除。应用场景：Pod中容器之间数据共享，<br>我们可以创建2个容器，一个写，一个读，来测试我们数据是否共享<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-128 ~]# mkdir volume &amp;&amp; cd volume/</span><br><span class="line">[root@k8s-master-128 volume]# vim empty.yaml</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Pod</span><br><span class="line">metadata:</span><br><span class="line">  name: my-pod</span><br><span class="line">spec:</span><br><span class="line">  containers:</span><br><span class="line">  - name: write</span><br><span class="line">    image: centos</span><br><span class="line">    command: [&quot;bash&quot;,&quot;-c&quot;,&quot;for i in &#123;1..100&#125;;do echo $i &gt;&gt; /data/hello;sleep 1;done&quot;]</span><br><span class="line">    volumeMounts:</span><br><span class="line">      # 根据下面的数据卷名字使用名为data的数据卷，挂载在/data下面</span><br><span class="line">      - name: data</span><br><span class="line">        mountPath: /data</span><br><span class="line"></span><br><span class="line">  - name: read</span><br><span class="line">    image: centos</span><br><span class="line">    command: [&quot;bash&quot;,&quot;-c&quot;,&quot;tail -f /data/hello&quot;]</span><br><span class="line">    volumeMounts:</span><br><span class="line">      # 根据下面的数据卷名字使用名为data的数据卷，挂载在/data下面</span><br><span class="line">      - name: data</span><br><span class="line">        mountPath: /data</span><br><span class="line"></span><br><span class="line">  # 定义一个数据卷来源</span><br><span class="line">  volumes:</span><br><span class="line">  # 定义数据卷名字</span><br><span class="line">  - name: data</span><br><span class="line">    emptyDir: &#123;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这样，我们2个容器都将名为data的数据卷挂载在/data目录下</p>
+<p>创建：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-128 volume]# kubectl create -f empty.yaml</span><br><span class="line">pod/my-pod created</span><br><span class="line">[root@k8s-master-128 volume]# kubectl get pods my-pod</span><br><span class="line">NAME READY STATUS RESTARTS AGE</span><br><span class="line">my-pod 2/2 Running 1 3m4s</span><br></pre></td></tr></table></figure></p>
+<p>检测：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-128 volume]# kubectl logs -f my-pod read</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td></tr></table></figure></p>
+<p>因为我们是每隔一秒写入，所以我们能够不停的看见打印的数据。</p>
+<h2 id="3、hostPath（本地挂载）"><a href="#3、hostPath（本地挂载）" class="headerlink" title="3、hostPath（本地挂载）"></a>3、hostPath（本地挂载）</h2><p>kubectl explain pod.spec.volumes.hostPath</p>
 <ul>
-<li>对订阅了的同一个topic、同一个channel的消费者使用负载均衡策略(不是轮询)</li>
-<li>只要channel存在，即使没有该channel的消费者，也会讲生产者的message缓存到队列汇总(注意消息的过时处理)</li>
-<li>保证队列中的message至少会被消费一次，及时nsqd退出，也会讲队列中的消息暂存磁盘(结束进程等意外情况除外)</li>
-<li>限定内存使用，能够配置nsqd中的每个channel队列在内存中缓存的message数量，一旦超出，message建会被缓存到磁盘中</li>
-<li>topic，channel一旦建立将会一直存在，要及时在管理台或者代码清除无效的topic和channel，避免资源浪费</li>
+<li>path 指定宿主机的路径</li>
+<li>type DirectoryOrCreate 宿主机上不存在创建此目录 Directory 必须存在挂载目录 FileOrCreate 宿主机上不存在挂载文件就创建 File 必须存在文件  </li>
 </ul>
-<p>下面是官方的图，第一个channel(meteics)因为有多个消费者，所以触发了负载均衡机制。后面两个channel由于没有消费者，所有的message均会被缓存在相应的队列里，直到消费者出现。</p>
-<img src="/2018/08/15/消息队列之《01-NSQ理论篇》/channel.gif" title="channel">
-<p>这里想到一个问题是：如果一个channel只有生产者不停的在投递message，会不会导致服务器资源被耗尽？也许nsqd内部做了相应处理，但还是要避免这种情况出现。</p>
-<h3 id="NSQ生产与消费"><a href="#NSQ生产与消费" class="headerlink" title="NSQ生产与消费"></a>NSQ生产与消费</h3><p>了解nsqlookupd，nsqd与客户端中消费者和生产者的关系</p>
-<h4 id="消费者"><a href="#消费者" class="headerlink" title="消费者"></a>消费者</h4><p>消费者有良好总方式与nsqd建立连接：</p>
+<p>挂载Node文件系统上的文件或目录到Pod中的容器。应用场景：Pod中容器需要访问宿主机文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-128 volume]# cat hostpath.yaml</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Pod</span><br><span class="line">metadata:</span><br><span class="line">  name: my-pod</span><br><span class="line">spec:</span><br><span class="line">  containers:</span><br><span class="line">  - name: busybox</span><br><span class="line">    image: busybox</span><br><span class="line">    args:</span><br><span class="line">    - /bin/sh</span><br><span class="line">    - -c</span><br><span class="line">    - sleep 36000</span><br><span class="line">   # 挂载点</span><br><span class="line">    volumeMounts:</span><br><span class="line">    - name: data</span><br><span class="line">      mountPath: /data</span><br><span class="line">  volumes:</span><br><span class="line">  - name: data</span><br><span class="line">    #挂载来源，宿主机的/tmp目录</span><br><span class="line">    hostPath:</span><br><span class="line">      path: /tmp</span><br><span class="line">      type: Directory</span><br></pre></td></tr></table></figure></p>
+<p>创建：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-128 volume]# kubectl create -f hostpath.yaml</span><br><span class="line">pod/hostpath-pod created</span><br><span class="line">[root@k8s-master-128 volume]# kubectl get pods hostpath-pod -o wide</span><br><span class="line">NAME READY STATUS RESTARTS AGE IP NODE NOMINATED NODE READINESS GATES</span><br><span class="line">hostpath-pod 1/1 Running 0 97s 172.17.4.3 172.16.194.129 &lt;none&gt; &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<p>使用-o wide参数知道hostpath-pod运行在172.16.194.129这个节点上，我们可以查看该节点的/tmp目录是否被挂载到容器中：</p>
+<p>先查看172.16.194.129的/tmp目录所存在的文件：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-node-129 ~]# ls -lha /tmp/</span><br><span class="line">总用量 0</span><br><span class="line">drwxrwxrwt. 8 root root 172 5月 23 20:25 .</span><br><span class="line">dr-xr-xr-x. 17 root root 224 4月 26 01:10 ..</span><br><span class="line">drwxrwxrwt. 2 root root 6 4月 26 01:06 .font-unix</span><br><span class="line">drwxrwxrwt. 2 root root 6 4月 26 01:06 .ICE-unix</span><br><span class="line">drwx------ 3 root root 17 5月 23 10:40 systemd-private-e3f8a01e9f24475b9544ebbb9406fe01-chronyd.service-vzW5qS</span><br><span class="line">drwxrwxrwt. 2 root root 6 4月 26 01:06 .Test-unix</span><br><span class="line">drwxrwxrwt. 2 root root 6 4月 26 01:06 .X11-unix</span><br><span class="line">drwxrwxrwt. 2 root root 6 4月 26 01:06 .XIM-unix</span><br></pre></td></tr></table></figure></p>
+<p>在进入Pod中查看：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-128 volume]# kubectl exec -it hostpath-pod /bin/sh</span><br><span class="line">/ # ls  # 能看到挂载的data目录</span><br><span class="line">bin data dev etc home proc root sys tmp usr var</span><br><span class="line">/ # ls -lha data/  </span><br><span class="line">total 0</span><br><span class="line">drwxrwxrwt 8 root root 172 May 23 12:26 .</span><br><span class="line">drwxr-xr-x 1 root root 41 May 23 12:10 ..</span><br><span class="line">drwxrwxrwt 2 root root 6 Apr 25 17:06 .ICE-unix</span><br><span class="line">drwxrwxrwt 2 root root 6 Apr 25 17:06 .Test-unix</span><br><span class="line">drwxrwxrwt 2 root root 6 Apr 25 17:06 .X11-unix</span><br><span class="line">drwxrwxrwt 2 root root 6 Apr 25 17:06 .XIM-unix</span><br><span class="line">drwxrwxrwt 2 root root 6 Apr 25 17:06 .font-unix</span><br><span class="line">drwx------ 3 root root 17 May 23 02:40 systemd-private-e3f8a01e9f24475b9544ebbb9406fe01-chronyd.service-vzW5qS</span><br><span class="line">/ #</span><br></pre></td></tr></table></figure></p>
+<p>上面信息证明Pod中容器的/data挂载目录与172.16.194.129的/tmp目录一致，挂载成功。<br>当然，你也可以创建一个文件试试看，Node节点的挂载目录也会同步。</p>
+<h2 id="4、NFS-文件共享存储，网络卷"><a href="#4、NFS-文件共享存储，网络卷" class="headerlink" title="4、NFS(文件共享存储，网络卷)"></a>4、NFS(文件共享存储，网络卷)</h2><p>kubectl explain pod.spec.volumes.nfs</p>
 <ul>
-<li>消费者直连nsqd，这是最简单的方式，缺点是nsqd服务无法实现动态伸缩了(当然，自己去实现一个亦可以)</li>
-<li>消费者通过http查询nsqlookupd获取所有nsqd的连接地址，然后再分别和折现nsqd建立连接(官网推荐的做法，也是我司在使用的方式)，但是客户端会不停的向nsqlookupd查询最新的nsqd地址目录。</li>
+<li>path 源目录</li>
+<li>readOnly 是否只读 默认false</li>
+<li>server NFS服务地址</li>
 </ul>
-<p>官方的消费者模型：</p>
-<img src="/2018/08/15/消息队列之《01-NSQ理论篇》/clipboard.png" title="clipboard">
-<h4 id="生产者"><a href="#生产者" class="headerlink" title="生产者"></a>生产者</h4><p>生产者必须连接nsqd去投递message(当然，可以连接到nsqlookupd，让nsqlookupd自动选择一个nsqd去完成投递)</p>
-<p>如果生产者所连接的nsqd挂了，那么message就会投递失败，所以在客户端必须自己实现相应的备用方案。</p>
+<p>安装NFS：（需要使用nfs服务，每台Node节点都需要安装）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ yum install -y nfs-utils</span><br></pre></td></tr></table></figure></p>
+<p>我们设置172.16.194.130为服务端，配置/opt/container_data/共享目录出来，并且具有读写权限<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-node-130 ~]# cat /etc/exports</span><br><span class="line">/opt/container_data 172.16.194.0/24(rw,no_root_squash)</span><br></pre></td></tr></table></figure></p>
+<p>然后启动服务<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl start rpcbind</span><br><span class="line">$ systemctl start nfs</span><br></pre></td></tr></table></figure></p>
+<p>在客户端节点上查看共享目录：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-node-129 ~]# showmount -e k8s-node-130</span><br><span class="line">Export list for k8s-node-130:</span><br><span class="line">/opt/container_data 172.16.194.0/24</span><br></pre></td></tr></table></figure></p>
+<p>如果能看到共享目录信息，则表明NFS配置完成，接下来创建Pod使用之。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-128 volume]# vim nfs.yaml</span><br><span class="line">apiVersion: apps/v1beta1</span><br><span class="line">kind: Deployment</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx-deployment</span><br><span class="line">spec:</span><br><span class="line">  replicas: 2</span><br><span class="line">  selector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      app: nginx</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      labels:</span><br><span class="line">        app: nginx</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">      - name: nginx</span><br><span class="line">        image: nginx</span><br><span class="line">        # 启用数据卷的名字为wwwroot,并挂载到nginx的html目录下</span><br><span class="line">        volumeMounts:</span><br><span class="line">        - name: wwwroot</span><br><span class="line">          mountPath: /usr/share/nginx/html</span><br><span class="line">        ports:</span><br><span class="line">        - containerPort: 80</span><br><span class="line">    # 定义数据卷名字为wwwroot,类型为nfs</span><br><span class="line">      volumes:</span><br><span class="line">      - name: wwwroot</span><br><span class="line">        nfs:</span><br><span class="line">          server: 172.16.194.130</span><br><span class="line">          path: /opt/container_data</span><br></pre></td></tr></table></figure></p>
+<p>创建：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-128 volume]# kubectl create -f nfs.yaml</span><br><span class="line">deployment.apps/nginx-deployment created</span><br><span class="line">[root@k8s-master-128 volume]# kubectl get deploy|grep nginx-</span><br><span class="line">nginx-deployment 0/2 2 0 12s</span><br><span class="line">[root@k8s-master-128 volume]# kubectl get pods |grep nginx-deploy</span><br><span class="line">nginx-deployment-668db478c9-fj9np 1/1 Running 0 61s</span><br><span class="line">nginx-deployment-668db478c9-wsc5n 1/1 Running 0 61s</span><br></pre></td></tr></table></figure></p>
+<p>查看挂载点下的文件：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-node-130 container_data]# echo &quot;hello world&quot; &gt;index.html</span><br><span class="line">[root@k8s-node-130 container_data]# ls -lh</span><br><span class="line">总用量 4.0K</span><br><span class="line">-rw-r--r-- 1 root root 12 5月 23 20:54 index.html</span><br></pre></td></tr></table></figure></p>
+<p>进入Pod的容器中，查看/usr/share/nginx/html 挂载文件数据：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-128 volume]# kubectl exec -it nginx-deployment-668db478c9-wsc5n bash</span><br><span class="line">root@nginx-deployment-668db478c9-wsc5n:/# ls -lh /usr/share/nginx/html/</span><br><span class="line">total 4.0K</span><br><span class="line">-rw-r--r-- 1 root root 12 May 23 12:54 index.html</span><br><span class="line">root@nginx-deployment-668db478c9-wsc5n:/# cat /usr/share/nginx/html/index.html</span><br><span class="line">hello world</span><br></pre></td></tr></table></figure></p>
+<p>访问测试：<br>找到容器的IP地址<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl get pods -o wide|grep nginx-deploy</span><br></pre></td></tr></table></figure></p>
+<p>在Node上测试：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-node-129 ~]# curl 172.17.34.7</span><br><span class="line">hello world</span><br></pre></td></tr></table></figure></p>
+<p>至此，使用NFS挂载网站根目录完成，今后类似需求可采用此方案。</p>
+<p>参考文章：</p>
+<ul>
+<li><a href="https://www.kubernetes.org.cn/4075.html" target="_blank" rel="noopener">Kubernetes-存储卷Volume</a></li>
+<li><a href="https://www.kubernetes.org.cn/4022.html" target="_blank" rel="noopener">kunbernetes-基于NFS的存储</a></li>
+</ul>
 
       
     </div>
@@ -531,7 +532,7 @@
       </li>
       <li class="post-copyright-link">
         <strong>本文链接：</strong>
-        <a href="/2018/08/15/消息队列之《01-NSQ理论篇》.html" title="消息队列之《01.NSQ理论篇》">2018/08/15/消息队列之《01-NSQ理论篇》.html</a>
+        <a href="/2019/06/27/kubernetes系列之《Volume》.html" title="kubernetes系列之《Volume》">2019/06/27/kubernetes系列之《Volume》.html</a>
       </li>
       <li class="post-copyright-license">
         <strong>版权声明： </strong>
@@ -555,7 +556,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/NSQ/" rel="tag"><i class="fa fa-tag"></i> NSQ</a>
+            <a href="/tags/Service/" rel="tag"><i class="fa fa-tag"></i> Service</a>
           
         </div>
       
@@ -568,8 +569,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/07/25/Python系列之《Django-DRF-权限》.html" rel="next" title="Python系列之《Django-DRF-权限》">
-                <i class="fa fa-chevron-left"></i> Python系列之《Django-DRF-权限》
+              <a href="/2019/06/26/kubernetes系列之《Ingress》.html" rel="next" title="kubernetes系列之《Ingress》">
+                <i class="fa fa-chevron-left"></i> kubernetes系列之《Ingress》
               </a>
             
           </div>
@@ -577,10 +578,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/08/15/消息队列之《02-NSQ实践篇》.html" rel="prev" title="消息队列之《02.NSQ实践篇》">
-                消息队列之《02.NSQ实践篇》 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -821,7 +818,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NSQ与其他队列对比图"><span class="nav-number">2.</span> <span class="nav-text">NSQ与其他队列对比图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NSQ介绍"><span class="nav-number">3.</span> <span class="nav-text">NSQ介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NSQ服务端介绍"><span class="nav-number">4.</span> <span class="nav-text">NSQ服务端介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#nsqlookupd"><span class="nav-number">4.1.</span> <span class="nav-text">nsqlookupd</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#nsqadmin"><span class="nav-number">4.2.</span> <span class="nav-text">nsqadmin</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#nsqd"><span class="nav-number">4.3.</span> <span class="nav-text">nsqd</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NSQ生产与消费"><span class="nav-number">5.</span> <span class="nav-text">NSQ生产与消费</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#消费者"><span class="nav-number">5.1.</span> <span class="nav-text">消费者</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#生产者"><span class="nav-number">5.2.</span> <span class="nav-text">生产者</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、了解k8s的Volume"><span class="nav-number">1.</span> <span class="nav-text">1、了解k8s的Volume</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、emptyDir（空目录）"><span class="nav-number">2.</span> <span class="nav-text">2、emptyDir（空目录）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、hostPath（本地挂载）"><span class="nav-number">3.</span> <span class="nav-text">3、hostPath（本地挂载）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4、NFS-文件共享存储，网络卷"><span class="nav-number">4.</span> <span class="nav-text">4、NFS(文件共享存储，网络卷)</span></a></li></ol></div>
             
 
           </div>

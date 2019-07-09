@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="[TOC] 一、RBAC介绍基于角色的访问控制（Role-Based Access Control，即“RBAC”）使用“rbac.authorization.k8s.io” Apo Group实现授权决策，允许管理员通过Kubernetes Api动态配置策略。要启用RBAC，请使用 --authorization-mode=RBAC启动API Server。 在RABC API中，通过如下的步">
+<meta name="keywords" content="RBAC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kubernetes系列之《k8s基于RBAC的授权》">
+<meta property="og:url" content="//blog.nicksors.cc/2019/07/09/kubernetes系列之《k8s基于RBAC的授权》.html">
+<meta property="og:site_name" content="开元DevOps知识库">
+<meta property="og:description" content="[TOC] 一、RBAC介绍基于角色的访问控制（Role-Based Access Control，即“RBAC”）使用“rbac.authorization.k8s.io” Apo Group实现授权决策，允许管理员通过Kubernetes Api动态配置策略。要启用RBAC，请使用 --authorization-mode=RBAC启动API Server。 在RABC API中，通过如下的步">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="//blog.nicksors.cc/2019/07/09/kubernetes系列之《k8s基于RBAC的授权》/rbac.jpg">
+<meta property="og:updated_time" content="2019-07-09T08:59:52.177Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="kubernetes系列之《k8s基于RBAC的授权》">
+<meta name="twitter:description" content="[TOC] 一、RBAC介绍基于角色的访问控制（Role-Based Access Control，即“RBAC”）使用“rbac.authorization.k8s.io” Apo Group实现授权决策，允许管理员通过Kubernetes Api动态配置策略。要启用RBAC，请使用 --authorization-mode=RBAC启动API Server。 在RABC API中，通过如下的步">
+<meta name="twitter:image" content="//blog.nicksors.cc/2019/07/09/kubernetes系列之《k8s基于RBAC的授权》/rbac.jpg">
+
+
+
+
+
+
+  <link rel="canonical" href="//blog.nicksors.cc/2019/07/09/kubernetes系列之《k8s基于RBAC的授权》.html"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>kubernetes系列之《k8s基于RBAC的授权》 | 开元DevOps知识库</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+<a href="https://github.com/nicksors"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">开元DevOps知识库</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">没有白走的路，每一步都算数.</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="//blog.nicksors.cc/2019/07/09/kubernetes系列之《k8s基于RBAC的授权》.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="开元">
+      <meta itemprop="description" content="知识管理，时间管理，自我管理">
+      <meta itemprop="image" content="/static/images/stark.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="开元DevOps知识库">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">kubernetes系列之《k8s基于RBAC的授权》
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-07-09 16:53:42 / 修改时间：16:59:52" itemprop="dateCreated datePublished" datetime="2019-07-09T16:53:42+08:00">2019-07-09</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>[TOC]</p>
+<h2 id="一、RBAC介绍"><a href="#一、RBAC介绍" class="headerlink" title="一、RBAC介绍"></a>一、RBAC介绍</h2><p>基于角色的访问控制（Role-Based Access Control，即“RBAC”）使用“rbac.authorization.k8s.io” Apo Group实现授权决策，允许管理员通过Kubernetes Api动态配置策略。<br>要启用RBAC，请使用 <code>--authorization-mode=RBAC</code>启动API Server。</p>
+<p>在RABC API中，通过如下的步骤进行授权：</p>
+<ul>
+<li>1）定义角色：在定义角色时会指定此角色对于资源的访问控制的规则；</li>
+<li>2）绑定角色：将主体与角色进行绑定，对用户进行访问授权。</li>
+</ul>
+<img src="/2019/07/09/kubernetes系列之《k8s基于RBAC的授权》/rbac.jpg">
+<a id="more"></a>
+<h3 id="1-1、角色和集群角色"><a href="#1-1、角色和集群角色" class="headerlink" title="1.1、角色和集群角色"></a>1.1、角色和集群角色</h3><p>在RBAC API中，角色包含代表权限集合的规则。在这里，权限只有被授予，而没有被拒绝的设置。<br>在Kubernetes中有两类角色，即普通角色和集群角色。可以通过Role定义在一个命名空间中的角色，或者可以使用ClusterRole定义集群范围的角色。一个角色只能被用来授予访问单一命名空间中的资源。<br>下面是在“default”命名空间中定义了一个名为“pod_reader”的角色，此角色能够对在“default”命名空间中访问Pod：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">kind: Role</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1beta1</span><br><span class="line">metadata:</span><br><span class="line">  namespace: default</span><br><span class="line">  name: pod-reader</span><br><span class="line">rules:</span><br><span class="line">- apiGroups: [&quot;&quot;] # 空字符串&quot;&quot;表明使用core API group</span><br><span class="line">  resources: [&quot;pods&quot;]</span><br><span class="line">  verbs: [&quot;get&quot;, &quot;watch&quot;, &quot;list&quot;]</span><br></pre></td></tr></table></figure></p>
+<p>集群角色（ClusterRole）能够被授予如下资源的权限：</p>
+<ul>
+<li>集群范围资源（例如Node）</li>
+<li>非集群类型endpoint（例如“/healthz”）</li>
+<li>集群中所有命名空间的资源（例如Pod）</li>
+</ul>
+<p>下面是授予集群角色读取<code>secret</code>文件访问权限的例子：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">kind: ClusterRole</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1beta1</span><br><span class="line">metadata:</span><br><span class="line">  # 鉴于ClusterRole是集群范围对象，所以这里不需要定义&quot;namespace&quot;字段</span><br><span class="line">  name: secret-reader</span><br><span class="line">rules:</span><br><span class="line">- apiGroups: [&quot;&quot;]</span><br><span class="line">  resources: [&quot;secrets&quot;]  # 明确资源类型</span><br><span class="line">  verbs: [&quot;get&quot;, &quot;watch&quot;, &quot;list&quot;]</span><br></pre></td></tr></table></figure></p>
+<h3 id="1-2、角色绑定和集群角色绑定"><a href="#1-2、角色绑定和集群角色绑定" class="headerlink" title="1.2、角色绑定和集群角色绑定"></a>1.2、角色绑定和集群角色绑定</h3><p>角色绑定用于将角色与一个或一组用户进行绑定，从而实现将对用户进行授权的目的。主题分为用户、组和服务账户。角色绑定也分为角色绑定和集群角色绑定，角色绑定只能应用同一个命名空间下的角色。</p>
+<p>在下面例子中，在“default”命名空间中角色绑定将“jane”用户和“pod-reader”角色进行了绑定，这就授予了“jane”能够访问default命名空间下的Pod：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># 以下角色绑定定义将允许用户&quot;jane&quot;从&quot;default&quot;命名空间中读取pod。</span><br><span class="line">kind: RoleBinding</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1beta1</span><br><span class="line">metadata:</span><br><span class="line">  name: read-pods</span><br><span class="line">  namespace: default</span><br><span class="line">subjects:  # 主体</span><br><span class="line">- kind: User</span><br><span class="line">  name: jane</span><br><span class="line">  apiGroup: rbac.authorization.k8s.io</span><br><span class="line">roleRef:  # 引用的角色</span><br><span class="line">  kind: Role</span><br><span class="line">  name: pod-reader</span><br><span class="line">  apiGroup: rbac.authorization.k8s.io</span><br></pre></td></tr></table></figure></p>
+<p><code>注解：给用户jane授权一个能读取Pod的角色权限</code></p>
+<p>角色绑定也可以通过引用集群角色授予访问权限，当主体对资源的访问仅限于本命名空间，这就允许管理员定义这个呢个集群的公共角色集合，然后在多个命名空间中进行复用。<br>例如，下面的角色绑定引用了集群角色，但是“dave”用户也仅仅只能读取“development”命名空间中的secrets资源：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># 以下角色绑定允许用户&quot;dave&quot;读取&quot;development&quot;命名空间中的secret。</span><br><span class="line">kind: RoleBinding</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1beta1</span><br><span class="line">metadata:</span><br><span class="line">  name: read-secrets</span><br><span class="line">  namespace: development # 这里表明仅授权读取&quot;development&quot;命名空间中的资源。</span><br><span class="line">subjects:</span><br><span class="line">- kind: User</span><br><span class="line">  name: dave</span><br><span class="line">  apiGroup: rbac.authorization.k8s.io</span><br><span class="line">roleRef:</span><br><span class="line">  kind: ClusterRole</span><br><span class="line">  name: secret-reader</span><br><span class="line">  apiGroup: rbac.authorization.k8s.io</span><br></pre></td></tr></table></figure></p>
+<p><code>注解：给用户dave授权一个能读取secret的集群角色权限</code></p>
+<p>集群角色可以被用在集群层面和整个命名空间进行授权。下面的示例允许在“manager”组中的用户能够访问所有命名空间中的secret资源。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># 以下`ClusterRoleBinding`对象允许在用户组&quot;manager&quot;中的任何用户都可以读取集群中任何命名空间中的secret。</span><br><span class="line">kind: ClusterRoleBinding</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1beta1</span><br><span class="line">metadata:</span><br><span class="line">  name: read-secrets-global</span><br><span class="line">subjects:</span><br><span class="line">- kind: Group</span><br><span class="line">  name: manager</span><br><span class="line">  apiGroup: rbac.authorization.k8s.io</span><br><span class="line">roleRef:</span><br><span class="line">  kind: ClusterRole</span><br><span class="line">  name: secret-reader</span><br><span class="line">  apiGroup: rbac.authorization.k8s.io</span><br></pre></td></tr></table></figure></p>
+<p><code>注解：给用户组manager授权一个能读取secret的集群角色权限</code></p>
+<h3 id="1-3、对资源的引用"><a href="#1-3、对资源的引用" class="headerlink" title="1.3、对资源的引用"></a>1.3、对资源的引用</h3><p>在Kubernetes中，主要的资源包括：Pods、Nodes、Services、Deployment、Replicasets、Statefulsets、Namespace、Persistents、Secrets和ConfigMap等。另外，有些资源下面存在“子资源”，例如：Pod下面就存在log子资源：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET /api/v1/namespaces/&#123;namespace&#125;/pods/&#123;name&#125;/log</span><br></pre></td></tr></table></figure></p>
+<p>下面的例子显示，“pod-and-pod-logs-reader”角色能够对“pods”和“pods/log”进行访问：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">kind: Role</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1beta1</span><br><span class="line">metadata:</span><br><span class="line">  namespace: default</span><br><span class="line">  name: pod-and-pod-logs-reader</span><br><span class="line">rules:</span><br><span class="line">- apiGroups: [&quot;&quot;]</span><br><span class="line">  resources: [&quot;pods&quot;, &quot;pods/log&quot;]</span><br><span class="line">  verbs: [&quot;get&quot;, &quot;list&quot;]</span><br></pre></td></tr></table></figure></p>
+<p>也可以通过resourceNames指定特定的资源实例，以限制角色只能够对实例进行访问控制：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">kind:Role</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1</span><br><span class="line">metadata:</span><br><span class="line">  namespace: default</span><br><span class="line">  name: configmap-updater</span><br><span class="line">rules:</span><br><span class="line">- apiGroups: [&quot;&quot;]</span><br><span class="line">  resources: [&quot;configmaps&quot;]</span><br><span class="line">  resourceNames: [&quot;my-configmap&quot;]</span><br><span class="line">  verbs: [&quot;update&quot;,&quot;get&quot;]</span><br></pre></td></tr></table></figure></p>
+<h3 id="1-4、主体（subject）"><a href="#1-4、主体（subject）" class="headerlink" title="1.4、主体（subject）"></a>1.4、主体（subject）</h3><p>RBAC授权中的主体可以是组、用户、服务账户。用户通过字符串表示，比如“alice”、“<a href="mailto:nicksors@example.com" target="_blank" rel="noopener">nicksors@example.com</a>”等，具体形式取决于管理员在认证模块中配置的用户名。<br>system：被保留作为用来Kubernetes系统使用，因此不能作为用户的前缀。组也有认证模块提供，格式与用户类似。</p>
+<p><strong>角色绑定主体的例子：</strong><br>名称为“<a href="mailto:nicksors@example.com" target="_blank" rel="noopener">nicksors@example.com</a>”用户：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">subjects:</span><br><span class="line">- kind: User</span><br><span class="line">  name: &quot;nicksors@example.com&quot;</span><br><span class="line">  apiGroup: rbac.authorization.k8s.io</span><br></pre></td></tr></table></figure></p>
+<p>名称为“frontend-admins”的组：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">subjects:</span><br><span class="line">- kind: Group</span><br><span class="line">  name: &quot;frontend-admins&quot;</span><br><span class="line">  apiGroup: rbac.authorization.k8s.io</span><br></pre></td></tr></table></figure></p>
+<p>在kube-system命名空间中，名称为“default”的服务账户：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">subjects:</span><br><span class="line">- kind: ServiceAccount</span><br><span class="line">  name: default</span><br><span class="line">  namespace: kube-system</span><br></pre></td></tr></table></figure></p>
+<p>在“qa”命名空间中，所有的服务账户：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">subjects:</span><br><span class="line">- kind: Group</span><br><span class="line">  name: system:serviceaccounts:qa</span><br><span class="line">  apiGroup: rbac.authorization.k8s.io</span><br></pre></td></tr></table></figure></p>
+<p>在集群中的所有服务账户：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">subjects:</span><br><span class="line">- kind: Group</span><br><span class="line">  name: system:serviceaccounts</span><br><span class="line">  apiGroup: rbac.authorization.k8s.io</span><br></pre></td></tr></table></figure></p>
+<p>所有认证过的用户（version 1.5+）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">subjects:</span><br><span class="line">- kind: Group</span><br><span class="line">  name: system:authenticated</span><br><span class="line">  apiGroup: rbac.authorization.k8s.io</span><br></pre></td></tr></table></figure></p>
+<p>所有未认证的用户（version 1.5+）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">subjects:</span><br><span class="line">- kind: Group</span><br><span class="line">  name: system:unauthenticated</span><br><span class="line">  apiGroup: rbac.authorization.k8s.io</span><br></pre></td></tr></table></figure></p>
+<p>所有用户（version 1.5+）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">subjects:</span><br><span class="line">- kind: Group</span><br><span class="line">  name: system:authenticated</span><br><span class="line">  apiGroup: rbac.authorization.k8s.io</span><br><span class="line">- kind: Group</span><br><span class="line">  name: system:unauthenticated</span><br><span class="line">  apiGroup: rbac.authorization.k8s.io</span><br></pre></td></tr></table></figure></p>
+<h2 id="二、命令行工具"><a href="#二、命令行工具" class="headerlink" title="二、命令行工具"></a>二、命令行工具</h2><p>Kubernetes可以通过命令进行角色绑定</p>
+<h3 id="2-1、kubectl-create-rolebinding"><a href="#2-1、kubectl-create-rolebinding" class="headerlink" title="2.1、kubectl create rolebinding"></a>2.1、kubectl create rolebinding</h3><p>在指定的命名空间中进行角色绑定：<br>1、在“acme”命名空间中，将“admin”集群角色授予“bob”用户<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl create rolebinding bob-admin-binding --clusterrole=admin --user=bob --namespace=acme</span><br></pre></td></tr></table></figure></p>
+<p>2、在“acme”命名空间中，将“view”集群角色授予“acme:myapp”服务账户：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl create rolebinding myapp-view-binding --clusterrole=view --serviceaccount=acme:myapp --namespace=acme</span><br></pre></td></tr></table></figure></p>
+<h3 id="2-2、kubectl-create-clusterrolebinding"><a href="#2-2、kubectl-create-clusterrolebinding" class="headerlink" title="2.2、kubectl create clusterrolebinding"></a>2.2、kubectl create clusterrolebinding</h3><p>在整个集群中进行角色绑定：<br>1、在整个集群中，授予“cluster-admin”集群角色给“root”用户：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl create clusterrolebinding root-cluster-admin-binding --clusterrole=cluster-admin --user=root</span><br></pre></td></tr></table></figure></p>
+<p>2、在整个集群中，授予“system:node”集群角色给“kubelet”用户：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl create clusterrolebinding kubelet-node-binding --clusterrole=system:node --user=kubelet</span><br></pre></td></tr></table></figure></p>
+<p>3、在整个集群中，授予“view”集群角色给“acme:myapp”服务账户：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl create clusterrolebinding myapp-view-binding --clusterrole=view --serviceaccount=acme:myapp</span><br></pre></td></tr></table></figure></p>
+<h3 id="2-3、服务账户（Service-Account）权限"><a href="#2-3、服务账户（Service-Account）权限" class="headerlink" title="2.3、服务账户（Service Account）权限"></a>2.3、服务账户（Service Account）权限</h3><p>默认情况下，RBAC策略授予控制板组件、Node和控制器作用域的权限，但是未授予“kube-system”命名空间外服务账户的访问权限。这就允许管理员按照需求将特定角色授予服务账户。</p>
+<p>从最安全到最不安全的顺序，方法如下：<br>1、授予角色给一个指定应用的服务账户（最佳实践）<br>这要求在Pod规范（pod spec）中指定serviceAccountName字段，同时要创建此服务账户。<br>例如，在”my-namespace”命名空间中授予服务账户”my-sa”只读权限：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">kubectl create rolebinding my-sa-view \</span><br><span class="line">  --clusterrole=view \</span><br><span class="line">  --serviceaccount=my-namespace:my-sa \</span><br><span class="line">  --namespace=my-namespace</span><br></pre></td></tr></table></figure></p>
+<p>2、在某一命名空间中授予”default”服务账号一个角色<br>如果应用没有指定serviceAccountName，那么默认将使用“default”服务账户。<br>下面的例子将在”my-namespace”命名空间内授予”default”服务账号只读权限：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">kubectl create rolebinding default-view \ </span><br><span class="line">--clusterrole=view \ </span><br><span class="line">--serviceaccount=my-namespace:default \ </span><br><span class="line">--namespace=my-namespace</span><br></pre></td></tr></table></figure></p>
+<p>当前，在“kube-system”命名空间中，有很多插件作为“default”服务账户进行运行。为了云允许超级用户访问这些插件，在“kube-system”命名空间中授予“cluster-admin”角色给“default”服务账户。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl create clusterrolebinding add-on-cluster-admin \ </span><br><span class="line">--clusterrole=cluster-admin \ </span><br><span class="line">--serviceaccount=kube-system:default</span><br></pre></td></tr></table></figure></p>
+<p>3、为命名空间中所有的服务账号授予角色<br>如果希望命名空间内的所有应用程序都拥有同一个角色，无论它们使用什么服务账户，可以为该命名空间的服务账户用户组授予角色。<br>下面的例子将授予”my-namespace”命名空间中的所有服务账户只读权限：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">kubectl create rolebinding serviceaccounts-view \</span><br><span class="line">  --clusterrole=view \</span><br><span class="line">  --group=system:serviceaccounts:my-namespace \</span><br><span class="line">  --namespace=my-namespace</span><br></pre></td></tr></table></figure></p>
+<p>4、对集群范围内的所有服务账户授予一个受限角色（不推荐）<br>如果不想管理每个命名空间的权限，则可以将集群范围角色授予所有服务帐户。<br>下面的例子将所有命名空间中的只读权限授予集群中的所有服务账户：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubectl create clusterrolebinding serviceaccounts-view \</span><br><span class="line">  --clusterrole=view \</span><br><span class="line">  --group=system:serviceaccounts</span><br></pre></td></tr></table></figure></p>
+<p>5、授予超级用户访问权限给集群范围内的所有服务帐户（强烈不鼓励）<br>如果您根本不关心权限分块，您可以对所有服务账户授予超级用户访问权限。<br>警告：这种做法将允许任何具有读取权限的用户访问secret或者通过创建一个容器的方式来访问超级用户的凭据。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubectl create clusterrolebinding serviceaccounts-cluster-admin \</span><br><span class="line">  --clusterrole=cluster-admin \</span><br><span class="line">  --group=system:serviceaccounts</span><br></pre></td></tr></table></figure></p>
+<h3 id="2-4、宽松的RBAC权限"><a href="#2-4、宽松的RBAC权限" class="headerlink" title="2.4、宽松的RBAC权限"></a>2.4、宽松的RBAC权限</h3><p>下面的策略允许所有的服务账户作为集群管理员。在容器运行的应用将自动收取到服务账户证书，并执行所有API行为。包括查看secret和修改权限，不推荐这种访问权限。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">kubectl create clusterrolebinding permissive-binding \</span><br><span class="line">  --clusterrole=cluster-admin \</span><br><span class="line">  --user=admin \</span><br><span class="line">  --user=kubelet \</span><br><span class="line">  --group=system:serviceaccounts</span><br></pre></td></tr></table></figure></p>
+<h2 id="三、RBAC-实战"><a href="#三、RBAC-实战" class="headerlink" title="三、RBAC 实战"></a>三、RBAC 实战</h2><p>K8s的用户和权限管理包括两个方面：认证和授权。认证解决用户是谁的问题，授权解决用户能做什么的问题。通过合理的权限管理，能够保证系统的安全可靠。</p>
+<p>K8s的认证包含以下3种方式。这3种方式可以同时存在，认证时只按一种即可。</p>
+<ul>
+<li>证书认证：设置apiserver的启动参数：–client_ca_file=SOMEFILE。</li>
+<li>Token认证：设置apiserver的启动参数：–token_auth_file=SOMEFILE。</li>
+<li>基本信息认证：设置apiserver的启动参数：–basic_auth_file=SOMEFILE。</li>
+</ul>
+<p><code>实战目的：让名为“nicksors”的用户只能有权限访问指定namespace下的Pod</code></p>
+<h3 id="3-1、安装证书生成工具cfssl"><a href="#3-1、安装证书生成工具cfssl" class="headerlink" title="3.1、安装证书生成工具cfssl"></a>3.1、安装证书生成工具cfssl</h3><p>使用此工具进行自签证书<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ wget https://pkg.cfssl.org/R1.2/cfssl_linux-amd64</span><br><span class="line">$ wget https://pkg.cfssl.org/R1.2/cfssljson_linux-amd64</span><br><span class="line">$ wget https://pkg.cfssl.org/R1.2/cfssl-certinfo_linux-amd64</span><br><span class="line">$ chmod +x cfssl_linux-amd64 cfssljson_linux-amd64 cfssl-certinfo_linux-amd64</span><br><span class="line">$ mv cfssl_linux-amd64 /usr/local/bin/cfssl</span><br><span class="line">$ mv cfssljson_linux-amd64 /usr/local/bin/cfssljson</span><br><span class="line">$ mv cfssl-certinfo_linux-amd64 /usr/bin/cfssl-certinfo</span><br></pre></td></tr></table></figure></p>
+<h3 id="3-2、签发用户证书"><a href="#3-2、签发用户证书" class="headerlink" title="3.2、签发用户证书"></a>3.2、签发用户证书</h3><p>使用Kubernetes集群里原有CA证书对用户证书进行签发，如果不使用原有集群的CA证书签发的话集群不认；<br>集群根证书路径在：/opt/kubernetes/ssl/（我的是在这里，以你的证书路径为准哈）<br>确保有如下CA证书文件：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ca-config.json ca-key.pem ca.pem</span><br></pre></td></tr></table></figure></p>
+<p>生成用户nicksors的证书：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-128 rbac]# cat nicksors_cert.sh</span><br><span class="line">[root@k8s-master-128 rbac]# cat nicksors_cert.sh</span><br><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line">export SSL_DIR=/opt/kubernetes/ssl/</span><br><span class="line"></span><br><span class="line"># 创建用户“nicksors”证书</span><br><span class="line">cat &gt; nicksors-csr.json &lt;&lt;EOF</span><br><span class="line">&#123;</span><br><span class="line">    &quot;CN&quot;: &quot;nicksors&quot;,</span><br><span class="line">    &quot;hosts&quot;: [],</span><br><span class="line">    &quot;key&quot;: &#123;</span><br><span class="line">        &quot;algo&quot;: &quot;rsa&quot;,</span><br><span class="line">        &quot;size&quot;: 2048</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;names&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;C&quot;: &quot;CN&quot;,</span><br><span class="line">            &quot;L&quot;: &quot;BeiJing&quot;,</span><br><span class="line">            &quot;ST&quot;: &quot;BeiJing&quot;,</span><br><span class="line">            &quot;O&quot;: &quot;k8s&quot;,</span><br><span class="line">            &quot;OU&quot;: &quot;System&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line">cfssl gencert -ca=$&#123;SSL_DIR&#125;/ca.pem -ca-key=$&#123;SSL_DIR&#125;/ca-key.pem -config=$&#123;SSL_DIR&#125;/ca-config.json -profile=kubernetes nicksors-csr.json | cfssljson -bare nicksors</span><br><span class="line">[root@k8s-master-128 rbac]# sh nicksors_cert.sh</span><br><span class="line">2019/05/29 12:14:14 [INFO] generate received request</span><br><span class="line">2019/05/29 12:14:14 [INFO] received CSR</span><br><span class="line">2019/05/29 12:14:14 [INFO] generating key: rsa-2048</span><br><span class="line">2019/05/29 12:14:14 [INFO] encoded CSR</span><br><span class="line">2019/05/29 12:14:14 [INFO] signed certificate with serial number 241710936734166826753488524447632489452920840015</span><br><span class="line">2019/05/29 12:14:14 [WARNING] This certificate lacks a &quot;hosts&quot; field. This makes it unsuitable for</span><br><span class="line">websites. For more information see the Baseline Requirements for the Issuance and Management</span><br><span class="line">of Publicly-Trusted Certificates, v.1.1.6, from the CA/Browser Forum (https://cabforum.org);</span><br><span class="line">specifically, section 10.2.3 (&quot;Information Requirements&quot;).</span><br></pre></td></tr></table></figure></p>
+<p>执行命令后，生成如下文件：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nicksors_cert.sh nicksors.csr nicksors-csr.json nicksors-key.pem nicksors.pem</span><br></pre></td></tr></table></figure></p>
+<h3 id="3-3、创建kubeconfig文件"><a href="#3-3、创建kubeconfig文件" class="headerlink" title="3.3、创建kubeconfig文件"></a>3.3、创建kubeconfig文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">export KUBE_APISERVER=&quot;https://172.16.194.128:6443&quot;</span><br><span class="line">export SSL_DIR=/opt/kubernetes/ssl/</span><br><span class="line"></span><br><span class="line"># 设置集群参数</span><br><span class="line">kubectl config set-cluster kubernetes \</span><br><span class="line">--certificate-authority=$&#123;SSL_DIR&#125;/ca.pem \</span><br><span class="line">--embed-certs=true \</span><br><span class="line">--server=$&#123;KUBE_APISERVER&#125; \</span><br><span class="line">--kubeconfig=nicksors.kubeconfig</span><br><span class="line"></span><br><span class="line"># 设置客户端认证参数</span><br><span class="line">kubectl config set-credentials nicksors \</span><br><span class="line">--client-certificate=$&#123;SSL_DIR&#125;/nicksors.pem \</span><br><span class="line">--client-key=$&#123;SSL_DIR&#125;/nicksors-key.pem \</span><br><span class="line">--embed-certs=true \</span><br><span class="line">--kubeconfig=nicksors.kubeconfig</span><br><span class="line"></span><br><span class="line"># 设置上下文参数</span><br><span class="line">kubectl config set-context kubernetes \</span><br><span class="line">--cluster=kubernetes \</span><br><span class="line">--user=nicksors \</span><br><span class="line">--namespace=kube-system \</span><br><span class="line">--kubeconfig=nicksors.kubeconfig</span><br><span class="line"></span><br><span class="line"># 设置默认上下文</span><br><span class="line">kubectl config use-context kubernetes --kubeconfig=nicksors.kubeconfig</span><br></pre></td></tr></table></figure>
+<p>以上执行一个步骤就可以看一下 nicksors.kubeconfig 的变化。里面最主要的三个东西</p>
+<ul>
+<li>cluster: 集群信息，包含集群地址与公钥</li>
+<li>user: 用户信息，客户端证书与私钥，真正的信息是从证书里读取出来的，人能看到的只是给人看的。</li>
+<li>context: 维护一个三元组，namespace cluster 与 user</li>
+</ul>
+<h3 id="3-4、创建角色"><a href="#3-4、创建角色" class="headerlink" title="3.4、创建角色"></a>3.4、创建角色</h3><p>创建一个叫pod-reader的角色（见名思意：Pod只读）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;pod-reader.yaml &lt;&lt;EOF</span><br><span class="line">kind: Role</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1</span><br><span class="line">metadata:</span><br><span class="line">  namespace: kube-system</span><br><span class="line">  # 角色默认的命令空间为kube-system，如果user绑定到此角色，那么此角色只有在命令空间的权限</span><br><span class="line">  name: pod-reader</span><br><span class="line">rules:</span><br><span class="line">- apiGroups: [&quot;&quot;] # &quot;&quot; indicates the core API group</span><br><span class="line">  resources: [&quot;pods&quot;]</span><br><span class="line">  verbs: [&quot;get&quot;, &quot;watch&quot;, &quot;list&quot;]</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure></p>
+<p>执行并查看执行结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-128 rbac]# kubectl apply -f pod-reader.yaml</span><br><span class="line">role.rbac.authorization.k8s.io/pod-reader created</span><br><span class="line">[root@k8s-master-128 rbac]# kubectl get role -n kube-system|grep pod-reader</span><br><span class="line">pod-reader 43s</span><br></pre></td></tr></table></figure></p>
+<h3 id="3-5、用户绑定角色"><a href="#3-5、用户绑定角色" class="headerlink" title="3.5、用户绑定角色"></a>3.5、用户绑定角色</h3><p>上面创建好了一个pod-reader角色，只有查看kube-system的权限，将这个角色绑定到nicksors用户上；<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;nicksors-role-bind.yaml &lt;&lt;EOF</span><br><span class="line">kind: RoleBinding</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1</span><br><span class="line">metadata:</span><br><span class="line">  name: read-pods</span><br><span class="line">  namespace: kube-system</span><br><span class="line">subjects:</span><br><span class="line">- kind: User</span><br><span class="line">  name: nicksors # 目标用户</span><br><span class="line">  apiGroup: rbac.authorization.k8s.io</span><br><span class="line">roleRef:</span><br><span class="line">  kind: Role</span><br><span class="line">  name: pod-reader # 角色信息</span><br><span class="line">  apiGroup: rbac.authorization.k8s.io</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure></p>
+<p>执行并查看执行结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-128 rbac]# kubectl apply -f nicksors-role-bind.yaml</span><br><span class="line">rolebinding.rbac.authorization.k8s.io/read-pods created</span><br><span class="line">[root@k8s-master-128 rbac]# kubectl get rolebinding -n kube-system|grep read-pods</span><br><span class="line">read-pods 33s</span><br></pre></td></tr></table></figure></p>
+<h3 id="3-6、使用新的config文件"><a href="#3-6、使用新的config文件" class="headerlink" title="3.6、使用新的config文件"></a>3.6、使用新的config文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp -f ./nicksors.kubeconfig /root/.kube/config</span><br></pre></td></tr></table></figure>
+<p>测试使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-128 rbac]# kubectl get pod # 默认获取kube-system命名空间的pod</span><br><span class="line">NAME READY STATUS RESTARTS AGE</span><br><span class="line">coredns-55f46dd959-85qgd 1/1 Running 0 5d19h</span><br><span class="line">coredns-55f46dd959-czkgm 1/1 Running 0 5d19h</span><br><span class="line">kubernetes-dashboard-7d5f7c58f5-dlmcv 1/1 Running 0 5d19h</span><br><span class="line">[root@k8s-master-128 rbac]# kubectl get pod -n kube-system</span><br><span class="line">NAME READY STATUS RESTARTS AGE</span><br><span class="line">coredns-55f46dd959-85qgd 1/1 Running 0 5d19h</span><br><span class="line">coredns-55f46dd959-czkgm 1/1 Running 0 5d19h</span><br><span class="line">kubernetes-dashboard-7d5f7c58f5-dlmcv 1/1 Running 0 5d19h</span><br><span class="line">[root@k8s-master-128 rbac]# kubectl get pod -n default # 可以看到指定其他命名空间获取Pod失败，没有权限了</span><br><span class="line">Error from server (Forbidden): pods is forbidden: User &quot;nicksors&quot; cannot list resource &quot;pods&quot; in API group &quot;&quot; in the namespace &quot;default&quot;</span><br><span class="line">[root@k8s-master-128 rbac]#</span><br><span class="line">[root@k8s-master-128 rbac]# kubectl get deploy # 尝试查看其他资源也失败，因为nicksors用户只绑定了pod-reader权限</span><br><span class="line">Error from server (Forbidden): deployments.extensions is forbidden: User &quot;nicksors&quot; cannot list resource &quot;deployments&quot; in API group &quot;extensions&quot; in the namespace &quot;kube-system&quot;</span><br><span class="line">[root@k8s-master-128 rbac]# kubectl get node</span><br><span class="line">Error from server (Forbidden): nodes is forbidden: User &quot;nicksors&quot; cannot list resource &quot;nodes&quot; in API group &quot;&quot; at the cluster scope</span><br></pre></td></tr></table></figure></p>
+<p>参考文章：</p>
+<ul>
+<li><a href="https://www.kubernetes.org.cn/4062.html" target="_blank" rel="noopener">Kubernetes-基于RBAC的授权</a></li>
+<li><a href="https://jimmysong.io/kubernetes-handbook/guide/kubectl-user-authentication-authorization.html" target="_blank" rel="noopener">创建用户认证授权的kubeconfig文件</a></li>
+<li><a href="https://github.com/rootsongjc/kubernetes-handbook/blob/master/tools/create-user/README.md" target="_blank" rel="noopener">在kubernetes中创建用户并授予用户namespace的admin权限</a></li>
+<li><a href="https://www.cnblogs.com/xzkzzz/p/9909468.html" target="_blank" rel="noopener">Kubernetes之RBAC</a></li>
+</ul>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+<div>    
+ 
+ 
+    <ul class="post-copyright">
+      <li class="post-copyright-author">
+          <strong>本文作者：</strong>开元
+      </li>
+      <li class="post-copyright-link">
+        <strong>本文链接：</strong>
+        <a href="/2019/07/09/kubernetes系列之《k8s基于RBAC的授权》.html" title="kubernetes系列之《k8s基于RBAC的授权》">2019/07/09/kubernetes系列之《k8s基于RBAC的授权》.html</a>
+      </li>
+      <li class="post-copyright-license">
+        <strong>版权声明： </strong>
+        <!--Copyright©2018 NICKSORS.CC 版权所有 未经许可 请勿转载 -->
+	本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0 CN</a> 许可协议。转载请注明出处!
+      </li>
+    </ul>
+  
+</div>
+
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/RBAC/" rel="tag"><i class="fa fa-tag"></i> RBAC</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/07/03/kubernetes系列之《PersistentVolumes》.html" rel="next" title="kubernetes系列之《PersistentVolumes》">
+                <i class="fa fa-chevron-left"></i> kubernetes系列之《PersistentVolumes》
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/static/images/stark.jpg"
+                alt="开元" />
+            
+              <p class="site-author-name" itemprop="name">开元</p>
+              <p class="site-description motion-element" itemprop="description">知识管理，时间管理，自我管理</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">36</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">8</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">37</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/nicksors" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.hi-linux.com/" title="运维之美" target="_blank">运维之美</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、RBAC介绍"><span class="nav-number">1.</span> <span class="nav-text">一、RBAC介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1、角色和集群角色"><span class="nav-number">1.1.</span> <span class="nav-text">1.1、角色和集群角色</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2、角色绑定和集群角色绑定"><span class="nav-number">1.2.</span> <span class="nav-text">1.2、角色绑定和集群角色绑定</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3、对资源的引用"><span class="nav-number">1.3.</span> <span class="nav-text">1.3、对资源的引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4、主体（subject）"><span class="nav-number">1.4.</span> <span class="nav-text">1.4、主体（subject）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、命令行工具"><span class="nav-number">2.</span> <span class="nav-text">二、命令行工具</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1、kubectl-create-rolebinding"><span class="nav-number">2.1.</span> <span class="nav-text">2.1、kubectl create rolebinding</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2、kubectl-create-clusterrolebinding"><span class="nav-number">2.2.</span> <span class="nav-text">2.2、kubectl create clusterrolebinding</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3、服务账户（Service-Account）权限"><span class="nav-number">2.3.</span> <span class="nav-text">2.3、服务账户（Service Account）权限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4、宽松的RBAC权限"><span class="nav-number">2.4.</span> <span class="nav-text">2.4、宽松的RBAC权限</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、RBAC-实战"><span class="nav-number">3.</span> <span class="nav-text">三、RBAC 实战</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1、安装证书生成工具cfssl"><span class="nav-number">3.1.</span> <span class="nav-text">3.1、安装证书生成工具cfssl</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2、签发用户证书"><span class="nav-number">3.2.</span> <span class="nav-text">3.2、签发用户证书</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3、创建kubeconfig文件"><span class="nav-number">3.3.</span> <span class="nav-text">3.3、创建kubeconfig文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4、创建角色"><span class="nav-number">3.4.</span> <span class="nav-text">3.4、创建角色</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5、用户绑定角色"><span class="nav-number">3.5.</span> <span class="nav-text">3.5、用户绑定角色</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-6、使用新的config文件"><span class="nav-number">3.6.</span> <span class="nav-text">3.6、使用新的config文件</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">开元</span>
+
+
+  
+
+  
+</div>
+
+
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  访问用户:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<div class="powered-by">
+<i class="fa fa-eye"></i><span id="busuanzi_container_site_pv">
+   访问量:<span id="busuanzi_value_site_pv"></span>
+</span>
+</div>
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">全站共72.6k字</span>
+</div>
+
+<!--
+<span class="post-meta-divider">|</span>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Mist</div>
+
+
+
+-->
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<!--<script type="text/javascript" src="/js/src/love.js"></script>-->

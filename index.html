@@ -350,6 +350,159 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="//blog.nicksors.cc/2019/07/09/kubernetes系列之《k8s基于RBAC的授权》.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="开元">
+      <meta itemprop="description" content="知识管理，时间管理，自我管理">
+      <meta itemprop="image" content="/static/images/stark.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="开元DevOps知识库">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/07/09/kubernetes系列之《k8s基于RBAC的授权》.html" itemprop="url">
+                  kubernetes系列之《k8s基于RBAC的授权》
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-07-09 16:53:42 / 修改时间：16:59:52" itemprop="dateCreated datePublished" datetime="2019-07-09T16:53:42+08:00">2019-07-09</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>[TOC]</p>
+<h2 id="一、RBAC介绍"><a href="#一、RBAC介绍" class="headerlink" title="一、RBAC介绍"></a>一、RBAC介绍</h2><p>基于角色的访问控制（Role-Based Access Control，即“RBAC”）使用“rbac.authorization.k8s.io” Apo Group实现授权决策，允许管理员通过Kubernetes Api动态配置策略。<br>要启用RBAC，请使用 <code>--authorization-mode=RBAC</code>启动API Server。</p>
+<p>在RABC API中，通过如下的步骤进行授权：</p>
+<ul>
+<li>1）定义角色：在定义角色时会指定此角色对于资源的访问控制的规则；</li>
+<li>2）绑定角色：将主体与角色进行绑定，对用户进行访问授权。</li>
+</ul>
+<img src="/2019/07/09/kubernetes系列之《k8s基于RBAC的授权》/rbac.jpg">
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/07/09/kubernetes系列之《k8s基于RBAC的授权》.html#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="//blog.nicksors.cc/2019/07/03/kubernetes系列之《PersistentVolumes》.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1939,190 +2092,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="//blog.nicksors.cc/2019/06/11/kubernetes系列之《集群部署（上）》.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="开元">
-      <meta itemprop="description" content="知识管理，时间管理，自我管理">
-      <meta itemprop="image" content="/static/images/stark.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="开元DevOps知识库">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/06/11/kubernetes系列之《集群部署（上）》.html" itemprop="url">
-                  kubernetes系列之《集群部署（上）》.md
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-06-11 12:18:14" itemprop="dateCreated datePublished" datetime="2019-06-11T12:18:14+08:00">2019-06-11</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-06-26 17:11:22" itemprop="dateModified" datetime="2019-06-26T17:11:22+08:00">2019-06-26</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/kubernetes/" itemprop="url" rel="index"><span itemprop="name">kubernetes</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <blockquote>
-<p>从本文开始，将进入Kubernetes实战阶段，后续大部分文章将以实战为基础，讲解各个知识点<br>本文将实现：</p>
-<ol>
-<li>完整的ETCD集群</li>
-<li>自颁发SSL证书</li>
-<li>Docker的安装</li>
-<li>Flanneld网络从安装到到原理深入理解</li>
-</ol>
-</blockquote>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/06/11/kubernetes系列之《集群部署（上）》.html#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2174,7 +2143,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">35</span>
+                    <span class="site-state-item-count">36</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2288,7 +2257,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">36</span>
+                      
+                    
+                    <span class="site-state-item-count">37</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -2388,7 +2359,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">全站共68.6k字</span>
+  <span class="post-count">全站共72.6k字</span>
 </div>
 
 <!--

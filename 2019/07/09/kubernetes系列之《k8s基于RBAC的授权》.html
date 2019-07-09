@@ -123,19 +123,19 @@
 
 
 
-  <meta name="description" content="[TOC] 一、RBAC介绍基于角色的访问控制（Role-Based Access Control，即“RBAC”）使用“rbac.authorization.k8s.io” Apo Group实现授权决策，允许管理员通过Kubernetes Api动态配置策略。要启用RBAC，请使用 --authorization-mode=RBAC启动API Server。 在RABC API中，通过如下的步">
+  <meta name="description" content="一、RBAC介绍基于角色的访问控制（Role-Based Access Control，即“RBAC”）使用“rbac.authorization.k8s.io” Apo Group实现授权决策，允许管理员通过Kubernetes Api动态配置策略。要启用RBAC，请使用 --authorization-mode=RBAC启动API Server。 在RABC API中，通过如下的步骤进行授权：">
 <meta name="keywords" content="RBAC">
 <meta property="og:type" content="article">
 <meta property="og:title" content="kubernetes系列之《k8s基于RBAC的授权》">
 <meta property="og:url" content="//blog.nicksors.cc/2019/07/09/kubernetes系列之《k8s基于RBAC的授权》.html">
 <meta property="og:site_name" content="开元DevOps知识库">
-<meta property="og:description" content="[TOC] 一、RBAC介绍基于角色的访问控制（Role-Based Access Control，即“RBAC”）使用“rbac.authorization.k8s.io” Apo Group实现授权决策，允许管理员通过Kubernetes Api动态配置策略。要启用RBAC，请使用 --authorization-mode=RBAC启动API Server。 在RABC API中，通过如下的步">
+<meta property="og:description" content="一、RBAC介绍基于角色的访问控制（Role-Based Access Control，即“RBAC”）使用“rbac.authorization.k8s.io” Apo Group实现授权决策，允许管理员通过Kubernetes Api动态配置策略。要启用RBAC，请使用 --authorization-mode=RBAC启动API Server。 在RABC API中，通过如下的步骤进行授权：">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="//blog.nicksors.cc/2019/07/09/kubernetes系列之《k8s基于RBAC的授权》/rbac.jpg">
-<meta property="og:updated_time" content="2019-07-09T08:59:52.177Z">
+<meta property="og:updated_time" content="2019-07-09T09:04:06.291Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="kubernetes系列之《k8s基于RBAC的授权》">
-<meta name="twitter:description" content="[TOC] 一、RBAC介绍基于角色的访问控制（Role-Based Access Control，即“RBAC”）使用“rbac.authorization.k8s.io” Apo Group实现授权决策，允许管理员通过Kubernetes Api动态配置策略。要启用RBAC，请使用 --authorization-mode=RBAC启动API Server。 在RABC API中，通过如下的步">
+<meta name="twitter:description" content="一、RBAC介绍基于角色的访问控制（Role-Based Access Control，即“RBAC”）使用“rbac.authorization.k8s.io” Apo Group实现授权决策，允许管理员通过Kubernetes Api动态配置策略。要启用RBAC，请使用 --authorization-mode=RBAC启动API Server。 在RABC API中，通过如下的步骤进行授权：">
 <meta name="twitter:image" content="//blog.nicksors.cc/2019/07/09/kubernetes系列之《k8s基于RBAC的授权》/rbac.jpg">
 
 
@@ -392,7 +392,7 @@
                 
               
 
-              <time title="创建时间：2019-07-09 16:53:42 / 修改时间：16:59:52" itemprop="dateCreated datePublished" datetime="2019-07-09T16:53:42+08:00">2019-07-09</time>
+              <time title="创建时间：2019-07-09 16:53:42 / 修改时间：17:04:06" itemprop="dateCreated datePublished" datetime="2019-07-09T16:53:42+08:00">2019-07-09</time>
             
 
             
@@ -428,8 +428,7 @@
       
 
       
-        <p>[TOC]</p>
-<h2 id="一、RBAC介绍"><a href="#一、RBAC介绍" class="headerlink" title="一、RBAC介绍"></a>一、RBAC介绍</h2><p>基于角色的访问控制（Role-Based Access Control，即“RBAC”）使用“rbac.authorization.k8s.io” Apo Group实现授权决策，允许管理员通过Kubernetes Api动态配置策略。<br>要启用RBAC，请使用 <code>--authorization-mode=RBAC</code>启动API Server。</p>
+        <h2 id="一、RBAC介绍"><a href="#一、RBAC介绍" class="headerlink" title="一、RBAC介绍"></a>一、RBAC介绍</h2><p>基于角色的访问控制（Role-Based Access Control，即“RBAC”）使用“rbac.authorization.k8s.io” Apo Group实现授权决策，允许管理员通过Kubernetes Api动态配置策略。<br>要启用RBAC，请使用 <code>--authorization-mode=RBAC</code>启动API Server。</p>
 <p>在RABC API中，通过如下的步骤进行授权：</p>
 <ul>
 <li>1）定义角色：在定义角色时会指定此角色对于资源的访问控制的规则；</li>

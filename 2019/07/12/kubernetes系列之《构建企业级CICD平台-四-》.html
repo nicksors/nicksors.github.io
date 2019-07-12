@@ -1,0 +1,1438 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="前言：本文是构建企业级CICD的最后一篇文章，以实战为导向，讲解Jenkins 通过Pipeline流水线如何实现在kubernetes系统中做到持续集成持续部署的，请关注！">
+<meta name="keywords" content="CICD">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kubernetes系列之《构建企业级CICD平台(四)》">
+<meta property="og:url" content="//blog.nicksors.cc/2019/07/12/kubernetes系列之《构建企业级CICD平台-四-》.html">
+<meta property="og:site_name" content="开元DevOps知识库">
+<meta property="og:description" content="前言：本文是构建企业级CICD的最后一篇文章，以实战为导向，讲解Jenkins 通过Pipeline流水线如何实现在kubernetes系统中做到持续集成持续部署的，请关注！">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="//blog.nicksors.cc/2019/07/12/kubernetes系列之《构建企业级CICD平台-四-》/01.png">
+<meta property="og:image" content="//blog.nicksors.cc/2019/07/12/kubernetes系列之《构建企业级CICD平台-四-》/02.png">
+<meta property="og:image" content="//blog.nicksors.cc/2019/07/12/kubernetes系列之《构建企业级CICD平台-四-》/03.png">
+<meta property="og:image" content="//blog.nicksors.cc/2019/07/12/kubernetes系列之《构建企业级CICD平台-四-》/04.png">
+<meta property="og:image" content="//blog.nicksors.cc/2019/07/12/kubernetes系列之《构建企业级CICD平台-四-》/05.png">
+<meta property="og:image" content="//blog.nicksors.cc/2019/07/12/kubernetes系列之《构建企业级CICD平台-四-》/06.png">
+<meta property="og:image" content="//blog.nicksors.cc/2019/07/12/kubernetes系列之《构建企业级CICD平台-四-》/06.png">
+<meta property="og:image" content="//blog.nicksors.cc/2019/07/12/kubernetes系列之《构建企业级CICD平台-四-》/07.png">
+<meta property="og:image" content="//blog.nicksors.cc/2019/07/12/kubernetes系列之《构建企业级CICD平台-四-》/08.png">
+<meta property="og:image" content="//blog.nicksors.cc/2019/07/12/kubernetes系列之《构建企业级CICD平台-四-》/09.png">
+<meta property="og:image" content="//blog.nicksors.cc/2019/07/12/kubernetes系列之《构建企业级CICD平台-四-》/10.png">
+<meta property="og:image" content="//blog.nicksors.cc/2019/07/12/kubernetes系列之《构建企业级CICD平台-四-》/11.png">
+<meta property="og:image" content="//blog.nicksors.cc/2019/07/12/kubernetes系列之《构建企业级CICD平台-四-》/12.png">
+<meta property="og:updated_time" content="2019-07-12T10:30:13.311Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="kubernetes系列之《构建企业级CICD平台(四)》">
+<meta name="twitter:description" content="前言：本文是构建企业级CICD的最后一篇文章，以实战为导向，讲解Jenkins 通过Pipeline流水线如何实现在kubernetes系统中做到持续集成持续部署的，请关注！">
+<meta name="twitter:image" content="//blog.nicksors.cc/2019/07/12/kubernetes系列之《构建企业级CICD平台-四-》/01.png">
+
+
+
+
+
+
+  <link rel="canonical" href="//blog.nicksors.cc/2019/07/12/kubernetes系列之《构建企业级CICD平台-四-》.html"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>kubernetes系列之《构建企业级CICD平台(四)》 | 开元DevOps知识库</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+<a href="https://github.com/nicksors"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">开元DevOps知识库</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">没有白走的路，每一步都算数.</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="//blog.nicksors.cc/2019/07/12/kubernetes系列之《构建企业级CICD平台-四-》.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="开元">
+      <meta itemprop="description" content="知识管理，时间管理，自我管理">
+      <meta itemprop="image" content="/static/images/stark.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="开元DevOps知识库">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">kubernetes系列之《构建企业级CICD平台(四)》
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-07-12 18:05:15 / 修改时间：18:30:13" itemprop="dateCreated datePublished" datetime="2019-07-12T18:05:15+08:00">2019-07-12</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/kubernetes/" itemprop="url" rel="index"><span itemprop="name">kubernetes</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>前言：本文是构建企业级CICD的最后一篇文章，以实战为导向，讲解Jenkins 通过Pipeline流水线如何实现在kubernetes系统中做到持续集成持续部署的，请关注！</p>
+</blockquote>
+<a id="more"></a>
+<h2 id="七、Jenkins在K8s中持续部署"><a href="#七、Jenkins在K8s中持续部署" class="headerlink" title="七、Jenkins在K8s中持续部署"></a>七、Jenkins在K8s中持续部署</h2><h3 id="7-1、构建镜像推送到Harbor"><a href="#7-1、构建镜像推送到Harbor" class="headerlink" title="7.1、构建镜像推送到Harbor"></a>7.1、构建镜像推送到Harbor</h3><p>上面我们运行了一个拉取代码的示例，这里基于上面的Pipeline构建环境，实现代码的拉取–&gt;构建镜像–&gt;推送镜像三大发布操作</p>
+<h4 id="7-1-1、Jenkinsfile"><a href="#7-1-1、Jenkinsfile" class="headerlink" title="7.1.1、Jenkinsfile"></a>7.1.1、Jenkinsfile</h4><p>首先来看Pipeline定义的流水线代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">// 公共</span><br><span class="line">def registry = &quot;172.16.194.130&quot;</span><br><span class="line">// 项目</span><br><span class="line">def project = &quot;library&quot;</span><br><span class="line">def app_name = &quot;java-demo&quot;</span><br><span class="line">def image_name = &quot;$&#123;registry&#125;/$&#123;project&#125;/$&#123;app_name&#125;:$&#123;Branch&#125;-$&#123;BUILD_NUMBER&#125;&quot;</span><br><span class="line">def git_address = &quot;git@172.16.194.130:/home/git/app.git&quot;</span><br><span class="line">// 认证</span><br><span class="line">def docker_registry_auth = &quot;9df0c22e-9cce-4f54-b7d4-ede2a7755fc7&quot; // Jenkins配置harbor凭证的ID</span><br><span class="line">def git_auth = &quot;a3672571-97ed-4088-b407-43a9c54d3f5a&quot; // Jenkins配置Git凭证的ID</span><br><span class="line"></span><br><span class="line">// 生成Jenkins-slave Pod的模板</span><br><span class="line">podTemplate(label: &apos;jenkins-slave&apos;, cloud: &apos;kubernetes&apos;, containers: [</span><br><span class="line">    containerTemplate(</span><br><span class="line">        name: &apos;jnlp&apos;,</span><br><span class="line">        image: &quot;$&#123;registry&#125;/library/jenkins-slave-jdk:1.8&quot;</span><br><span class="line">    ),</span><br><span class="line">  ],</span><br><span class="line">  volumes: [ // jenkins-slave镜像没有docker环境，因此需要将宿主机上的docker环境挂载到Pod中（Jenkins-slave需要使用docker push来推送镜像）</span><br><span class="line">    hostPathVolume(mountPath: &apos;/var/run/docker.sock&apos;, hostPath: &apos;/var/run/docker.sock&apos;),</span><br><span class="line">    hostPathVolume(mountPath: &apos;/usr/bin/docker&apos;, hostPath: &apos;/usr/bin/docker&apos;)</span><br><span class="line">  ],</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">// 脚本式的Pipeline声明</span><br><span class="line">&#123;</span><br><span class="line">  node(&quot;jenkins-slave&quot;)&#123;</span><br><span class="line">      // 第一步</span><br><span class="line">      stage(&apos;拉取代码&apos;)&#123;</span><br><span class="line">         checkout([$class: &apos;GitSCM&apos;, branches: [[name: &apos;$&#123;Branch&#125;&apos;]], userRemoteConfigs: [[credentialsId: &quot;$&#123;git_auth&#125;&quot;, url: &quot;$&#123;git_address&#125;&quot;]]])</span><br><span class="line">      &#125;</span><br><span class="line">      // 第二步</span><br><span class="line">      stage(&apos;代码编译&apos;)&#123;</span><br><span class="line">          sh &quot;mvn clean package -Dmaven.test.skip=true&quot; // 编译的目的就是生成一个可部署的java包</span><br><span class="line">      &#125;</span><br><span class="line">      // 第三步</span><br><span class="line">      stage(&apos;构建镜像&apos;)&#123;</span><br><span class="line">          withCredentials([usernamePassword(credentialsId: &quot;$&#123;docker_registry_auth&#125;&quot;, passwordVariable: &apos;password&apos;, usernameVariable: &apos;username&apos;)]) &#123;</span><br><span class="line">            sh &quot;&quot;&quot;</span><br><span class="line">              echo &apos;</span><br><span class="line">                FROM nicksors/tomcat</span><br><span class="line">                RUN rm -rf /usr/local/tomcat/webapps/*</span><br><span class="line">                ADD target/*.war /usr/local/tomcat/webapps/ROOT.war</span><br><span class="line">              &apos; &gt; Dockerfile</span><br><span class="line">              docker build -t $&#123;image_name&#125; .</span><br><span class="line">              docker login -u $&#123;username&#125; -p &apos;$&#123;password&#125;&apos; $&#123;registry&#125;</span><br><span class="line">              docker push $&#123;image_name&#125;</span><br><span class="line">            &quot;&quot;&quot;</span><br><span class="line">            &#125;</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>代码字段说明：（前面说过的以及在上脚本有注释的这里不再说明）</p>
+<ul>
+<li>def project # 定义Harbor项镜像库名称，一般都是私有项目镜像库；</li>
+<li>app_name # 本次构建的应用名称，会显示在Harbor上的名称；</li>
+<li>image_name # 提交到Harbor的镜像名称，’${Branch}’参数需要在Job里定义，，${BUILD_NUMBER}参数是每次编译的版本号（Jenkins内置变量，会自动获取）</li>
+<li>git_address # Git项目地址</li>
+</ul>
+<h4 id="7-1-2、定义Branch参数"><a href="#7-1-2、定义Branch参数" class="headerlink" title="7.1.2、定义Branch参数"></a>7.1.2、定义Branch参数</h4><p>在Job里定义’${Branch}’参数：（点击test项目–&gt;配置–&gt;勾选参数化构建过程–&gt;选择字符参数，填写指定Branch变量的值为master）<br><img src="/2019/07/12/kubernetes系列之《构建企业级CICD平台-四-》/01.png"></p>
+<h4 id="7-1-3、编译、构建、推送镜像"><a href="#7-1-3、编译、构建、推送镜像" class="headerlink" title="7.1.3、编译、构建、推送镜像"></a>7.1.3、编译、构建、推送镜像</h4><p>将上面的Jenkinsfile粘贴到流水线脚本内容里，覆盖原有的脚本内容：<br><img src="/2019/07/12/kubernetes系列之《构建企业级CICD平台-四-》/02.png"></p>
+<p>注意：左下角有一个“流水线语法”，可以根据流水线语法来生成Pipeline脚本内容。</p>
+<p>保存后，点击Job构建：<br><img src="/2019/07/12/kubernetes系列之《构建企业级CICD平台-四-》/03.png"></p>
+<p>构建成功后，Harbor仓库应多一个java-demo镜像，这就是所谓的镜像交付了，接下来就是把这个镜像通过Jenkins Pipeline部署到K8s中，即可完成整套CI/CD。<br><img src="/2019/07/12/kubernetes系列之《构建企业级CICD平台-四-》/04.png"></p>
+<h3 id="7-2、将镜像持续部署到k8s集群"><a href="#7-2、将镜像持续部署到k8s集群" class="headerlink" title="7.2、将镜像持续部署到k8s集群"></a>7.2、将镜像持续部署到k8s集群</h3><h4 id="7-2-1、安装Kubernetes-Continuous-Deploy插件"><a href="#7-2-1、安装Kubernetes-Continuous-Deploy插件" class="headerlink" title="7.2.1、安装Kubernetes Continuous Deploy插件"></a>7.2.1、安装Kubernetes Continuous Deploy插件</h4><p>Kubernetes Continuous Deploy插件：用于将资源部署到Kubernetes中<br>插件介绍：<a href="https://plugins.jenkins.io/kubernetes-cd" target="_blank" rel="noopener">https://plugins.jenkins.io/kubernetes-cd</a></p>
+<p>支持以下资源类型：（这些资源都可以通过该插件部署到k8s集群中）</p>
+<ul>
+<li>Deployment</li>
+<li>Replica Set</li>
+<li>Daemon Set</li>
+<li>Pod</li>
+<li>Job</li>
+<li>Service</li>
+<li>Ingress</li>
+<li>Secret</li>
+</ul>
+<p>输入kubernetes搜索，安装：<br><img src="/2019/07/12/kubernetes系列之《构建企业级CICD平台-四-》/05.png"></p>
+<p>安装完成后，在“流水线语法”中会出现下面选项：<br><img src="/2019/07/12/kubernetes系列之《构建企业级CICD平台-四-》/06.png"></p>
+<p>在这里可以定义你需要部署的资源，自动生成流水线脚本。</p>
+<p>需要注意的是，在这里配置部署资源，有两个必要的条件：</p>
+<ul>
+<li>Kuberconfig：连接k8s api需要kubeconfig认证，</li>
+<li>Config Files：部署资源的文件名</li>
+</ul>
+<p>那这两个文件都还没有，那接下来进生成这两个必要的条件吧。</p>
+<h4 id="7-2-2、K8s生成config文件"><a href="#7-2-2、K8s生成config文件" class="headerlink" title="7.2.2、K8s生成config文件"></a>7.2.2、K8s生成config文件</h4><p>在K8s集群里生成一个拥有管理员权限的config文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-128 k8s-cret]# wget https://raw.githubusercontent.com/rootsongjc/kubernetes-handbook/master/tools/create-user/create-user.sh</span><br><span class="line">[root@k8s-master-128 k8s-cret]# vim create-user.sh</span><br><span class="line">#!/bin/bash</span><br><span class="line"># 注意修改KUBE_APISERVER为你的API Server的地址</span><br><span class="line">KUBE_APISERVER=$1</span><br><span class="line">USER=$2</span><br><span class="line">USAGE=&quot;USAGE: create-user.sh &lt;api_server&gt; &lt;username&gt;\n</span><br><span class="line">Example: https://172.22.1.1:6443 brand&quot;</span><br><span class="line">CSR=`pwd`/user-csr.json</span><br><span class="line">SSL_PATH=&quot;/opt/kubernetes/ssl&quot;  # 请填写自己的k8s  ssl目录</span><br><span class="line">SSL_FILES=(ca-key.pem ca.pem ca-config.json)</span><br><span class="line">CERT_FILES=($&#123;USER&#125;.csr $USER-key.pem $&#123;USER&#125;.pem)</span><br><span class="line"></span><br><span class="line">if [[ $KUBE_APISERVER == &quot;&quot; ]]; then</span><br><span class="line">   echo -e $USAGE</span><br><span class="line">   exit 1</span><br><span class="line">fi</span><br><span class="line">if [[ $USER == &quot;&quot; ]];then</span><br><span class="line">    echo -e $USAGE</span><br><span class="line">    exit 1</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line"># 创建用户的csr文件</span><br><span class="line">function createCSR()&#123;</span><br><span class="line">cat&gt;$CSR&lt;&lt;EOF</span><br><span class="line">&#123;</span><br><span class="line">  &quot;CN&quot;: &quot;USER&quot;,</span><br><span class="line">  &quot;hosts&quot;: [],</span><br><span class="line">  &quot;key&quot;: &#123;</span><br><span class="line">    &quot;algo&quot;: &quot;rsa&quot;,</span><br><span class="line">    &quot;size&quot;: 2048</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;names&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;C&quot;: &quot;CN&quot;,</span><br><span class="line">      &quot;ST&quot;: &quot;BeiJing&quot;,</span><br><span class="line">      &quot;L&quot;: &quot;BeiJing&quot;,</span><br><span class="line">      &quot;O&quot;: &quot;k8s&quot;,</span><br><span class="line">      &quot;OU&quot;: &quot;System&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line"># 替换csr文件中的用户名</span><br><span class="line">sed -i &quot;s/USER/$USER/g&quot; $CSR</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function ifExist()&#123;</span><br><span class="line">if [ ! -f &quot;$SSL_PATH/$1&quot; ]; then</span><br><span class="line">    echo &quot;$SSL_PATH/$1 not found.&quot;</span><br><span class="line">    exit 1</span><br><span class="line">fi</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"># 判断证书文件是否存在</span><br><span class="line">for f in $&#123;SSL_FILES[@]&#125;;</span><br><span class="line">do</span><br><span class="line">    echo &quot;Check if ssl file $f exist...&quot;</span><br><span class="line">    ifExist $f</span><br><span class="line">    echo &quot;OK&quot;</span><br><span class="line">done</span><br><span class="line"></span><br><span class="line">echo &quot;Create CSR file...&quot;</span><br><span class="line">createCSR</span><br><span class="line">echo &quot;$CSR created&quot;</span><br><span class="line">echo &quot;Create user&apos;s certificates and keys...&quot;</span><br><span class="line">cd $SSL_PATH</span><br><span class="line">cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=kubernetes $CSR| cfssljson -bare $USER</span><br><span class="line">cd -</span><br><span class="line"></span><br><span class="line"># 设置集群参数</span><br><span class="line">kubectl config set-cluster kubernetes \</span><br><span class="line">--certificate-authority=$&#123;SSL_PATH&#125;/ca.pem \</span><br><span class="line">--embed-certs=true \</span><br><span class="line">--server=$&#123;KUBE_APISERVER&#125; \</span><br><span class="line">--kubeconfig=$&#123;USER&#125;.kubeconfig</span><br><span class="line"></span><br><span class="line"># 设置客户端认证参数</span><br><span class="line">kubectl config set-credentials $USER \</span><br><span class="line">--client-certificate=$SSL_PATH/$&#123;USER&#125;.pem \</span><br><span class="line">--client-key=$SSL_PATH/$&#123;USER&#125;-key.pem \</span><br><span class="line">--embed-certs=true \</span><br><span class="line">--kubeconfig=$&#123;USER&#125;.kubeconfig</span><br><span class="line"></span><br><span class="line"># 设置上下文参数</span><br><span class="line">kubectl config set-context kubernetes \</span><br><span class="line">--cluster=kubernetes \</span><br><span class="line">--user=$USER \</span><br><span class="line">--kubeconfig=$&#123;USER&#125;.kubeconfig</span><br><span class="line"></span><br><span class="line"># 设置默认上下文</span><br><span class="line">kubectl config use-context kubernetes --kubeconfig=$&#123;USER&#125;.kubeconfig</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 绑定角色（创建集群角色，绑定管理员权限）</span><br><span class="line">kubectl create clusterrolebinding $&#123;USER&#125;-admin-binding --clusterrole=cluster-admin --user=$USER</span><br><span class="line"></span><br><span class="line">kubectl config get-contexts</span><br><span class="line"></span><br><span class="line">echo &quot;Congratulations!&quot;</span><br><span class="line">echo &quot;Your kubeconfig file is $&#123;USER&#125;.kubeconfig&quot;</span><br><span class="line"></span><br><span class="line">[root@k8s-master-128 k8s-cret]# chmod +x create-user.sh</span><br><span class="line">[root@k8s-master-128 k8s-cret]# sh create-user.sh https://172.16.194.128:6443 nicksors</span><br></pre></td></tr></table></figure></p>
+<p>执行完成后，当前目录下会生成一个文件，配置测试使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-128 k8s-cret]# cp nicksors.kubeconfig /root/.kube/config</span><br><span class="line">[root@k8s-master-128 k8s-cret]# kubectl get deploy -A</span><br><span class="line">NAMESPACE NAME READY UP-TO-DATE AVAILABLE AGE</span><br><span class="line">default nfs-client-provisioner 1/1 1 1 12d</span><br><span class="line">default nginx 1/1 1 1 29d</span><br><span class="line">ingress-nginx nginx-ingress-controller 1/1 1 1 14d</span><br><span class="line">kube-system coredns 2/2 2 2 15d</span><br><span class="line">kube-system kubernetes-dashboard 1/1 1 1 29d</span><br></pre></td></tr></table></figure></p>
+<p>没问题，config文件可以使用了，接下来将config配置文件添加到Jenkins 凭证里。</p>
+<p>将nicksors.kubeconfig里的内容贴进去，点击确定即可：<br><img src="/2019/07/12/kubernetes系列之《构建企业级CICD平台-四-》/06.png"></p>
+<p>查看ID：f664aa68-fbdc-4f41-9dfb-b241f0951241</p>
+<h4 id="7-2-3、资源部署文件"><a href="#7-2-3、资源部署文件" class="headerlink" title="7.2.3、资源部署文件"></a>7.2.3、资源部署文件</h4><p>资源部署文件里定义了将交付的容器部署到k8s集群中，其中定义了有deployment资源、Service资源和Ingress提供域名服务资源。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-128 jenkins]# cat deploy.yml</span><br><span class="line">apiVersion: apps/v1</span><br><span class="line">kind: Deployment</span><br><span class="line">metadata:</span><br><span class="line">  name: web</span><br><span class="line">spec:</span><br><span class="line">  replicas: 1</span><br><span class="line">  selector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      app: java-demo</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      labels:</span><br><span class="line">        app: java-demo</span><br><span class="line">    spec:</span><br><span class="line">      imagePullSecrets:</span><br><span class="line">      - name: $SECRET_NAME</span><br><span class="line">      containers:</span><br><span class="line">      - name: tomcat</span><br><span class="line">        image: $IMAGE_NAME</span><br><span class="line">        ports:</span><br><span class="line">        - containerPort: 8080</span><br><span class="line">          name: web</span><br><span class="line">        livenessProbe:</span><br><span class="line">          httpGet:</span><br><span class="line">            path: /</span><br><span class="line">            port: 8080</span><br><span class="line">          initialDelaySeconds: 60</span><br><span class="line">          timeoutSeconds: 5</span><br><span class="line">          failureThreshold: 12</span><br><span class="line">        readinessProbe:</span><br><span class="line">          httpGet:</span><br><span class="line">            path: /</span><br><span class="line">            port: 8080</span><br><span class="line">          initialDelaySeconds: 60</span><br><span class="line">          timeoutSeconds: 5</span><br><span class="line">          failureThreshold: 12</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  name: web</span><br><span class="line">spec:</span><br><span class="line">  type: NodePort</span><br><span class="line">  selector:</span><br><span class="line">    app: java-demo</span><br><span class="line">  ports:</span><br><span class="line">    - protocol: TCP</span><br><span class="line">      port: 80</span><br><span class="line">      targetPort: 8080</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line">apiVersion: extensions/v1beta1</span><br><span class="line">kind: Ingress</span><br><span class="line">metadata:</span><br><span class="line">  name: web</span><br><span class="line">spec:</span><br><span class="line">  rules:</span><br><span class="line">  - host: java.nicksors.cc</span><br><span class="line">    http:</span><br><span class="line">      paths:</span><br><span class="line">      - path: /</span><br><span class="line">        backend:</span><br><span class="line">          serviceName: web</span><br><span class="line">          servicePort: 80</span><br></pre></td></tr></table></figure></p>
+<p>在Deployment配置下有两个参数是通过变量传入进来的：</p>
+<ul>
+<li>$SECRET_NAME  # 这个是k8s运行拉取Harbor镜像的许可，在部署文件里需要配置</li>
+<li>$IMAGE_NAME    # 镜像名称， 因为每次发版的镜像版本都不同，名称固然不同，因此每次都需要Jenkins传入进来； </li>
+</ul>
+<p>那这里需要配置K8s允许拉取Harbor私有仓库的权限（其实就是登录的用户名和密码保存在k8s中），操作如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-128 jenkins]# kubectl create secret docker-registry registry-pull-secret --docker-server=172.16.194.130 --docker-username=admin --docker-password=123123 --docker-email=admin@nicksors.cc</span><br><span class="line">secret/registry-pull-secret created</span><br><span class="line">[root@k8s-master-128 jenkins]# kubectl get secret|grep registry-pull-secret</span><br><span class="line">registry-pull-secret kubernetes.io/dockerconfigjson 1 15s</span><br></pre></td></tr></table></figure></p>
+<h4 id="7-2-4、流水线语法生成脚本"><a href="#7-2-4、流水线语法生成脚本" class="headerlink" title="7.2.4、流水线语法生成脚本"></a>7.2.4、流水线语法生成脚本</h4><p>经过上面两步骤后，可以来到流水线语法这里了，Kuberconfig选择咱们刚刚添加的config授权，Config Files填写我们的资源部署文件名称。<br><img src="/2019/07/12/kubernetes系列之《构建企业级CICD平台-四-》/07.png"></p>
+<p>点击“生成流水线脚本”，得到如下内容：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubernetesDeploy configs: &apos;deploy.yml&apos;, kubeConfig: [path: &apos;&apos;], kubeconfigId: &apos;f664aa68-fbdc-4f41-9dfb-b241f0951241&apos;, secretName: &apos;&apos;, ssh: [sshCredentialsId: &apos;*&apos;, sshServer: &apos;&apos;], textCredentials: [certificateAuthorityData: &apos;&apos;, clientCertificateData: &apos;&apos;, clientKeyData: &apos;&apos;, serverUrl: &apos;https://&apos;]</span><br></pre></td></tr></table></figure></p>
+<p>这个内容有些无用的信息，经过调教后内容如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubernetesDeploy configs: &apos;deploy.yml&apos;, kubeconfigId: &quot;f664aa68-fbdc-4f41-9dfb-b241f0951241&quot;</span><br></pre></td></tr></table></figure></p>
+<h4 id="7-2-5、最终的Jenkinsfile"><a href="#7-2-5、最终的Jenkinsfile" class="headerlink" title="7.2.5、最终的Jenkinsfile"></a>7.2.5、最终的Jenkinsfile</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-128 jenkins]# cat Jenkinsfile</span><br><span class="line">// 公共</span><br><span class="line">def registry = &quot;172.16.194.130&quot;</span><br><span class="line">// 项目</span><br><span class="line">def project = &quot;library&quot;</span><br><span class="line">def app_name = &quot;java-demo&quot;</span><br><span class="line">def image_name = &quot;$&#123;registry&#125;/$&#123;project&#125;/$&#123;app_name&#125;:$&#123;Branch&#125;-$&#123;BUILD_NUMBER&#125;&quot;</span><br><span class="line">def git_address = &quot;git@172.16.194.130:/home/git/app.git&quot;</span><br><span class="line">// 认证</span><br><span class="line">def secret_name = &quot;registry-pull-secret&quot; // K8s从harbor拉取镜像的权限认证</span><br><span class="line">def docker_registry_auth = &quot;9df0c22e-9cce-4f54-b7d4-ede2a7755fc7&quot; // Jenkins配置harbor凭证的ID</span><br><span class="line">def git_auth = &quot;a3672571-97ed-4088-b407-43a9c54d3f5a&quot; // Jenkins配置Git凭证的ID</span><br><span class="line">def k8s_auth = &quot;f664aa68-fbdc-4f41-9dfb-b241f0951241&quot; // Jenkins配置k8s凭证的ID</span><br><span class="line"></span><br><span class="line">// 生成Jenkins-slave Pod的模板</span><br><span class="line">podTemplate(label: &apos;jenkins-slave&apos;, cloud: &apos;kubernetes&apos;, containers: [</span><br><span class="line">    containerTemplate(</span><br><span class="line">        name: &apos;jnlp&apos;,</span><br><span class="line">        image: &quot;$&#123;registry&#125;/library/jenkins-slave-jdk:1.8&quot;</span><br><span class="line">    ),</span><br><span class="line">  ],</span><br><span class="line">  volumes: [ // jenkins-slave镜像没有docker环境，因此需要将宿主机上的docker环境挂载到Pod中（Jenkins-slave需要使用docker push来推送镜像）</span><br><span class="line">    hostPathVolume(mountPath: &apos;/var/run/docker.sock&apos;, hostPath: &apos;/var/run/docker.sock&apos;),</span><br><span class="line">    hostPathVolume(mountPath: &apos;/usr/bin/docker&apos;, hostPath: &apos;/usr/bin/docker&apos;)</span><br><span class="line">  ],</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">// 脚本式的Pipeline</span><br><span class="line">&#123;</span><br><span class="line">  node(&quot;jenkins-slave&quot;)&#123;</span><br><span class="line">      // 第一步</span><br><span class="line">      stage(&apos;拉取代码&apos;)&#123;</span><br><span class="line">         checkout([$class: &apos;GitSCM&apos;, branches: [[name: &apos;$&#123;Branch&#125;&apos;]], userRemoteConfigs: [[credentialsId: &quot;$&#123;git_auth&#125;&quot;, url: &quot;$&#123;git_address&#125;&quot;]]])</span><br><span class="line">      &#125;</span><br><span class="line">      // 第二步</span><br><span class="line">      stage(&apos;代码编译&apos;)&#123;</span><br><span class="line">          sh &quot;mvn clean package -Dmaven.test.skip=true&quot; // 编译的目的就是生成一个可部署的java包</span><br><span class="line">      &#125;</span><br><span class="line">      // 第三步</span><br><span class="line">      stage(&apos;构建镜像&apos;)&#123;</span><br><span class="line">          withCredentials([usernamePassword(credentialsId: &quot;$&#123;docker_registry_auth&#125;&quot;, passwordVariable: &apos;password&apos;, usernameVariable: &apos;username&apos;)]) &#123;</span><br><span class="line">            sh &quot;&quot;&quot;</span><br><span class="line">              echo &apos;</span><br><span class="line">                FROM nicksors/tomcat</span><br><span class="line">                RUN rm -rf /usr/local/tomcat/webapps/*</span><br><span class="line">                ADD target/*.war /usr/local/tomcat/webapps/ROOT.war</span><br><span class="line">              &apos; &gt; Dockerfile</span><br><span class="line">              docker build -t $&#123;image_name&#125; .</span><br><span class="line">              docker login -u $&#123;username&#125; -p &apos;$&#123;password&#125;&apos; $&#123;registry&#125;</span><br><span class="line">              docker push $&#123;image_name&#125;</span><br><span class="line">            &quot;&quot;&quot;</span><br><span class="line">            &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      // 第四步</span><br><span class="line">      stage(&apos;部署到K8S平台&apos;)&#123;</span><br><span class="line">          sh &quot;&quot;&quot;</span><br><span class="line">          pwd</span><br><span class="line">          ls</span><br><span class="line">          sed -i &apos;s#\$IMAGE_NAME#$&#123;image_name&#125;#&apos; deploy.yml</span><br><span class="line">          sed -i &apos;s#\$SECRET_NAME#$&#123;secret_name&#125;#&apos; deploy.yml</span><br><span class="line">          &quot;&quot;&quot;</span><br><span class="line">          kubernetesDeploy configs: &apos;deploy.yml&apos;, kubeconfigId: &quot;$&#123;k8s_auth&#125;&quot;</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>增加了第四步，主要的内容就是改变deploy.yml文件那两个变量，然后拿着kubeconfig权限去执行部署deploy.yml，将容器部署到集群中。</p>
+<h4 id="7-2-6、配置Pipeline使用Jenkinsfile"><a href="#7-2-6、配置Pipeline使用Jenkinsfile" class="headerlink" title="7.2.6、配置Pipeline使用Jenkinsfile"></a>7.2.6、配置Pipeline使用Jenkinsfile</h4><img src="/2019/07/12/kubernetes系列之《构建企业级CICD平台-四-》/08.png">
+<p>当然，app项目里一定得有Jenkinsfile文件才行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-128 app]# tree -L 1</span><br><span class="line">.</span><br><span class="line">├── db</span><br><span class="line">├── deploy.yml</span><br><span class="line">├── Jenkinsfile</span><br><span class="line">├── LICENSE</span><br><span class="line">├── pom.xml</span><br><span class="line">├── README.md</span><br><span class="line">└── src</span><br><span class="line"></span><br><span class="line">2 directories, 5 files</span><br><span class="line">[root@k8s-master-128 app]# git add .</span><br><span class="line">[root@k8s-master-128 app]# git commit -m &apos;create Jenkinsfile&apos;</span><br><span class="line">[root@k8s-master-128 app]# git push</span><br></pre></td></tr></table></figure></p>
+<h4 id="7-2-6、最终构建：部署到K8s集群"><a href="#7-2-6、最终构建：部署到K8s集群" class="headerlink" title="7.2.6、最终构建：部署到K8s集群"></a>7.2.6、最终构建：部署到K8s集群</h4><p>点击构建，选择master分支：<br><img src="/2019/07/12/kubernetes系列之《构建企业级CICD平台-四-》/09.png"><br>构建失败：<br><img src="/2019/07/12/kubernetes系列之《构建企业级CICD平台-四-》/10.png"></p>
+<p>找不到部署的文件，Pipeline执行流水线时会在下载的app代码仓库寻找文件，我们并没有将deploy.yml文件提交到app仓库，这才使得文件找不到，接下来将文件提交到app仓库，继续重新构建：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-128 app]# tree -L 1</span><br><span class="line">.</span><br><span class="line">├── db</span><br><span class="line">├── deploy.yml</span><br><span class="line">├── LICENSE</span><br><span class="line">├── pom.xml</span><br><span class="line">├── README.md</span><br><span class="line">└── src</span><br><span class="line"></span><br><span class="line">2 directories, 4 files</span><br><span class="line">[root@k8s-master-128 app]# git add .</span><br><span class="line">[root@k8s-master-128 app]# git commit -m &apos;create deploy file&apos;</span><br><span class="line">[root@k8s-master-128 app]# git push</span><br></pre></td></tr></table></figure></p>
+<p>部署成功：<br><img src="/2019/07/12/kubernetes系列之《构建企业级CICD平台-四-》/11.png"></p>
+<p>查看k8s集群启动的Pod及资源：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master-128 app]# kubectl get pod|grep web</span><br><span class="line">web-5d59d4c58f-frwp8 1/1 Running 0 3m</span><br><span class="line">web-5d59d4c58f-nclfr 1/1 Running 0 3m</span><br><span class="line">web-5d59d4c58f-sjdrn 1/1 Running 0 3m</span><br><span class="line">[root@k8s-master-128 app]# kubectl get ingress|grep java</span><br><span class="line">web java.nicksors.cc 80 3m39s</span><br><span class="line">[root@k8s-master-128 app]# kubectl get svc|grep web</span><br><span class="line">web NodePort 10.0.0.140 &lt;none&gt; 80:48780/TCP 3m56s</span><br></pre></td></tr></table></figure></p>
+<h4 id="7-2-7、访问项目：进入测试阶段"><a href="#7-2-7、访问项目：进入测试阶段" class="headerlink" title="7.2.7、访问项目：进入测试阶段"></a>7.2.7、访问项目：进入测试阶段</h4><p>将java.nicksors.cc配置本地host：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo vim /etc/hosts</span><br><span class="line">172.16.194.129 jenkins.nicksors.cc java.nicksors.cc</span><br></pre></td></tr></table></figure></p>
+<p>浏览器访问：<br><img src="/2019/07/12/kubernetes系列之《构建企业级CICD平台-四-》/12.png"></p>
+<h3 id="7-3、小结"><a href="#7-3、小结" class="headerlink" title="7.3、小结"></a>7.3、小结</h3><p>1、使用Jenkins三个插件：</p>
+<ul>
+<li>Kubernetes</li>
+<li>Pipeline</li>
+<li>Kubernetes Continuous Deploy</li>
+</ul>
+<p>2、CI/CD环境特点：</p>
+<ul>
+<li>Slave弹性伸缩</li>
+<li>基于镜像隔离构建环境</li>
+<li>流水线发布，易于维护</li>
+</ul>
+<p>3、Jenkins参数化构建可以帮助你完成更复杂的CI/CD</p>
+<p>感谢阅读，文完。</p>
+<p>构建企业级CICD平台这系列有四篇文章，文中用到的文件可以到我的GitHub地址去寻找<br>Github: <a href="https://github.com/nicksors/k8sDeployFile/tree/master/jenkins" target="_blank" rel="noopener">https://github.com/nicksors/k8sDeployFile/tree/master/jenkins</a></p>
+<p>参考文章：</p>
+<ul>
+<li><a href="https://www.cnblogs.com/apanly/p/8784096.html" target="_blank" rel="noopener">金丝雀发布、滚动发布、蓝绿发布到底有什么差别？关键点是什么？</a></li>
+<li><a href="http://baijiahao.baidu.com/s?id=1600328572885444668&amp;wfr=spider&amp;for=pc" target="_blank" rel="noopener">漫画：什么是蓝绿部署？</a></li>
+<li><a href="https://blog.csdn.net/qq_21816375/article/details/80039345" target="_blank" rel="noopener">kubernetes RBAC认证简介</a></li>
+<li><a href="https://blog.csdn.net/lusyoe/article/details/79684318" target="_blank" rel="noopener">基于K8s的动态Jenkins Slave构建实践</a></li>
+</ul>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+<div>    
+ 
+ 
+    <ul class="post-copyright">
+      <li class="post-copyright-author">
+          <strong>本文作者：</strong>开元
+      </li>
+      <li class="post-copyright-link">
+        <strong>本文链接：</strong>
+        <a href="/2019/07/12/kubernetes系列之《构建企业级CICD平台-四-》.html" title="kubernetes系列之《构建企业级CICD平台(四)》">2019/07/12/kubernetes系列之《构建企业级CICD平台-四-》.html</a>
+      </li>
+      <li class="post-copyright-license">
+        <strong>版权声明： </strong>
+        <!--Copyright©2018 NICKSORS.CC 版权所有 未经许可 请勿转载 -->
+	本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0 CN</a> 许可协议。转载请注明出处!
+      </li>
+    </ul>
+  
+</div>
+
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CICD/" rel="tag"><i class="fa fa-tag"></i> CICD</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/07/12/kubernetes系列之《构建企业级CICD平台-三-》.html" rel="next" title="kubernetes系列之《构建企业级CICD平台(三)》">
+                <i class="fa fa-chevron-left"></i> kubernetes系列之《构建企业级CICD平台(三)》
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/static/images/stark.jpg"
+                alt="开元" />
+            
+              <p class="site-author-name" itemprop="name">开元</p>
+              <p class="site-description motion-element" itemprop="description">知识管理，时间管理，自我管理</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">41</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">39</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/nicksors" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.hi-linux.com/" title="运维之美" target="_blank">运维之美</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#七、Jenkins在K8s中持续部署"><span class="nav-number">1.</span> <span class="nav-text">七、Jenkins在K8s中持续部署</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1、构建镜像推送到Harbor"><span class="nav-number">1.1.</span> <span class="nav-text">7.1、构建镜像推送到Harbor</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#7-1-1、Jenkinsfile"><span class="nav-number">1.1.1.</span> <span class="nav-text">7.1.1、Jenkinsfile</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-1-2、定义Branch参数"><span class="nav-number">1.1.2.</span> <span class="nav-text">7.1.2、定义Branch参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-1-3、编译、构建、推送镜像"><span class="nav-number">1.1.3.</span> <span class="nav-text">7.1.3、编译、构建、推送镜像</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2、将镜像持续部署到k8s集群"><span class="nav-number">1.2.</span> <span class="nav-text">7.2、将镜像持续部署到k8s集群</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#7-2-1、安装Kubernetes-Continuous-Deploy插件"><span class="nav-number">1.2.1.</span> <span class="nav-text">7.2.1、安装Kubernetes Continuous Deploy插件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-2-2、K8s生成config文件"><span class="nav-number">1.2.2.</span> <span class="nav-text">7.2.2、K8s生成config文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-2-3、资源部署文件"><span class="nav-number">1.2.3.</span> <span class="nav-text">7.2.3、资源部署文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-2-4、流水线语法生成脚本"><span class="nav-number">1.2.4.</span> <span class="nav-text">7.2.4、流水线语法生成脚本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-2-5、最终的Jenkinsfile"><span class="nav-number">1.2.5.</span> <span class="nav-text">7.2.5、最终的Jenkinsfile</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-2-6、配置Pipeline使用Jenkinsfile"><span class="nav-number">1.2.6.</span> <span class="nav-text">7.2.6、配置Pipeline使用Jenkinsfile</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-2-6、最终构建：部署到K8s集群"><span class="nav-number">1.2.7.</span> <span class="nav-text">7.2.6、最终构建：部署到K8s集群</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-2-7、访问项目：进入测试阶段"><span class="nav-number">1.2.8.</span> <span class="nav-text">7.2.7、访问项目：进入测试阶段</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-3、小结"><span class="nav-number">1.3.</span> <span class="nav-text">7.3、小结</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">开元</span>
+
+
+  
+
+  
+</div>
+
+
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  访问用户:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<div class="powered-by">
+<i class="fa fa-eye"></i><span id="busuanzi_container_site_pv">
+   访问量:<span id="busuanzi_value_site_pv"></span>
+</span>
+</div>
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">全站共82.8k字</span>
+</div>
+
+<!--
+<span class="post-meta-divider">|</span>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Mist</div>
+
+
+
+-->
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<!--<script type="text/javascript" src="/js/src/love.js"></script>-->

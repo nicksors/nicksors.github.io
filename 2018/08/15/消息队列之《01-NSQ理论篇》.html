@@ -134,7 +134,7 @@
 <meta property="og:image" content="//blog.nicksors.cc/2018/08/15/消息队列之《01-NSQ理论篇》/消息队列对比图.png">
 <meta property="og:image" content="//blog.nicksors.cc/2018/08/15/消息队列之《01-NSQ理论篇》/channel.gif">
 <meta property="og:image" content="//blog.nicksors.cc/2018/08/15/消息队列之《01-NSQ理论篇》/clipboard.png">
-<meta property="og:updated_time" content="2018-08-15T10:28:36.235Z">
+<meta property="og:updated_time" content="2019-07-17T11:01:03.505Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="消息队列之《01.NSQ理论篇》">
 <meta name="twitter:description" content="最近一直在做开源项目，该项目需要使用消息中间件来转储下日志、消息、监控数据、服务器上报等数据，因此调研了下业界开源的消息队列，大致有：Kafka、Redis、Zeromq、Rebbitmq、NSQ等等；">
@@ -394,12 +394,24 @@
                 
               
 
-              <time title="创建时间：2018-08-15 18:15:42 / 修改时间：18:28:36" itemprop="dateCreated datePublished" datetime="2018-08-15T18:15:42+08:00">2018-08-15</time>
+              <time title="创建时间：2018-08-15 18:15:42" itemprop="dateCreated datePublished" datetime="2018-08-15T18:15:42+08:00">2018-08-15</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-07-17 19:01:03" itemprop="dateModified" datetime="2019-07-17T19:01:03+08:00">2019-07-17</time>
               
             
           </span>
@@ -464,7 +476,7 @@
 <h3 id="NSQ服务端介绍"><a href="#NSQ服务端介绍" class="headerlink" title="NSQ服务端介绍"></a>NSQ服务端介绍</h3><p>在使用NSQ服务之前，还是有必要了解下NSQ的几个核心组件，整个NSQ服务包含三个主要部分</p>
 <h4 id="nsqlookupd"><a href="#nsqlookupd" class="headerlink" title="nsqlookupd"></a>nsqlookupd</h4><p>先看看官网的介绍：</p>
 <p>nsqdlookup是守护进程负责管理拓扑信息，客户端通过查询nsqlookupd来发现指定话题(topic)的生产者，并且nsqd节点广播话题(topic)和通道(channel)信息</p>
-<p>简单的理解：nsqlookupd就是中心管理服务，它使用tc(默认度那可4160)管理nsqd服务，使用http(默认端口4161)管理nsqadmin服务，同事为客户端提供查询服务。</p>
+<p>简单的理解：nsqlookupd就是中心管理服务，它使用tcp(默认度那可4160)管理nsqd服务，使用http(默认端口4161)管理nsqadmin服务，同时为客户端提供查询服务。</p>
 <p>总的来说，nsqlookupd具有以下功能或特性：</p>
 <ul>
 <li><strong>唯一性</strong> - 在一个NSQ服务中只有一个nsqlookupd服务。<code>当然也可以在集群中部署多个nsqlookupd，但它们之间是没有关联的</code>。</li>
